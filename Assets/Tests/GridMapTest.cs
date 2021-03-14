@@ -9,10 +9,10 @@ namespace Tests
     public class GridMapTest
     {
         [Test]
-        public void TilesNullByDefault()
+        public void TilesExistByDefault()
         {
             GridMap map = new GridMap(new Vector2Int(10, 10));
-            Assert.IsNull(map.GetTile(new Vector2Int(5, 5)));
+            Assert.IsNotNull(map.GetTile(new Vector2Int(5, 5)));
         }
 
         [Test]
