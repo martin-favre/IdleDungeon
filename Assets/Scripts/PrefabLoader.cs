@@ -2,10 +2,18 @@ using System.Collections.Generic;
 using Logging;
 using UnityEngine;
 
-class PrefabLoader
+class PrefabLoader : IGameObjectLoader
 {
-    private readonly static LilLogger logger = new LilLogger("PrefabLoader");
-    private static Object LoadPrefab(string path)
+    private readonly LilLogger logger = new LilLogger("PrefabLoader");
+
+    static IGameObjectLoader instance;
+
+    static PrefabLoader()
+    {
+        instance = new PrefabLoader();
+    }
+
+    private Object LoadPrefab(string path)
     {
         Object obj = Resources.Load(path) as Object;
         if (obj == null)
@@ -15,9 +23,11 @@ class PrefabLoader
         return obj;
     }
 
-    readonly static Dictionary<string, Object> prefabs = new Dictionary<string, Object>();
+    readonly Dictionary<string, Object> prefabs = new Dictionary<string, Object>();
 
-    public static T GetPrefab<T>(string name) where T : class
+    public static IGameObjectLoader Instance { get => instance; }
+
+    public T GetPrefab<T>(string name) where T : class
     {
         Object gameObject;
         prefabs.TryGetValue(name, out gameObject);
@@ -27,5 +37,14 @@ class PrefabLoader
             prefabs[name] = gameObject;
         }
         return gameObject as T;
+    }
+
+    public void ReplaceInstance(IGameObjectLoader obj) {
+        instance = obj;
+    }
+
+    public GameObject Instantiate(GameObject original) 
+    {
+        return GameObject.Instantiate(original) as GameObject;
     }
 }
