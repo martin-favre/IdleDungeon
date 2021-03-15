@@ -93,7 +93,7 @@ GameObject:
   - component: {fileID: 2936678474042621177}
   - component: {fileID: 3649582674315725367}
   m_Layer: 0
-  m_Name: EastWall
+  m_Name: North
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -255,7 +255,7 @@ GameObject:
   - component: {fileID: 1866759410284433750}
   - component: {fileID: 76859907692001827}
   m_Layer: 0
-  m_Name: SouthWall
+  m_Name: East
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -336,7 +336,7 @@ GameObject:
   - component: {fileID: 7314955336877287307}
   - component: {fileID: 6673719487963260940}
   m_Layer: 0
-  m_Name: WestWall
+  m_Name: South
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -414,6 +414,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5359844439547194523}
+  - component: {fileID: 1360229136124714859}
   m_Layer: 0
   m_Name: Tile
   m_TagString: Untagged
@@ -441,6 +442,24 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1360229136124714859
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5359844439547194520}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37839bf49fbc60d4caa5ae97ec974914, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tile:
+    walls: 00000000
+  northWall: {fileID: 955223778022739351}
+  southWall: {fileID: 4937521103582244225}
+  eastWall: {fileID: 3550798495397394520}
+  westWall: {fileID: 6868612351913857892}
 --- !u!1 &6868612351913857892
 GameObject:
   m_ObjectHideFlags: 0
@@ -453,7 +472,7 @@ GameObject:
   - component: {fileID: 3338875364561224553}
   - component: {fileID: 3533019613463936780}
   m_Layer: 0
-  m_Name: NorthWall
+  m_Name: West
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

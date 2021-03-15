@@ -1,8 +1,10 @@
+using System;
 using UnityEngine;
 
+[Serializable]
 public class Tile
 {
-    bool[] walls = new bool[] { false, false, false, false };
+    [SerializeField] bool[] walls = new bool[4] { false, false, false, false };
 
 
     public Tile(Tile defaultTile)
