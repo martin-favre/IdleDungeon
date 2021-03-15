@@ -12,9 +12,7 @@ public class Tile
         this.walls = defaultTile.walls.Clone() as bool[];
     }
 
-    public Tile()
-    {
-    }
+    public Tile() {}
 
     public void SetWall(Directions.Direction direction, bool open)
     {

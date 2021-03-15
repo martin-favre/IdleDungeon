@@ -25,6 +25,7 @@ public class DepthFirst : IPathFinder
             var currentPos = unvisitedPaths.Pop();
             if (currentPos.Item1 == to)
             {
+                currentPos.Item2.Reverse();
                 return new Stack<Vector2Int>(currentPos.Item2.ToArray());
             }
             testedLocations.Add(currentPos.Item1);
