@@ -6,7 +6,6 @@ using System.Timers;
 
 public class Counter : MonoBehaviour
 {
-    int counter = 0;
     public TMP_Text text;
     Timer timer;
     float offsetTime = 0;
