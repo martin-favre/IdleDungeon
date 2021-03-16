@@ -48,20 +48,4 @@ public class DepthFirst : IPathFinder
         return new Stack<Vector2Int>();
 
     }
-
-    private void FindPath(Vector2Int currentPos)
-    {
-        foreach (var dir in Directions.directions)
-        {
-            // if that wall is open
-            if (map.GetTile(currentPos).GetWall(dir))
-            {
-                Vector2Int nextPos = currentPos + Directions.DirToVec(dir);
-                if (map.InsideMap(nextPos) && !testedLocations.Contains(nextPos))
-                {
-
-                }
-            }
-        }
-    }
 }
