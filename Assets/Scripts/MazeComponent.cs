@@ -32,7 +32,7 @@ public class MazeComponent : MonoBehaviour
         Helpers.DoForAll(maze.Size, (pos) => {
             GameObject gObj = PrefabLoader.Instance.Instantiate(tilePrefab) as GameObject;
             gObj.transform.parent = transform;
-            gObj.transform.position = new Vector3(pos.x*10, 0, pos.y*10);
+            gObj.transform.position = new Vector3(pos.x*Constants.tileSize.x, 0, pos.y*Constants.tileSize.x);
             gObj.GetComponent<TileComponent>().SetTile(maze.GetTile(pos));
         });
     }
