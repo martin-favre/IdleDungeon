@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
+using Moq;
 using UnityEngine;
 using UnityEngine.TestTools;
 using Logging;
@@ -9,6 +10,9 @@ namespace Tests
     public class RecursiveBacktrackerTest
     {
         static LilLogger logger = new LilLogger("RecursiveBacktrackerTest");
+        
+        Mock<IGridMap> mapperino = new Mock<IGridMap>(); 
+        
         [Test]
         public void GenerationShouldWork()
         {
