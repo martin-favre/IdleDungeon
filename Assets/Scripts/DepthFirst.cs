@@ -44,7 +44,7 @@ public class DepthFirst : IPathFinder
                 }
             }
         }
-        logger.Log("Unable to find path, no possible path");
+        logger.Log("Unable to find path, no possible path", LogLevel.Warning);
         return new Stack<Vector2Int>();
 
     }

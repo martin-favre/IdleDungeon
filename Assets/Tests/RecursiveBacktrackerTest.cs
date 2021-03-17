@@ -33,6 +33,17 @@ namespace Tests
                 if (pos.y == size.y - 1) Assert.AreEqual(false, map.GetTile(pos).GetWall(Directions.Direction.North));
             });
         }
+        [Test]
+        public void GeneratingTwiceShouldYieldSameResult()
+        {
+            Vector2Int size = new Vector2Int(20, 20);
+            var mapGenerator = new RecursiveBacktracker();
+            var map = mapGenerator.GenerateMap(size, 10);
+            string str = GridMapHelper.ToString(map);
+            var map2 = mapGenerator.GenerateMap(size, 10);
+            string str2 = GridMapHelper.ToString(map2);
+            Assert.AreEqual(str, str2);
+        }
 
     }
 }

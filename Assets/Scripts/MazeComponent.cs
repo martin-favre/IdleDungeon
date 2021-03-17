@@ -8,10 +8,12 @@ public class MazeComponent : MonoBehaviour
 
     IGridMap maze;
     List<GameObject> tiles;
+
+
     
     private void Start()
     {
-        SetMaze(new RecursiveBacktracker().GenerateMap(new Vector2Int(20, 20), 10));
+        
     }
 
     private void Update()
@@ -19,7 +21,7 @@ public class MazeComponent : MonoBehaviour
 
     }
 
-    public void SetMaze(IGridMap maze)
+    public void Setup(IGridMap maze)
     {
         this.maze = maze;
         GenerateMaze();

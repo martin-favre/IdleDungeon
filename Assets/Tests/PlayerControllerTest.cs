@@ -80,6 +80,16 @@ namespace Tests
             Assert.AreEqual(true, flagDone);
         }
 
+        [Test]
+        public void PlayerShouldNotifyOnEmptyPath()
+        {
+            bool flagDone = false;
+            var controller = new PlayerController.PlayerController(mapMock.Object, timeMock.Object, pathfinderMock.Object, () => flagDone = true);
+            currentTime = controller.TimePerStep + 0.0001f; // just a bit more
+            controller.Update();
+            Assert.AreEqual(true, flagDone);
+        }
+
 
 
     }

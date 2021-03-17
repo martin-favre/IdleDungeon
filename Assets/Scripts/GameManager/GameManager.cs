@@ -14,7 +14,7 @@ namespace GameManager
         private readonly Action spawnMaze;
         private readonly Action spawnPlayer;
 
-        StateMachine machine;
+        private StateMachine machine;
 
         public IGridMap GridMap { get => map; set => map = value; }
         public IMaceGenerator MapGenerator { get => maceGenerator; set => maceGenerator = value; }

@@ -8,16 +8,15 @@ public class RecursiveBacktracker : IMaceGenerator
 {
     static readonly Vector2Int[] directions = { Vector2Int.up, Vector2Int.down, Vector2Int.right, Vector2Int.left };
 
-    HashSet<Vector2Int> visitedLocations = new HashSet<Vector2Int>();
+    HashSet<Vector2Int> visitedLocations;
 
     System.Random random;
     // LilLogger logger = new LilLogger("RecursiveBacktracker");
     public IGridMap GenerateMap(Vector2Int size, int seed)
     {
         random = new System.Random(seed);
-
+        visitedLocations = new HashSet<Vector2Int>();
         IGridMap map = new GridMap(size);
-        // Vector2Int startingPos = new Vector2Int(random.Next(0, size.x), random.Next(0, size.y));
         Vector2Int startingPos = new Vector2Int(0, 0);
         CarvePassage(map, startingPos);
 

@@ -11,6 +11,7 @@ namespace GameManager
     public class PlayGameState : State
     {
         private readonly IGameManager manager;
+        private bool goalReached = false;
 
         public PlayGameState(IGameManager manager)
         {
@@ -27,12 +28,16 @@ namespace GameManager
             if (happening is PlayerReachedGoalEvent)
             {
                 var ev = happening as PlayerReachedGoalEvent;
+                goalReached = true;
                 Debug.Log("Hurrah");
             }
         }
 
         public override State OnDuring()
         {
+            if(goalReached) {
+                return new UpdatePointsState(manager);
+            }
             return StateMachine.NoTransition();
         }
     }

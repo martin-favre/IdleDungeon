@@ -10,7 +10,7 @@ namespace GameManager
 
         public GenerateMapState(IGameManager manager)
         {
-            manager.GridMap = manager.MapGenerator.GenerateMap(new Vector2Int(20, 20), 10);
+            manager.GridMap = manager.MapGenerator.GenerateMap(new Vector2Int(20, 20), Random.Range(0, int.MaxValue));
             this.manager = manager;
         }
         public override State OnDuring()

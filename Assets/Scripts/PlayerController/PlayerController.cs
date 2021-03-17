@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using Logging;
 using UnityEngine;
 
 namespace PlayerController
@@ -18,8 +19,10 @@ namespace PlayerController
 
         private float previousStepTime;
         float timePerStep = 1;
+        LilLogger logger;
         public PlayerController(IGridMap map, ITimeProvider timeProvider, IPathFinder pathFinder, Action onPathDone)
         {
+            logger = new LilLogger("PlayerController");
             Debug.Assert(timeProvider != null);
             Debug.Assert(pathFinder != null);
             Debug.Assert(map != null);
@@ -29,6 +32,12 @@ namespace PlayerController
             this.onPathDone = onPathDone;
             path = pathFinder.FindPath(position, goal, map);
             previousStepTime = timeProvider.Time;
+            if (path.Count == 0)
+            {
+                logger.Log("Path generated 0 steps", LogLevel.Warning);
+                if (onPathDone != null) onPathDone();
+            }
+
         }
 
         public void Update()
