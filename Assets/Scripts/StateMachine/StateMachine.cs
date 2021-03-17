@@ -14,6 +14,8 @@ namespace StateMachineCollection
 
         private bool machineTerminated = false;
 
+        public bool MachineTerminated { get => machineTerminated; }
+
         public State() { }
         public virtual void OnEntry() { }
         public abstract State OnDuring();
@@ -23,10 +25,6 @@ namespace StateMachineCollection
         protected void TerminateMachine()
         {
             machineTerminated = true;
-        }
-        public bool IsMachineTerminated()
-        {
-            return machineTerminated;
         }
 
     }
@@ -43,13 +41,13 @@ namespace StateMachineCollection
 
         public bool IsTerminated()
         {
-            return activeState.IsMachineTerminated();
+            return activeState.MachineTerminated;
         }
 
         public void Update()
         {
 
-            if (!activeState.IsMachineTerminated())
+            if (!activeState.MachineTerminated)
             {
                 if (!isFirstEntryExecuted)
                 {
@@ -68,7 +66,7 @@ namespace StateMachineCollection
         private void TransitToState(State nextState)
         {
             activeState = nextState;
-            if (!activeState.IsMachineTerminated())
+            if (!activeState.MachineTerminated)
             {
                 activeState.OnEntry();
             }
@@ -77,7 +75,7 @@ namespace StateMachineCollection
 
         public void RaiseEvent(IStateEvent ev)
         {
-            if (activeState != null && !activeState.IsMachineTerminated())
+            if (activeState != null && !activeState.MachineTerminated)
             {
                 activeState.HandleEvent(ev);
             }

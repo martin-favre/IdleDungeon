@@ -5,7 +5,7 @@ namespace GameManager
 {
     public class GenerateMapState : State
     {
-        private readonly IMaceGenerator maceGenerator;
+        private readonly IMazeGenerator maceGenerator;
         private readonly IGameManager manager;
 
         public GenerateMapState(IGameManager manager)
@@ -15,7 +15,6 @@ namespace GameManager
         }
         public override State OnDuring()
         {
-            TerminateMachine();
             return new PlayGameState(manager);
         }
     }

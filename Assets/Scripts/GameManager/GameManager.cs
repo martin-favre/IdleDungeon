@@ -9,7 +9,7 @@ namespace GameManager
 
     public class GameManager : IGameManager
     {
-        private IMaceGenerator maceGenerator = new RecursiveBacktracker();
+        private IMazeGenerator maceGenerator = new RecursiveBacktracker();
         private IGridMap map;
         private readonly Action spawnMaze;
         private readonly Action spawnPlayer;
@@ -17,7 +17,7 @@ namespace GameManager
         private StateMachine machine;
 
         public IGridMap GridMap { get => map; set => map = value; }
-        public IMaceGenerator MapGenerator { get => maceGenerator; set => maceGenerator = value; }
+        public IMazeGenerator MapGenerator { get => maceGenerator; set => maceGenerator = value; }
         public GameManager(Action spawnMaze, Action spawnPlayer)
         {
             this.spawnMaze = spawnMaze;

@@ -2,7 +2,7 @@ using StateMachineCollection;
 
 namespace GameManager
 {
-    internal class UpdatePointsState : State
+    public class UpdatePointsState : State
     {
         private readonly IGameManager manager;
 

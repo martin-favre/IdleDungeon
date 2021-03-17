@@ -4,7 +4,7 @@ using System.Linq;
 using Logging;
 using UnityEngine;
 
-public class RecursiveBacktracker : IMaceGenerator
+public class RecursiveBacktracker : IMazeGenerator
 {
     static readonly Vector2Int[] directions = { Vector2Int.up, Vector2Int.down, Vector2Int.right, Vector2Int.left };
 

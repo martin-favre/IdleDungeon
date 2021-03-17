@@ -1,7 +1,7 @@
 
 using UnityEngine;
 
-public interface IMaceGenerator
+public interface IMazeGenerator
 {
     IGridMap GenerateMap(Vector2Int size, int seed);
 }
