@@ -15,6 +15,7 @@ namespace Tests
         float currentTime;
         Mock<IGridMap> mapMock;
         Vector2Int mapSize;
+        Tile mockTile;
 
         Mock<IPathFinder> pathfinderMock;
         Stack<Vector2Int> path;
@@ -25,10 +26,12 @@ namespace Tests
             timeMock = new Mock<ITimeProvider>();
             currentTime = 0;
             timeMock.Setup(foo => foo.Time).Returns(() => currentTime);
-
             mapMock = new Mock<IGridMap>();
             mapSize = new Vector2Int(20, 20);
             mapMock.Setup(foo => foo.Size).Returns(mapSize);
+            mockTile = new Tile();
+            mockTile.SetAllWalls(true);
+            mapMock.Setup(foo => foo.GetTile(It.IsAny<Vector2Int>())).Returns(mockTile);
 
             pathfinderMock = new Mock<IPathFinder>();
             path = new Stack<Vector2Int>();
