@@ -58,4 +58,37 @@ public static class Directions
                 throw new System.Exception("Unknown Direction");
         }
     }
+
+    public static bool IsRightTurn(Direction previous, Direction next) {
+        switch (previous)
+        {
+            case Direction.North:
+                return next == Direction.East;
+            case Direction.South:
+                return next == Direction.West;
+            case Direction.West:
+                return next == Direction.North;
+            case Direction.East:
+                return next == Direction.South;
+            default:
+                throw new System.Exception("Unknown Direction");
+        }
+    }
+
+        public static bool IsLeftTurn(Direction previous, Direction next) {
+        switch (previous)
+        {
+            case Direction.North:
+                return next == Direction.West;
+            case Direction.South:
+                return next == Direction.East;
+            case Direction.West:
+                return next == Direction.South;
+            case Direction.East:
+                return next == Direction.North;
+            default:
+                throw new System.Exception("Unknown Direction");
+        }
+    }
+
 }

@@ -43,7 +43,7 @@ namespace GameManager
 
             var playerPrefab = PrefabLoader.Instance.GetPrefab<GameObject>("Prefabs/Player");
             player = PrefabLoader.Instance.Instantiate(playerPrefab);
-            player.transform.position = new Vector3(0, Constants.tileSize.x / 2f, 0);
+            player.transform.position = new Vector3(1, Constants.tileSize.x / 2f, 1);
             var comp = player.GetComponent<PlayerControllerComponent>();
             comp.Setup(manager.GridMap, manager.OnGoalReached);
         }

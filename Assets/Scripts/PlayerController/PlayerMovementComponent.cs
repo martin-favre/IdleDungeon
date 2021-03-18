@@ -6,8 +6,9 @@ public class PlayerMovementComponent : MonoBehaviour
 
     [SerializeField]
     private float rotationSpeed;
-
-    private float movementSpeed = Constants.tileSize.x; // we want to complete one tilesize per step
+    
+    [SerializeField]
+    private float movementSpeed = Constants.tileSize.x;
 
     private float startTime;
     private Vector3 originalPos;

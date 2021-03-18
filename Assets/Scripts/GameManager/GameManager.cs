@@ -9,7 +9,7 @@ namespace GameManager
 
     public class GameManager : IGameManager
     {
-        private IMazeGenerator maceGenerator = new RecursiveBacktracker();
+        private IMazeGenerator maceGenerator = new BlockyRecursiveBacktracker();
         private IGridMap map;
         private readonly Action spawnMaze;
         private readonly Action spawnPlayer;

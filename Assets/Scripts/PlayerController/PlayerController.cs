@@ -27,7 +27,17 @@ namespace PlayerController
             Debug.Assert(pathFinder != null);
             Debug.Assert(map != null);
             this.position = new Vector2Int(0, 0);
+            while(map.GetTile(position).IsClosed()) {
+                position += new Vector2Int(1, 1);
+                if(position == map.Size) throw new Exception("Error horror");
+            }
+
             var goal = map.Size - new Vector2Int(1, 1);
+            while (map.GetTile(goal).IsClosed())
+            {
+                goal -= new Vector2Int(1, 1);
+                if(goal == Vector2Int.zero) throw new Exception("Error horror");
+            }
             this.timeProvider = timeProvider;
             this.onPathDone = onPathDone;
             path = pathFinder.FindPath(position, goal, map);

@@ -18,7 +18,6 @@ namespace PlayerController
         float journeyLength;
         private Vector3 originalPos;
 
-        public float rotationSpeed;
 
         PlayerMovementComponent movementComponent;
 
