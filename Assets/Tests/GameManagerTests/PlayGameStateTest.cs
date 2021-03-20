@@ -14,8 +14,8 @@ namespace Tests
 
         Mock<IGridMap> mapMock;
         Vector2Int mapSize;
-
-        Mock<IMazeGenerator> maceGeneratorMock;
+ 
+        Mock<IMazeFactory> maceGeneratorMock;
         Mock<IGameManager> gameManagerMock;
 
         [SetUp]
@@ -26,11 +26,11 @@ namespace Tests
             mapSize = new Vector2Int(20, 20);
             mapMock.Setup(foo => foo.Size).Returns(mapSize);
 
-            maceGeneratorMock = new Mock<IMazeGenerator>();
+            maceGeneratorMock = new Mock<IMazeFactory>();
             maceGeneratorMock.Setup(foo => foo.GenerateMap(It.IsAny<Vector2Int>(), It.IsAny<int>())).Returns(mapMock.Object);
 
             gameManagerMock = new Mock<IGameManager>();
-            gameManagerMock.Setup(foo => foo.MapGenerator).Returns(maceGeneratorMock.Object);
+            gameManagerMock.Setup(foo => foo.MapFactory).Returns(maceGeneratorMock.Object);
 
 
         }

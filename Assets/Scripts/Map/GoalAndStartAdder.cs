@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GoalAndEndAdder : IMazeImprover
+public class GoalAndStartAdder : IMazeModifier
 {
     System.Random random;
     public bool ImproveMap(IGridMap map, int seed)
@@ -25,17 +25,15 @@ public class GoalAndEndAdder : IMazeImprover
     private (bool, Vector2Int) PlaceTileInQuadrant(Directions.Direction quadrant, IGridMap map, Tile tile)
     {
 
-        var topleft = GetTopLeft(quadrant, map);
-        var bottomRight = GetBottomRight(quadrant, map);
         var testedLocations = new HashSet<Vector2Int>();
         var untestedLocations = new Queue<Vector2Int>();
 
-        untestedLocations.Enqueue(new Vector2Int(random.Next(topleft.x, bottomRight.x), random.Next(topleft.y, bottomRight.y)));
+        untestedLocations.Enqueue(GetStartingPoint(quadrant, map));
         while (untestedLocations.Count > 0)
         {
             var currentLocation = untestedLocations.Dequeue();
             testedLocations.Add(currentLocation);
-            if (currentLocation.x < topleft.x || currentLocation.y < topleft.y || currentLocation.x > bottomRight.x || currentLocation.y > bottomRight.y) continue;
+            if(!map.InsideMap(currentLocation)) continue;
             if (!map.GetTile(currentLocation).IsClosed())
             {
                 map.SetTile(currentLocation, tile);
@@ -54,6 +52,24 @@ public class GoalAndEndAdder : IMazeImprover
             }
         }
         return (false, Vector2Int.zero);
+    }
+
+    private Vector2Int GetStartingPoint(Directions.Direction quadrant, IGridMap map)
+    {
+        switch (quadrant)
+        {
+            case Directions.Direction.North:
+                return Vector2Int.zero;
+            case Directions.Direction.South:
+                return new Vector2Int(map.Size.x-1, map.Size.y-1);
+            case Directions.Direction.West:
+                return new Vector2Int(0, map.Size.y-1);
+            case Directions.Direction.East:
+                return new Vector2Int(map.Size.x-1, 0);
+            default:
+                throw new System.Exception("Unknown Direction");
+        }
+
     }
 
     private Vector2Int GetBottomRight(Directions.Direction quadrant, IGridMap map)

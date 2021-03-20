@@ -4,9 +4,9 @@ using System.Linq;
 using Logging;
 using UnityEngine;
 
-public class RecursiveBacktracker : IMazeGenerator
+public class RecursiveBacktracker : IMazeFactory
 {
-
+ 
     HashSet<Vector2Int> visitedLocations;
 
     System.Random random;

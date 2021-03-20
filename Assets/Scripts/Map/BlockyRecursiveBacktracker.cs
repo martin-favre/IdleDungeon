@@ -4,9 +4,9 @@ using System.Linq;
 using Logging;
 using UnityEngine;
 
-public class BlockyRecursiveBacktracker : IMazeGenerator
+public class BlockyRecursiveBacktracker : IMazeFactory
 {
-
+ 
     HashSet<Vector2Int> visitedLocations;
 
     System.Random random;

@@ -6,7 +6,7 @@ public class PlayerMovementComponent : MonoBehaviour
 
     [SerializeField]
     private float rotationSpeed;
-    
+
     [SerializeField]
     private float movementSpeed = Constants.tileSize.x;
 
@@ -17,6 +17,11 @@ public class PlayerMovementComponent : MonoBehaviour
 
     Vector3 targetPos;
     Quaternion targetRot;
+
+    public void SetPosition(Vector3 pos)
+    {
+        transform.position = pos;
+    }
     public void SetTargetPosition(Vector3 pos)
     {
         targetPosition = pos;

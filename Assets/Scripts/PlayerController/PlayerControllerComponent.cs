@@ -26,10 +26,15 @@ namespace PlayerController
             this.onGoalReached = onGoalReached;
             controller = new PlayerController(map, UnityTime.Instance, new DepthFirst(), OnDone);
             previousPosition = controller.Position;
+
+            movementComponent = GetComponent<PlayerMovementComponent>();
+            var pos = Helpers.ToVec3(previousPosition * Constants.tileSize, transform.position.y);
+            movementComponent.SetPosition(pos);
+
         }
 
-        void Awake() {
-            movementComponent = GetComponent<PlayerMovementComponent>();
+        void Awake()
+        {
         }
 
         private void OnDone()

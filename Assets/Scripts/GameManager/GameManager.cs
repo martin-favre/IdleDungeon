@@ -9,7 +9,10 @@ namespace GameManager
 
     public class GameManager : IGameManager
     {
-        private IMazeGenerator maceGenerator = new BlockyRecursiveBacktracker();
+        private readonly IMazeFactory maceGenerator = new BlockyRecursiveBacktracker();
+        private readonly IMazeModifier[] mazeModifiers = {
+            new GoalAndStartAdder()
+        };
         private IGridMap map;
         private readonly Action spawnMaze;
         private readonly Action spawnPlayer;
@@ -17,7 +20,9 @@ namespace GameManager
         private StateMachine machine;
 
         public IGridMap GridMap { get => map; set => map = value; }
-        public IMazeGenerator MapGenerator { get => maceGenerator; set => maceGenerator = value; }
+        public IMazeFactory MapFactory { get => maceGenerator; }
+        public IMazeModifier[] MapModifiers { get => mazeModifiers; }
+
         public GameManager(Action spawnMaze, Action spawnPlayer)
         {
             this.spawnMaze = spawnMaze;
@@ -25,7 +30,8 @@ namespace GameManager
             machine = new StateMachine(new GenerateMapState(this));
         }
 
-        public void OnGoalReached() {
+        public void OnGoalReached()
+        {
             machine.RaiseEvent(new PlayerReachedGoalEvent());
         }
 
