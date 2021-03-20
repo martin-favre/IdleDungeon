@@ -6,6 +6,10 @@ public class GridMap : IGridMap
     private Dictionary<Vector2Int, Tile> tiles;
     private readonly Vector2Int size;
 
+    private Vector2Int goal;
+
+    private Vector2Int start;
+
     public GridMap(Vector2Int size)
     {
         this.size = size;
@@ -20,6 +24,9 @@ public class GridMap : IGridMap
     }
 
     public Vector2Int Size => size;
+
+    public Vector2Int Goal { get => goal; set => goal = value; }
+    public Vector2Int Start { get => start; set => start = value; }
 
     public bool InsideMap(Vector2Int position)
     {
