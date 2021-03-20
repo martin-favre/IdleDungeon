@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GridMap : IGridMap
+public class GridMap : IMap 
 {
     private Dictionary<Vector2Int, Tile> tiles;
     private readonly Vector2Int size;

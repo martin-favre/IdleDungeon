@@ -2,7 +2,7 @@ using UnityEngine;
 
 public static class GridMapHelper
 {
-    public static string ToString(IGridMap map)
+    public static string ToString(IMap map)
     {
         Vector2Int size = map.Size;
         string outStr = "";

@@ -21,7 +21,7 @@ namespace PlayerController
 
         PlayerMovementComponent movementComponent;
 
-        public void Setup(IGridMap map, Action onGoalReached)
+        public void Setup(IMap map, Action onGoalReached)
         {
             this.onGoalReached = onGoalReached;
             controller = new PlayerController(map, UnityTime.Instance, new DepthFirst(), OnDone);

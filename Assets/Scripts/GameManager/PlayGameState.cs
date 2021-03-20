@@ -20,7 +20,7 @@ namespace GameManager
 
         public override void OnEntry()
         {
-            manager.SpawnMaze();
+            manager.SpawnMap();
             manager.SpawnPlayer();
         }
         public override void HandleEvent(IStateEvent happening)

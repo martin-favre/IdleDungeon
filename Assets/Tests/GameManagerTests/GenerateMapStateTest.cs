@@ -12,25 +12,25 @@ namespace Tests
     public class GenerateMapStateTest
     {
 
-        Mock<IGridMap> mapMock;
+        Mock<IMap> mapMock;
         Vector2Int mapSize;
  
-        Mock<IMazeFactory> maceGeneratorMock;
+        Mock<IMapFactory> mapGeneratorMock;
         Mock<IGameManager> gameManagerMock;
 
         [SetUp]
         public void Setup()
         {
 
-            mapMock = new Mock<IGridMap>();
+            mapMock = new Mock<IMap>();
             mapSize = new Vector2Int(20, 20);
             mapMock.Setup(foo => foo.Size).Returns(mapSize);
 
-            maceGeneratorMock = new Mock<IMazeFactory>();
-            maceGeneratorMock.Setup(foo => foo.GenerateMap(It.IsAny<Vector2Int>(), It.IsAny<int>())).Returns(mapMock.Object);
+            mapGeneratorMock = new Mock<IMapFactory>();
+            mapGeneratorMock.Setup(foo => foo.GenerateMap(It.IsAny<Vector2Int>(), It.IsAny<int>())).Returns(mapMock.Object);
 
             gameManagerMock = new Mock<IGameManager>();
-            gameManagerMock.Setup(foo => foo.MapFactory).Returns(maceGeneratorMock.Object);
+            gameManagerMock.Setup(foo => foo.MapFactory).Returns(mapGeneratorMock.Object);
 
 
         }

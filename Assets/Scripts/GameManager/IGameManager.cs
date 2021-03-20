@@ -2,11 +2,11 @@ namespace GameManager
 {
     public interface IGameManager
     {
-        IGridMap GridMap { get; set; }
-        IMazeFactory MapFactory { get; }
-        IMazeModifier[] MapModifiers { get; }
+        IMap GridMap { get; set; }
+        IMapFactory MapFactory { get; }
+        IMapModifier[] MapModifiers { get; }
 
-        void SpawnMaze();
+        void SpawnMap(); 
         void SpawnPlayer();
     }
 }

@@ -3,10 +3,10 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MazeComponent : MonoBehaviour
+public class MapComponent : MonoBehaviour
 {
 
-    IGridMap maze;
+    IMap map;
     List<GameObject> tiles;
 
 
@@ -21,21 +21,21 @@ public class MazeComponent : MonoBehaviour
 
     }
 
-    public void Setup(IGridMap maze)
+    public void Setup(IMap map) 
     {
-        this.maze = maze;
-        GenerateMaze();
+        this.map = map;
+        GenerateMap();
     }
 
-    private void GenerateMaze()
+    private void GenerateMap()
     {
         tiles = new List<GameObject>();
         GameObject tilePrefab = PrefabLoader.Instance.GetPrefab<GameObject>("Prefabs/Tile");
-        Helpers.DoForAll(maze.Size, (pos) => {
+        Helpers.DoForAll(map.Size, (pos) => {
             GameObject gObj = PrefabLoader.Instance.Instantiate(tilePrefab) as GameObject;
             gObj.transform.parent = transform;
             gObj.transform.position = new Vector3(pos.x*Constants.tileSize.x, 0, pos.y*Constants.tileSize.x);
-            gObj.GetComponent<TileComponent>().SetTile(maze.GetTile(pos));
+            gObj.GetComponent<TileComponent>().SetTile(map.GetTile(pos));
         });
     }
 }

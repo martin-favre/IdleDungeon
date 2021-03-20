@@ -20,7 +20,7 @@ namespace PlayerController
         private float previousStepTime;
         float timePerStep = 1;
         LilLogger logger;
-        public PlayerController(IGridMap map, ITimeProvider timeProvider, IPathFinder pathFinder, Action onPathDone)
+        public PlayerController(IMap map, ITimeProvider timeProvider, IPathFinder pathFinder, Action onPathDone)
         {
             logger = new LilLogger("PlayerController");
             Debug.Assert(timeProvider != null);

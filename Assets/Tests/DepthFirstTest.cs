@@ -9,7 +9,7 @@ namespace Tests
     public class DepthFirstTest
     {
 
-        (IGridMap, Stack<Vector2Int>) GenerateMaze()
+        (IMap, Stack<Vector2Int>) GenerateMap()
         {
             var size = new Vector2Int(50, 50);
             var map = new RecursiveBacktracker().GenerateMap(size, 10);
@@ -34,9 +34,9 @@ namespace Tests
         }
 
         [Test]
-        public void ShouldFindPathInMaze()
+        public void ShouldFindPathInMap()
         {
-            (var map, var path) = GenerateMaze();
+            (var map, var path) = GenerateMap();
             Vector2Int currentPos = Vector2Int.zero;
             while (path.Count > 0)
             {
@@ -48,14 +48,14 @@ namespace Tests
         [Test]
         public void FirstStepShouldBeOneAwayFromOrigin()
         {
-            (var map, var path) = GenerateMaze();
+            (var map, var path) = GenerateMap();
             var firstPos = path.Pop();
             Assert.AreEqual(1, Mathf.Abs((firstPos.x + firstPos.y)));
         }
         [Test]
         public void EachStepShouldBeOneLong()
         {
-            (var map, var path) = GenerateMaze();
+            (var map, var path) = GenerateMap();
             Vector2Int currentPos = Vector2Int.zero;
             while (path.Count > 0)
             {

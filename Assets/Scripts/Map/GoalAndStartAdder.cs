@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GoalAndStartAdder : IMazeModifier
+public class GoalAndStartAdder : IMapModifier
 {
     System.Random random;
-    public bool ImproveMap(IGridMap map, int seed)
+    public bool ImproveMap(IMap map, int seed)
     {
         random = new System.Random(seed);
         // Let's reuse directions, but let them represent quadrants
@@ -22,7 +22,7 @@ public class GoalAndStartAdder : IMazeModifier
 
     }
 
-    private (bool, Vector2Int) PlaceTileInQuadrant(Directions.Direction quadrant, IGridMap map, Tile tile)
+    private (bool, Vector2Int) PlaceTileInQuadrant(Directions.Direction quadrant, IMap map, Tile tile)
     {
 
         var testedLocations = new HashSet<Vector2Int>();
@@ -54,7 +54,7 @@ public class GoalAndStartAdder : IMazeModifier
         return (false, Vector2Int.zero);
     }
 
-    private Vector2Int GetStartingPoint(Directions.Direction quadrant, IGridMap map)
+    private Vector2Int GetStartingPoint(Directions.Direction quadrant, IMap map)
     {
         switch (quadrant)
         {
@@ -72,7 +72,7 @@ public class GoalAndStartAdder : IMazeModifier
 
     }
 
-    private Vector2Int GetBottomRight(Directions.Direction quadrant, IGridMap map)
+    private Vector2Int GetBottomRight(Directions.Direction quadrant, IMap map)
     {
         switch (quadrant)
         {
@@ -90,7 +90,7 @@ public class GoalAndStartAdder : IMazeModifier
 
     }
 
-    private Vector2Int GetTopLeft(Directions.Direction quadrant, IGridMap map)
+    private Vector2Int GetTopLeft(Directions.Direction quadrant, IMap map)
     {
         switch (quadrant)
         {

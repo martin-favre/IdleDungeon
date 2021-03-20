@@ -4,25 +4,25 @@ using System.Linq;
 using Logging;
 using UnityEngine;
 
-public class RecursiveBacktracker : IMazeFactory
+public class RecursiveBacktracker : IMapFactory
 {
  
     HashSet<Vector2Int> visitedLocations;
 
     System.Random random;
     // LilLogger logger = new LilLogger("RecursiveBacktracker");
-    public IGridMap GenerateMap(Vector2Int size, int seed)
+    public IMap GenerateMap(Vector2Int size, int seed)
     {
         random = new System.Random(seed);
         visitedLocations = new HashSet<Vector2Int>();
-        IGridMap map = new GridMap(size);
+        IMap map = new GridMap(size);
         Vector2Int startingPos = new Vector2Int(0, 0);
         CarvePassage(map, startingPos);
 
         return map;
     }
 
-    void CarvePassage(IGridMap map, Vector2Int currentPos)
+    void CarvePassage(IMap map, Vector2Int currentPos)
     {
         Directions.Direction[] directions = Directions.GetRandomDirections(random);
         Tile currentTile = map.GetTile(currentPos);

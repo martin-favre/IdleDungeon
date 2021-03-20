@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public interface IGridMap
+public interface IMap
 {
     void SetTile(Vector2Int position, Tile tile);
     Tile GetTile(Vector2Int position);

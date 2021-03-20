@@ -9,7 +9,7 @@ namespace Tests
 {
     public class GoalAndStartAdderTest
     {
-        Mock<IGridMap> mapMock;
+        Mock<IMap> mapMock;
         Vector2Int mapSize;
         Tile mockTile;
 
@@ -17,7 +17,7 @@ namespace Tests
         [SetUp]
         public void Setup()
         {
-            mapMock = new Mock<IGridMap>();
+            mapMock = new Mock<IMap>();
             mapSize = new Vector2Int(20, 20);
             mapMock.Setup(foo => foo.Size).Returns(mapSize);
             mockTile = new Tile();

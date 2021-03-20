@@ -8,11 +8,11 @@ public class DepthFirst : IPathFinder
 {
     HashSet<Vector2Int> testedLocations = new HashSet<Vector2Int>();
     Vector2Int goal;
-    IGridMap map;
+    IMap map;
 
     LilLogger logger = new LilLogger("DepthFirst");
 
-    public Stack<Vector2Int> FindPath(Vector2Int from, Vector2Int to, IGridMap map)
+    public Stack<Vector2Int> FindPath(Vector2Int from, Vector2Int to, IMap map)
     {
         goal = to;
         this.map = map;

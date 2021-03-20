@@ -7,29 +7,29 @@ namespace GameManager
     public class GameManagerComponent : MonoBehaviour
     {
         private GameManager manager;
-        private GameObject maze;
+        private GameObject map;
         private GameObject player;
 
         private void Awake()
         {
-            manager = new GameManager(SpawnMaze, SpawnPlayer);
+            manager = new GameManager(SpawnMap, SpawnPlayer);
         }
         private void Update()
         {
             manager.Update();
         }
 
-        void SpawnMaze()
+        void SpawnMap()
         {
-            if (maze != null)
+            if (map != null)
             {
-                GameObject.Destroy(maze);
-                maze = null;
+                GameObject.Destroy(map);
+                map = null;
             }
-            var mazePrefab = PrefabLoader.Instance.GetPrefab<GameObject>("Prefabs/Maze");
-            maze = PrefabLoader.Instance.Instantiate(mazePrefab);
-            maze.transform.position = new Vector3(0, 0, 0);
-            var comp = maze.GetComponent<MazeComponent>();
+            var mapPrefab = PrefabLoader.Instance.GetPrefab<GameObject>("Prefabs/Map");
+            map = PrefabLoader.Instance.Instantiate(mapPrefab);
+            map.transform.position = new Vector3(0, 0, 0);
+            var comp = map.GetComponent<MapComponent>();
             comp.Setup(manager.GridMap);
         }
 
