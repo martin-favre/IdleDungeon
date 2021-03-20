@@ -32,6 +32,11 @@ public class Tile
         }
     }
 
+    public virtual string GetPrefabPath()
+    {
+        return "Prefabs/Tile";
+    }
+
     public bool IsClosed()
     {
         foreach (var wall in walls)

@@ -30,12 +30,13 @@ public class MapComponent : MonoBehaviour
     private void GenerateMap()
     {
         tiles = new List<GameObject>();
-        GameObject tilePrefab = PrefabLoader.Instance.GetPrefab<GameObject>("Prefabs/Tile");
         Helpers.DoForAll(map.Size, (pos) => {
-            GameObject gObj = PrefabLoader.Instance.Instantiate(tilePrefab) as GameObject;
+            var tile = map.GetTile(pos);
+            var prefab = PrefabLoader.Instance.GetPrefab<GameObject>(tile.GetPrefabPath());
+            GameObject gObj = PrefabLoader.Instance.Instantiate(prefab) as GameObject;
             gObj.transform.parent = transform;
             gObj.transform.position = new Vector3(pos.x*Constants.tileSize.x, 0, pos.y*Constants.tileSize.x);
-            gObj.GetComponent<TileComponent>().SetTile(map.GetTile(pos));
+            gObj.GetComponent<ITileComponent>().SetTile(tile);
         });
     }
 }

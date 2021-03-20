@@ -12,17 +12,46 @@ public class GoalAndStartAdder : IMapModifier
         // So north-> north-west
         var quadrant = ChooseQuadrant();
         var goaltile = new GoalTile();
-        (var success, var location) = PlaceTileInQuadrant(quadrant, map, goaltile);
+        (var success, var location, var openDir) = PlaceTileInQuadrant(quadrant, map, goaltile);
         if (!success) return success;
+        goaltile.Direction = openDir;
         map.Goal = location;
         var startTile = new StartTile();
-        (success, location) = PlaceTileInQuadrant(Directions.GetOpposite(quadrant), map, startTile);
-        if (success) map.Start = location;
+        (success, location, openDir) = PlaceTileInQuadrant(Directions.GetOpposite(quadrant), map, startTile);
+        if (success)
+        {
+            startTile.Direction = openDir;
+            map.Start = location;
+        }
+
         return success;
 
     }
 
-    private (bool, Vector2Int) PlaceTileInQuadrant(Directions.Direction quadrant, IMap map, Tile tile)
+    (bool, Directions.Direction) isValidLocation(IMap map, Vector2Int position)
+    {
+        if (!map.InsideMap(position)) return (false, Directions.Direction.North);
+        // It is a valid location if only one surrounding tile is reachable
+        // e.g. x is a valid position here. y is not.
+        // ......
+        // #x#.y#
+        // ######
+        int nofFreeTiles = 0;
+        var freeDir = Directions.Direction.North;
+        foreach (var dir in Directions.directions)
+        {
+            var newPos = position + Directions.DirToVec(dir);
+            if (map.InsideMap(newPos) && !map.GetTile(newPos).IsClosed())
+            {
+                freeDir = dir;
+                nofFreeTiles++;
+            }
+            if (nofFreeTiles > 1) return (false, freeDir);
+        }
+        return (nofFreeTiles == 1, freeDir);
+    }
+
+    private (bool, Vector2Int, Directions.Direction) PlaceTileInQuadrant(Directions.Direction quadrant, IMap map, Tile tile)
     {
 
         var testedLocations = new HashSet<Vector2Int>();
@@ -33,11 +62,12 @@ public class GoalAndStartAdder : IMapModifier
         {
             var currentLocation = untestedLocations.Dequeue();
             testedLocations.Add(currentLocation);
-            if(!map.InsideMap(currentLocation)) continue;
-            if (!map.GetTile(currentLocation).IsClosed())
+            if (!map.InsideMap(currentLocation)) continue;
+            (var isValid, var freeDir) = isValidLocation(map, currentLocation);
+            if (isValid)
             {
                 map.SetTile(currentLocation, tile);
-                return (true, currentLocation);
+                return (true, currentLocation, freeDir);
             }
             else
             {
@@ -51,7 +81,7 @@ public class GoalAndStartAdder : IMapModifier
                 }
             }
         }
-        return (false, Vector2Int.zero);
+        return (false, Vector2Int.zero, Directions.Direction.North);
     }
 
     private Vector2Int GetStartingPoint(Directions.Direction quadrant, IMap map)
@@ -61,11 +91,11 @@ public class GoalAndStartAdder : IMapModifier
             case Directions.Direction.North:
                 return Vector2Int.zero;
             case Directions.Direction.South:
-                return new Vector2Int(map.Size.x-1, map.Size.y-1);
+                return new Vector2Int(map.Size.x - 1, map.Size.y - 1);
             case Directions.Direction.West:
-                return new Vector2Int(0, map.Size.y-1);
+                return new Vector2Int(0, map.Size.y - 1);
             case Directions.Direction.East:
-                return new Vector2Int(map.Size.x-1, 0);
+                return new Vector2Int(map.Size.x - 1, 0);
             default:
                 throw new System.Exception("Unknown Direction");
         }

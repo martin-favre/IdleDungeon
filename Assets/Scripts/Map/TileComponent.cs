@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class TileComponent : MonoBehaviour
+public class TileComponent : MonoBehaviour, ITileComponent
 {
     [SerializeField] Tile tile;
     [SerializeField] GameObject northWall;
