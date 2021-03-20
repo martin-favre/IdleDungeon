@@ -22,6 +22,7 @@ namespace GameManager
         {
             manager.SpawnMap();
             manager.SpawnPlayer();
+            manager.FadeIn();
         }
         public override void HandleEvent(IStateEvent happening)
         {
@@ -36,7 +37,7 @@ namespace GameManager
         public override State OnDuring()
         {
             if(goalReached) {
-                return new UpdatePointsState(manager);
+                return new FadeOutState(manager);
             }
             return StateMachine.NoTransition();
         }

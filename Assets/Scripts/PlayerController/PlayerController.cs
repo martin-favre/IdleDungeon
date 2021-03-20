@@ -30,7 +30,7 @@ namespace PlayerController
             this.timeProvider = timeProvider;
             this.onPathDone = onPathDone;
             path = pathFinder.FindPath(position, map.Goal, map);
-            previousStepTime = timeProvider.Time;
+            previousStepTime = 0; // so it will trigger right away 
             if (path.Count == 0)
             {
                 logger.Log("Path generated 0 steps", LogLevel.Warning);
@@ -51,6 +51,11 @@ namespace PlayerController
                     onPathDone();
                 }
             }
+        }
+
+        public bool IsDone()
+        {
+            return path.Count == 0;
         }
 
     }

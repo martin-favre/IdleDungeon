@@ -10,9 +10,12 @@ namespace GameManager
         private GameObject map;
         private GameObject player;
 
+        [SerializeField]
+        private FadeScreenComponent fade;
+
         private void Awake()
         {
-            manager = new GameManager(SpawnMap, SpawnPlayer);
+            manager = new GameManager(SpawnMap, SpawnPlayer, FadeOut, FadeIn);
         }
         private void Update()
         {
@@ -43,9 +46,22 @@ namespace GameManager
 
             var playerPrefab = PrefabLoader.Instance.GetPrefab<GameObject>("Prefabs/Player");
             player = PrefabLoader.Instance.Instantiate(playerPrefab);
-            player.transform.position = new Vector3(1, Constants.tileSize.x / 2f, 1);
+            const float initialHeight = 2f;
+            player.transform.position = Helpers.ToVec3(manager.GridMap.Start, Constants.tileSize.x / 2f + initialHeight);
             var comp = player.GetComponent<PlayerControllerComponent>();
             comp.Setup(manager.GridMap, manager.OnGoalReached);
+        }
+
+        void FadeOut()
+        {
+            if(!fade) return;
+            fade.FadeOut();
+        }
+
+        void FadeIn()
+        {
+            if(!fade) return;
+            fade.FadeIn();
         }
     }
 }

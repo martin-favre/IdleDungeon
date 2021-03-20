@@ -16,17 +16,20 @@ namespace GameManager
         private IMap map;
         private readonly Action spawnMap;
         private readonly Action spawnPlayer;
-
+        private readonly Action fadeOut;
+        private readonly Action fadeIn;
         private StateMachine machine;
  
         public IMap GridMap { get => map; set => map = value; }
         public IMapFactory MapFactory { get => mapGenerator; }
         public IMapModifier[] MapModifiers { get => mapModifiers; }
 
-        public GameManager(Action spawnMap, Action spawnPlayer)
+        public GameManager(Action spawnMap, Action spawnPlayer, Action fadeOut, Action fadeIn)
         {
             this.spawnMap = spawnMap;
             this.spawnPlayer = spawnPlayer;
+            this.fadeOut = fadeOut;
+            this.fadeIn = fadeIn;
             machine = new StateMachine(new GenerateMapState(this));
         }
 
@@ -51,6 +54,16 @@ namespace GameManager
         public void SpawnPlayer()
         {
             this.spawnPlayer();
+        }
+
+        public void FadeOut()
+        {
+            this.fadeOut();
+        }
+
+        public void FadeIn()
+        {
+            this.fadeIn();
         }
     }
 }

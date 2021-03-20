@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class PlayerMovementComponent : MonoBehaviour
 {
+    [SerializeField]
     private Vector3 targetPosition;
 
     [SerializeField]
@@ -18,12 +19,18 @@ public class PlayerMovementComponent : MonoBehaviour
     Vector3 targetPos;
     Quaternion targetRot;
 
+    public float MovementSpeed { get => movementSpeed; set => movementSpeed = value; }
+
     public void SetPosition(Vector3 pos)
     {
         transform.position = pos;
     }
     public void SetTargetPosition(Vector3 pos)
     {
+        if (!targetProvided)
+        {
+            transform.LookAt(pos);
+        }
         targetPosition = pos;
         startTime = UnityTime.Instance.Time;
         originalPos = transform.position;

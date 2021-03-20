@@ -49,7 +49,15 @@ namespace PlayerController
                 if (controller.Position != previousPosition)
                 {
                     previousPosition = controller.Position;
-                    targetPosition = Helpers.ToVec3(previousPosition * Constants.tileSize, transform.position.y);
+                    if (!controller.IsDone())
+                    {
+                        targetPosition = Helpers.ToVec3(previousPosition * Constants.tileSize, Constants.tileSize.y/2);
+                    } else {
+                        // last step, down a stair
+                        // go down a bit, and slower
+                        movementComponent.MovementSpeed = movementComponent.MovementSpeed/2f;
+                        targetPosition = Helpers.ToVec3(previousPosition * Constants.tileSize, (Constants.tileSize.y/2-Constants.tileSize.y*0.2f));
+                    }
                     movementComponent.SetTargetPosition(targetPosition);
                 }
             }

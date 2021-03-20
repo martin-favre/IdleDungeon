@@ -8,5 +8,7 @@ namespace GameManager
 
         void SpawnMap(); 
         void SpawnPlayer();
+        void FadeOut();
+        void FadeIn();
     }
 }
