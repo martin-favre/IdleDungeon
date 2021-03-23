@@ -6,7 +6,9 @@ namespace GameManager
         IMapFactory MapFactory { get; }
         IMapModifier[] MapModifiers { get; }
 
-        void SpawnMap(); 
+        ITimeProvider TimeProvider { get; }
+
+        void SpawnMap();
         void SpawnPlayer();
         void FadeOut();
         void FadeIn();

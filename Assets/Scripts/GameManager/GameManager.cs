@@ -24,6 +24,8 @@ namespace GameManager
         public IMapFactory MapFactory { get => mapGenerator; }
         public IMapModifier[] MapModifiers { get => mapModifiers; }
 
+        public ITimeProvider TimeProvider { get => UnityTime.Instance; }
+
         public GameManager(Action spawnMap, Action spawnPlayer, Action fadeOut, Action fadeIn)
         {
             this.spawnMap = spawnMap;

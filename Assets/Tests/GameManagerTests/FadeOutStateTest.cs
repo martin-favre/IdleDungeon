@@ -9,7 +9,7 @@ using GameManager;
 
 namespace Tests
 {
-    public class PlayGameStateTest
+    public class FadeOutStateTest
     {
 
         Mock<IMap> mapMock;
@@ -30,36 +30,38 @@ namespace Tests
 
             mapGeneratorMock = new Mock<IMapFactory>();
             mapGeneratorMock.Setup(foo => foo.GenerateMap(It.IsAny<Vector2Int>(), It.IsAny<int>())).Returns(mapMock.Object);
-
+            
             timeProviderMock = new Mock<ITimeProvider>();
+            timeProviderMock.Setup(foo => foo.Time).Returns(0);
 
             gameManagerMock = new Mock<IGameManager>();
             gameManagerMock.Setup(foo => foo.MapFactory).Returns(mapGeneratorMock.Object);
             gameManagerMock.Setup(foo => foo.TimeProvider).Returns(timeProviderMock.Object);
+
         }
 
         [Test]
         public void ShouldSpawnObjectsOnEntry()
         {
-            var state = new PlayGameState(gameManagerMock.Object);
+            var state = new FadeOutState(gameManagerMock.Object);
             state.OnEntry();
-            gameManagerMock.Verify (foo => foo.SpawnMap());
-            gameManagerMock.Verify (foo => foo.SpawnPlayer());
-            gameManagerMock.Verify (foo => foo.FadeIn());
+            gameManagerMock.Verify (foo => foo.FadeOut());
         }
 
 
         [Test]
-        public void ShouldTransitionOnEvent()
+        public void ShouldTransitionOnAfterAWhile()
         {
-            var state = new PlayGameState(gameManagerMock.Object);
+            var state = new FadeOutState(gameManagerMock.Object);
             state.OnEntry();
-            for(int i = 0; i < 100; i++) {
+            timeProviderMock.Setup(foo => foo.Time).Returns(0);
+            for(int i = 0; i < 10; i++) {
                 // Just run a bunch to show it's not transitioning
                 Assert.IsNull(state.OnDuring()); 
             }
-            state.HandleEvent(new PlayerReachedGoalEvent());
-            Assert.IsTrue(state.OnDuring() is FadeOutState);
+            timeProviderMock.Setup(foo => foo.Time).Returns(FadeOutState.fadeoutTime + 1);
+        
+            Assert.IsTrue(state.OnDuring() is UpdatePointsState);
         }
 
 

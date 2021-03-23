@@ -4,13 +4,13 @@ using StateMachineCollection;
 public class FadeOutState : State
 {
     private readonly IGameManager manager;
-    private const float fadeoutTime = 1.5f;
+    public const float fadeoutTime = 1.5f;
     private readonly float startTime;
 
     public FadeOutState(IGameManager manager)
     {
         this.manager = manager;
-        startTime = UnityTime.Instance.Time;
+        startTime = manager.TimeProvider.Time;
     }
 
     public override void OnEntry()
@@ -20,7 +20,8 @@ public class FadeOutState : State
 
     public override State OnDuring()
     {
-        if(UnityTime.Instance.Time > startTime + fadeoutTime) {
+        if (manager.TimeProvider.Time > startTime + fadeoutTime)
+        {
             return new UpdatePointsState(manager);
         }
         return StateMachine.NoTransition();
