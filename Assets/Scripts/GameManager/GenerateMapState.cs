@@ -9,10 +9,10 @@ namespace GameManager
 
         public GenerateMapState(IGameManager manager)
         {
-            int seed = Random.Range(0, int.MaxValue);
-            manager.GridMap = manager.MapFactory.GenerateMap(new Vector2Int(10, 10), Random.Range(0, int.MaxValue));
+            
+            manager.GridMap = manager.MapFactory.GenerateMap(new Vector2Int(10, 10), manager.RandomProvider);
             foreach(var modifier in manager.MapModifiers) {
-                modifier.ImproveMap(manager.GridMap, seed);
+                modifier.ImproveMap(manager.GridMap, manager.RandomProvider);
             }
             this.manager = manager;
         }

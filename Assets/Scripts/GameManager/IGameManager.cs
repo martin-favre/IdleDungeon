@@ -8,6 +8,8 @@ namespace GameManager
 
         ITimeProvider TimeProvider { get; }
 
+        IRandomProvider RandomProvider { get; }
+
         void SpawnMap();
         void SpawnPlayer();
         void FadeOut();

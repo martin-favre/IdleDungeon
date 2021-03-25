@@ -9,11 +9,11 @@ public class BlockyRecursiveBacktracker : IMapFactory
  
     HashSet<Vector2Int> visitedLocations;
 
-    System.Random random;
+    IRandomProvider random;
     // LilLogger logger = new LilLogger("BlockyRecursiveBacktracker");
-    public IMap GenerateMap(Vector2Int size, int seed)
+    public IMap GenerateMap(Vector2Int size, IRandomProvider random)
     {
-        random = new System.Random(seed);
+        this.random = random;
         visitedLocations = new HashSet<Vector2Int>();
         IMap map = new GridMap(size);
         Vector2Int startingPos = new Vector2Int(1, 1);

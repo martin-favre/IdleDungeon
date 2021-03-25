@@ -29,7 +29,7 @@ namespace Tests
             mapMock.Setup(foo => foo.Size).Returns(mapSize);
 
             mapGeneratorMock = new Mock<IMapFactory>();
-            mapGeneratorMock.Setup(foo => foo.GenerateMap(It.IsAny<Vector2Int>(), It.IsAny<int>())).Returns(mapMock.Object);
+            mapGeneratorMock.Setup(foo => foo.GenerateMap(It.IsAny<Vector2Int>(), It.IsAny<IRandomProvider>())).Returns(mapMock.Object);
 
             timeProviderMock = new Mock<ITimeProvider>();
 

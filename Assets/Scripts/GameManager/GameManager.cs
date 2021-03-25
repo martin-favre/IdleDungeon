@@ -19,12 +19,14 @@ namespace GameManager
         private readonly Action fadeOut;
         private readonly Action fadeIn;
         private StateMachine machine;
- 
+
         public IMap GridMap { get => map; set => map = value; }
         public IMapFactory MapFactory { get => mapGenerator; }
         public IMapModifier[] MapModifiers { get => mapModifiers; }
 
         public ITimeProvider TimeProvider { get => UnityTime.Instance; }
+
+        public IRandomProvider RandomProvider { get => SystemRandom.Instance; }
 
         public GameManager(Action spawnMap, Action spawnPlayer, Action fadeOut, Action fadeIn)
         {

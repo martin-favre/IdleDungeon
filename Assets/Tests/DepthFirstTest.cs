@@ -3,16 +3,25 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
-
+using Moq;
 namespace Tests
 {
+
+
     public class DepthFirstTest
     {
+        Mock<IRandomProvider> randomMock;
 
+        [SetUp]
+        public void Setup()
+        {
+            randomMock = new Mock<IRandomProvider>();
+            randomMock.Setup(foo => foo.RandomInt(It.IsAny<int>(), It.IsAny<int>())).Returns(0);
+        }
         (IMap, Stack<Vector2Int>) GenerateMap()
         {
             var size = new Vector2Int(50, 50);
-            var map = new RecursiveBacktracker().GenerateMap(size, 10);
+            var map = new RecursiveBacktracker().GenerateMap(size, randomMock.Object);
             var path = new DepthFirst().FindPath(new Vector2Int(0, 0), new Vector2Int(49, 49), map);
             Assert.AreNotEqual(path.Count, 0);
             return (map, path);

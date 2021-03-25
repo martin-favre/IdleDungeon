@@ -13,7 +13,7 @@ namespace Tests
         Vector2Int mapSize;
         Tile openTile;
         Tile closedTile;
-
+        Mock<IRandomProvider> randomMock;
 
         [SetUp]
         public void Setup()
@@ -26,7 +26,7 @@ namespace Tests
             openTile.SetAllWalls(true);
             closedTile = new Tile();
             closedTile.SetAllWalls(false);
-
+            randomMock = new Mock<IRandomProvider>();
 
         }
 
@@ -46,7 +46,7 @@ namespace Tests
         {
             SetUpSuccessfulSequence();
             var adder = new GoalAndStartAdder();
-            adder.ImproveMap(mapMock.Object, 10);
+            adder.ImproveMap(mapMock.Object, randomMock.Object);
             mapMock.VerifySet(foo => foo.Goal = It.IsAny<Vector2Int>());
             mapMock.VerifySet(foo => foo.Start = It.IsAny<Vector2Int>());
         }
@@ -57,7 +57,7 @@ namespace Tests
         {
             SetUpSuccessfulSequence();
             var adder = new GoalAndStartAdder();
-            adder.ImproveMap(mapMock.Object, 10);
+            adder.ImproveMap(mapMock.Object, randomMock.Object);
             mapMock.Verify(foo => foo.SetTile(It.IsAny<Vector2Int>(), It.IsAny<GoalTile>()));
             mapMock.Verify(foo => foo.SetTile(It.IsAny<Vector2Int>(), It.IsAny<StartTile>()));
         }
@@ -71,7 +71,7 @@ namespace Tests
             mapMock.SetupSet(h => h.Start = It.IsAny<Vector2Int>()).Callback<Vector2Int>(r => startLocation = r);
             mapMock.SetupSet(h => h.Goal = It.IsAny<Vector2Int>()).Callback<Vector2Int>(r => goalLocation = r);
             var adder = new GoalAndStartAdder();
-            adder.ImproveMap(mapMock.Object, 10);
+            adder.ImproveMap(mapMock.Object, randomMock.Object);
 
             Assert.AreNotEqual(startLocation, goalLocation);
 

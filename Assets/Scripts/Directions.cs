@@ -19,9 +19,9 @@ public static class Directions
     }
     public static readonly Vector2Int[] directionsVec = { Vector2Int.up, Vector2Int.down, Vector2Int.right, Vector2Int.left };
     public static readonly Direction[] directions = { Direction.North, Direction.South, Direction.East, Direction.West };
-    public static Direction[] GetRandomDirections(System.Random random)
+    public static Direction[] GetRandomDirections(IRandomProvider random)
     {
-        return directions.OrderBy(x => random.Next()).ToArray();
+        return directions.OrderBy(x => random.RandomInt(0, int.MaxValue)).ToArray();
     }
 
     public static Vector2Int DirToVec(Direction dir)

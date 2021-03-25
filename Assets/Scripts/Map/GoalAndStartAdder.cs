@@ -4,13 +4,12 @@ using UnityEngine;
 
 public class GoalAndStartAdder : IMapModifier
 {
-    System.Random random;
-    public bool ImproveMap(IMap map, int seed)
+    public bool ImproveMap(IMap map, IRandomProvider random)
     {
-        random = new System.Random(seed);
+        
         // Let's reuse directions, but let them represent quadrants
         // So north-> north-west
-        var quadrant = ChooseQuadrant();
+        var quadrant = ChooseQuadrant(random);
         var goaltile = new GoalTile();
         (var success, var location, var openDir) = PlaceTileInQuadrant(quadrant, map, goaltile);
         if (!success) return success;
@@ -137,7 +136,7 @@ public class GoalAndStartAdder : IMapModifier
         }
     }
 
-    private Directions.Direction ChooseQuadrant()
+    private Directions.Direction ChooseQuadrant(IRandomProvider random)
     {
         return Directions.GetRandomDirections(random)[0];
     }
