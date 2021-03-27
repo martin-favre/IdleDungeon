@@ -11,6 +11,11 @@ public class SystemRandom : IRandomProvider
         instance = new SystemRandom();
     }
 
+    private SystemRandom()
+    {
+        random = new System.Random();
+    }
+
     public int RandomInt(int min, int max)
     {
         return random.Next(min, max);

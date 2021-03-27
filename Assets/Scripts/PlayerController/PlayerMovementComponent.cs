@@ -16,25 +16,27 @@ public class PlayerMovementComponent : MonoBehaviour
     private float journeyLength;
     bool targetProvided = false;
 
-    Vector3 targetPos;
-    Quaternion targetRot;
-
     public float MovementSpeed { get => movementSpeed; set => movementSpeed = value; }
 
+    // instantly place the player at this position
     public void SetPosition(Vector3 pos)
     {
         transform.position = pos;
+        targetPosition = transform.position;
     }
+
+    // The player will start moving towards this position
     public void SetTargetPosition(Vector3 pos)
     {
         if (!targetProvided)
         {
             transform.LookAt(pos);
+
         }
+        originalPos = targetPosition;
         targetPosition = pos;
         startTime = UnityTime.Instance.Time;
-        originalPos = transform.position;
-        journeyLength = Vector3.Distance(transform.position, pos);
+        journeyLength = Vector3.Distance(originalPos, pos);
         targetProvided = true;
     }
 
@@ -42,32 +44,23 @@ public class PlayerMovementComponent : MonoBehaviour
     {
         if (targetProvided)
         {
-            UpdatePosition();
-            UpdateRotation();
+            transform.position = CalculateNextPosition();
+            transform.rotation = CalculateNextRotation();
         }
     }
 
-    private void FixedUpdate()
-    {
-        if (targetProvided)
-        {
-            transform.position = targetPos;
-            transform.rotation = targetRot;
-        }
-    }
-
-    private void UpdateRotation()
+    private Quaternion CalculateNextRotation()
     {
         var direction = (targetPosition - transform.position).normalized;
         var lookRotation = Quaternion.LookRotation(direction);
-        targetRot = Quaternion.Lerp(transform.rotation, lookRotation, rotationSpeed * UnityTime.Instance.DeltaTime);
+        return Quaternion.Lerp(transform.rotation, lookRotation, rotationSpeed * UnityTime.Instance.DeltaTime);
     }
 
-    private void UpdatePosition()
+    private Vector3 CalculateNextPosition()
     {
         float distCovered = (UnityTime.Instance.Time - startTime) * movementSpeed;
         float fractionOfJourney = distCovered / journeyLength;
-        targetPos = Vector3.Lerp(originalPos, targetPosition, fractionOfJourney);
+        return Vector3.Lerp(originalPos, targetPosition, fractionOfJourney);
     }
 
 }
