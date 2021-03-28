@@ -1,16 +1,22 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerPrefsReader : IPersistentDataReader
+public class PlayerPrefsReader : IPersistentDataStorage
 {
     private static PlayerPrefsReader instance;
-    static PlayerPrefsReader() {
-        instance = new PlayerPrefsReader();
-        PlayerPrefs.DeleteAll(); // clear all during development
-    }
-
     public static PlayerPrefsReader Instance { get => instance; set => instance = value; }
 
-    public float GetFloat(string key) {
+    Dictionary<string, List<IObserver<IPersistentStorageUpdateEvent>>> observers = new Dictionary<string, List<IObserver<IPersistentStorageUpdateEvent>>>();
+
+    static PlayerPrefsReader()
+    {
+        instance = new PlayerPrefsReader();
+        instance.ClearStorage(); // clear all during development
+    }
+
+    public float GetFloat(string key)
+    {
         return GetFloat(key, 0);
     }
 
@@ -18,15 +24,27 @@ public class PlayerPrefsReader : IPersistentDataReader
     {
         return PlayerPrefs.GetFloat(key, defaultValue);
     }
+    public void SetFloat(string key, float value)
+    {
+        PlayerPrefs.SetFloat(key, value);
+        NotifyObservers(key, new FloatPersistentStorageUpdateEvent(value));
+    }
 
     public int GetInt(string key)
     {
-        return PlayerPrefs.GetInt(key); 
+        return GetInt(key, 0);
     }
 
     public int GetInt(string key, int defaultValue)
     {
-        return GetInt(key, 0);
+        return PlayerPrefs.GetInt(key, defaultValue);
+    }
+
+    public void SetInt(string key, int value)
+    {
+        PlayerPrefs.SetInt(key, value);
+        NotifyObservers(key, new IntPersistentStorageUpdateEvent(value));
+
     }
 
     public string GetString(string key)
@@ -39,4 +57,30 @@ public class PlayerPrefsReader : IPersistentDataReader
         return PlayerPrefs.GetString(key, defaultValue);
     }
 
+
+    public void SetString(string key, string value)
+    {
+        PlayerPrefs.SetString(key, value);
+        NotifyObservers(key, new StringPersistentStorageUpdateEvent(value));
+    }
+
+    public void ClearStorage()
+    {
+        PlayerPrefs.DeleteAll();
+    }
+
+    private void NotifyObservers(string key, IPersistentStorageUpdateEvent evt)
+    {
+        foreach (var observer in observers[key])
+        {
+            observer.OnNext(evt);
+        }
+    }
+
+    // key is which value you want to subscribe to
+    // You'll get an OnNext called whenever this value is written to
+    public IDisposable Subscribe(IObserver<IPersistentStorageUpdateEvent> observer, string key)
+    {
+        return new KeyUnsubscriber<IPersistentStorageUpdateEvent, string>(observers, key, observer);
+    }
 }

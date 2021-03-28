@@ -3,18 +3,35 @@ using System.Collections.Generic;
 
 public class KeyUnsubscriber<T, Key> : IDisposable
 {
-    readonly Dictionary<Key, IObserver<T>> allObserversRef;
-    readonly IObserver<T> myObserver;
-    readonly Key key;
-    public KeyUnsubscriber(Dictionary<Key, IObserver<T>> allObserversRef, Key key, IObserver<T> myObserver)
+    private readonly Dictionary<Key, List<IObserver<T>>> allObserversRef;
+    private readonly IObserver<T> myObserver;
+    private readonly Key key;
+    public KeyUnsubscriber(Dictionary<Key, List<IObserver<T>>> allObserversRef, Key key, IObserver<T> myObserver)
     {
-        this.allObserversRef = allObserversRef;
         this.myObserver = myObserver;
+        this.allObserversRef = allObserversRef;
         this.key = key;
-        allObserversRef[key] = myObserver;
+        List<IObserver<T>> obs;
+        bool success = allObserversRef.TryGetValue(key, out obs);
+        if (!success)
+        {
+            obs = new List<IObserver<T>>();
+            obs.Add(myObserver);
+            allObserversRef[key] = obs;
+        }
+        else
+        {
+            allObserversRef[key].Add(myObserver);
+        }
     }
     public void Dispose()
     {
-        allObserversRef.Remove(key);
+        List<IObserver<T>> obs;
+        bool success = allObserversRef.TryGetValue(key, out obs);
+
+        if (success)
+        {
+            obs.Remove(myObserver);
+        }
     }
 }

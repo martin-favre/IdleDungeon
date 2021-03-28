@@ -28,6 +28,8 @@ namespace GameManager
 
         public IRandomProvider RandomProvider { get => SystemRandom.Instance; }
 
+        public IPersistentDataStorage DataStorage { get => PlayerPrefsReader.Instance; }
+
         public GameManager(Action spawnMap, Action spawnPlayer, Action fadeOut, Action fadeIn)
         {
             this.spawnMap = spawnMap;

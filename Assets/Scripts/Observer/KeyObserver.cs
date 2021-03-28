@@ -1,21 +1,21 @@
 
 using System;
 
-class SimpleKeyObserver<T, Key> : IObserver<T>
+class KeyObserver<T, Key> : IObserver<T>
 {
     private readonly IKeyObservable<T, Key> source;
     private readonly Action<T> onNext;
     private readonly IDisposable subscription;
     bool completed = false;
 
-    public SimpleKeyObserver(IKeyObservable<T, Key> source, Key key, Action<T> onNext)
+    public KeyObserver(IKeyObservable<T, Key> source, Key key, Action<T> onNext)
     {
         this.source = source;
         this.onNext = onNext;
         this.subscription = this.source.Subscribe(this, key);
     }
 
-    ~SimpleKeyObserver()
+    ~KeyObserver()
     {
         if (!completed)
         {

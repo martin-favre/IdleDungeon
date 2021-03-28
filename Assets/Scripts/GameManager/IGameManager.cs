@@ -10,6 +10,8 @@ namespace GameManager
 
         IRandomProvider RandomProvider { get; }
 
+        IPersistentDataStorage DataStorage { get; }
+
         void SpawnMap();
         void SpawnPlayer();
         void FadeOut();
