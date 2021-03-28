@@ -8,10 +8,10 @@ public class LevelDisplayer : MonoBehaviour
     private void Start()
     {
         valueHook = SimpleValueDisplayer.Instance.RegisterValue();
-        UpdateText(PlayerPrefsReader.Instance.GetInt("currentLevel", 0));
+        UpdateText(PlayerPrefsReader.Instance.GetInt(Constants.currentLevelKey, 0));
         observer = new KeyObserver<IPersistentStorageUpdateEvent, string>(
             PlayerPrefsReader.Instance,
-            "currentLevel",
+            Constants.currentLevelKey,
             (evt) =>
             {
                 var intEvt = ((IntPersistentStorageUpdateEvent)evt);

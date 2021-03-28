@@ -17,6 +17,7 @@ namespace Tests
  
         Mock<IMapFactory> mapGeneratorMock;
         Mock<IGameManager> gameManagerMock;
+        Mock<IPersistentDataStorage> persistentStorageMock;
 
         [SetUp]
         public void Setup()
@@ -28,10 +29,11 @@ namespace Tests
             mapGeneratorMock = new Mock<IMapFactory>();
             mapGeneratorMock.Setup(foo => foo.GenerateMap(It.IsAny<Vector2Int>(), It.IsAny<IRandomProvider>())).Returns(mapMock.Object);
 
+            persistentStorageMock = new Mock<IPersistentDataStorage>();
             gameManagerMock = new Mock<IGameManager>();
             gameManagerMock.Setup(foo => foo.MapFactory).Returns(mapGeneratorMock.Object);
-
-
+            gameManagerMock.Setup(foo => foo.DataStorage).Returns(persistentStorageMock.Object);
+            
         }
 
         [Test]
@@ -41,5 +43,28 @@ namespace Tests
             state.OnEntry();
             Assert.IsTrue(state.OnDuring() is GenerateMapState);
         }
+
+        [Test]
+        public void ShouldIncrementLevelByOne()
+        {
+            persistentStorageMock.Setup(foo => foo.GetInt(It.Is<string>((s) => s.Equals(Constants.currentLevelKey)), It.IsAny<int>())).Returns(5);
+            
+            var state = new UpdatePointsState(gameManagerMock.Object);
+            state.OnEntry();
+            persistentStorageMock.Verify(foo => foo.SetInt(It.Is<string>((s) => s.Equals(Constants.currentLevelKey)), It.Is<int>(i => i == 6)));
+        }
+
+        [Test]
+        public void LevelShouldDefaultToZero()
+        {   
+
+            var state = new UpdatePointsState(gameManagerMock.Object);
+            state.OnEntry();
+            persistentStorageMock.Verify(foo => foo.GetInt(It.Is<string>((s) => s.Equals(Constants.currentLevelKey)), It.Is<int>(i => i == 0)));
+            // It defaults to 0, so when we call OnEntry, it becomes 1
+            persistentStorageMock.Verify(foo => foo.SetInt(It.Is<string>((s) => s.Equals(Constants.currentLevelKey)), It.Is<int>(i => i == 1)));
+        
+        }
+
     }
 }

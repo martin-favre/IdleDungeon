@@ -13,8 +13,8 @@ namespace GameManager
 
         public override void OnEntry()
         {
-            var currentLevel = manager.DataStorage?.GetInt("currentLevel", 0);
-            this.manager.DataStorage?.SetInt("currentLevel", currentLevel.Value + 1);
+            var currentLevel = manager.DataStorage?.GetInt(Constants.currentLevelKey, 0);
+            this.manager.DataStorage?.SetInt(Constants.currentLevelKey, currentLevel.Value + 1);
         }
 
         //todo, have difficulty and points etc
