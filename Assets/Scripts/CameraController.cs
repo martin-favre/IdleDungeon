@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+// Only used for debugging when you want to zoom around in game mode and look
 public class CameraController : MonoBehaviour
 {
 
