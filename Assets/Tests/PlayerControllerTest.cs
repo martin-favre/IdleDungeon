@@ -93,6 +93,24 @@ namespace Tests
             Assert.AreEqual(true, flagDone);
         }
 
+        [Test]
+        public void IsDoneShouldReturnTrueOnEmptyPath()
+        {
+            var controller = new PlayerController.PlayerController(mapMock.Object, timeMock.Object, pathfinderMock.Object, null);
+            currentTime = controller.TimePerStep + 0.0001f; // just a bit more
+
+            controller.Update();
+            Assert.AreEqual(true, controller.IsDone());
+        }
+
+        [Test]
+        public void IsDoneShouldReturnFalseByDefault()
+        {
+            path.Push(Vector2Int.zero);
+            var controller = new PlayerController.PlayerController(mapMock.Object, timeMock.Object, pathfinderMock.Object, null);
+            Assert.AreEqual(false, controller.IsDone());
+        }
+
 
 
     }
