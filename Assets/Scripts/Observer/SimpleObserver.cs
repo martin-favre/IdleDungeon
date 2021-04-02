@@ -1,7 +1,7 @@
 
 using System;
 
-class SimpleObserver<T> : IObserver<T>
+class SimpleObserver<T> : IObserver<T>, IDisposable
 {
     private readonly IObservable<T> source;
     private readonly Action<T> onNext;
@@ -21,6 +21,11 @@ class SimpleObserver<T> : IObserver<T>
         {
             this.subscription.Dispose();
         }
+    }
+
+    public void Dispose()
+    {
+        OnCompleted();
     }
 
     public void OnCompleted()

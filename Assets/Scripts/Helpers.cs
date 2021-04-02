@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public static class Helpers
@@ -24,7 +25,15 @@ public static class Helpers
     }
 
     // Are the grid positions the same?
-    public static bool XYSame(Vector3 a, Vector3 b) {
+    public static bool XYSame(Vector3 a, Vector3 b)
+    {
         return a.x == b.x && a.z == b.z;
+    }
+
+    public static T GetRandom<T>(List<T> items, IRandomProvider random)
+    {
+        if(items.Count == 0) throw new Exception("Can't get a random item from an empty list");
+        var index = random.RandomInt(0, items.Count -1);
+        return items[index];
     }
 }

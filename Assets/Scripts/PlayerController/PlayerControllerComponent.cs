@@ -23,14 +23,22 @@ namespace PlayerController
 
         public void Setup(IMap map, Action onGoalReached)
         {
+            Debug.LogWarning("PlayerControllerComponent Setup");
             this.onGoalReached = onGoalReached;
-            controller = new PlayerController(map, UnityTime.Instance, new DepthFirst(), OnDone);
+            controller = new PlayerController(map, UnityTime.Instance, new DepthFirst(), OnDone, CombatManager.Instance);
             previousPosition = controller.Position;
 
             movementComponent = GetComponent<PlayerMovementComponent>();
             var pos = Helpers.ToVec3(previousPosition * Constants.tileSize, transform.position.y);
             movementComponent.SetPosition(pos);
 
+        }
+
+        public PlayerControllerComponent(){
+            Debug.LogWarning("PlayerControllerComponent constructor");
+        }
+        private void OnDestroy() {
+            controller.Dispose();
         }
 
         void Awake()

@@ -20,4 +20,9 @@ public class SystemRandom : IRandomProvider
     {
         return random.Next(min, max);
     }
+
+    public bool ThingHappens(float chance)
+    {
+        return random.NextDouble() <= chance;
+    }
 }

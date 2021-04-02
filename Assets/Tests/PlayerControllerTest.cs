@@ -18,6 +18,7 @@ namespace Tests
         Tile mockTile;
 
         Mock<IPathFinder> pathfinderMock;
+        Mock<ICombatManager> combatManager;
         Stack<Vector2Int> path;
 
         [SetUp]
@@ -38,13 +39,13 @@ namespace Tests
             pathfinderMock.Setup(foo => foo.FindPath(It.IsAny<Vector2Int>(),
                                                     It.IsAny<Vector2Int>(),
                                                     It.IsAny<IMap>())).Returns(path);
-
+            combatManager = new Mock<ICombatManager>();
         }
 
         [Test]
         public void PlayerShouldTakeStepEveryTimeUnit()
         {
-            var controller = new PlayerController.PlayerController(mapMock.Object, timeMock.Object, pathfinderMock.Object, null);
+            var controller = new PlayerController.PlayerController(mapMock.Object, timeMock.Object, pathfinderMock.Object, null, combatManager.Object);
             var playerPos = controller.Position;
             path.Push(controller.Position + new Vector2Int(1, 0));
             currentTime = controller.TimePerStep + 0.0001f; // just a bit more
@@ -56,7 +57,7 @@ namespace Tests
         [Test]
         public void PlayerWillWalkUntilPathDone()
         {
-            var controller = new PlayerController.PlayerController(mapMock.Object, timeMock.Object, pathfinderMock.Object, null);
+            var controller = new PlayerController.PlayerController(mapMock.Object, timeMock.Object, pathfinderMock.Object, null, combatManager.Object);
 
             for (int i = 0; i < 10; i++)
             {
@@ -76,7 +77,7 @@ namespace Tests
         public void PlayerShouldNotifyOnPathDone()
         {
             bool flagDone = false;
-            var controller = new PlayerController.PlayerController(mapMock.Object, timeMock.Object, pathfinderMock.Object, () => flagDone = true);
+            var controller = new PlayerController.PlayerController(mapMock.Object, timeMock.Object, pathfinderMock.Object, () => flagDone = true, combatManager.Object);
             path.Push(new Vector2Int(1, 0));
             currentTime = controller.TimePerStep + 0.0001f; // just a bit more
             controller.Update();
@@ -87,7 +88,7 @@ namespace Tests
         public void PlayerShouldNotifyOnEmptyPath()
         {
             bool flagDone = false;
-            var controller = new PlayerController.PlayerController(mapMock.Object, timeMock.Object, pathfinderMock.Object, () => flagDone = true);
+            var controller = new PlayerController.PlayerController(mapMock.Object, timeMock.Object, pathfinderMock.Object, () => flagDone = true, combatManager.Object);
             currentTime = controller.TimePerStep + 0.0001f; // just a bit more
             controller.Update();
             Assert.AreEqual(true, flagDone);
@@ -96,7 +97,7 @@ namespace Tests
         [Test]
         public void IsDoneShouldReturnTrueOnEmptyPath()
         {
-            var controller = new PlayerController.PlayerController(mapMock.Object, timeMock.Object, pathfinderMock.Object, null);
+            var controller = new PlayerController.PlayerController(mapMock.Object, timeMock.Object, pathfinderMock.Object, null, combatManager.Object);
             currentTime = controller.TimePerStep + 0.0001f; // just a bit more
 
             controller.Update();
@@ -107,7 +108,7 @@ namespace Tests
         public void IsDoneShouldReturnFalseByDefault()
         {
             path.Push(Vector2Int.zero);
-            var controller = new PlayerController.PlayerController(mapMock.Object, timeMock.Object, pathfinderMock.Object, null);
+            var controller = new PlayerController.PlayerController(mapMock.Object, timeMock.Object, pathfinderMock.Object, null, combatManager.Object);
             Assert.AreEqual(false, controller.IsDone());
         }
 

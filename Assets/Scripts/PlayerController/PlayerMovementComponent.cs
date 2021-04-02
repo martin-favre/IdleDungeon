@@ -52,6 +52,7 @@ public class PlayerMovementComponent : MonoBehaviour
     private Quaternion CalculateNextRotation()
     {
         var direction = (targetPosition - transform.position).normalized;
+        if(direction == Vector3.zero) return transform.rotation;
         var lookRotation = Quaternion.LookRotation(direction);
         return Quaternion.Lerp(transform.rotation, lookRotation, rotationSpeed * UnityTime.Instance.DeltaTime);
     }

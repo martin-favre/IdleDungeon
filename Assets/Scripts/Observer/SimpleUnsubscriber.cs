@@ -11,6 +11,7 @@ public class SimpleUnsubscriber<T> : IDisposable
         this.myObserver = myObserver;
         allObserversRef.Add(myObserver);
     }
+
     public void Dispose()
     {
         if (allObserversRef.Contains(myObserver))
