@@ -11,4 +11,9 @@ class PlayerCombatant : ICombatant
     {
         ICombatant enemy = Helpers.GetRandom<ICombatant>(enemies, random);
     }
+
+    public void BeAttacked(int AttackStat)
+    {
+         
+    }
 }

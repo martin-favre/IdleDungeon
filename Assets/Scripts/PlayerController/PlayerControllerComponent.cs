@@ -23,7 +23,6 @@ namespace PlayerController
 
         public void Setup(IMap map, Action onGoalReached)
         {
-            Debug.LogWarning("PlayerControllerComponent Setup");
             this.onGoalReached = onGoalReached;
             controller = new PlayerController(map, UnityTime.Instance, new DepthFirst(), OnDone, CombatManager.Instance);
             previousPosition = controller.Position;
@@ -34,15 +33,8 @@ namespace PlayerController
 
         }
 
-        public PlayerControllerComponent(){
-            Debug.LogWarning("PlayerControllerComponent constructor");
-        }
         private void OnDestroy() {
             controller.Dispose();
-        }
-
-        void Awake()
-        {
         }
 
         private void OnDone()
