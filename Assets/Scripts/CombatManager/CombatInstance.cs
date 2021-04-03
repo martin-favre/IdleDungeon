@@ -6,7 +6,7 @@ public class CombatResults
 
 }
 
-public class CombatInstance
+public class CombatInstance : ICombatInstance
 {
 
     float startTime;

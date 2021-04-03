@@ -12,12 +12,12 @@ public class CombatManager : ICombatManager
     private List<IObserver<CombatManagerUpdateEvent>> observers = new List<IObserver<CombatManagerUpdateEvent>>();
     static readonly LilLogger logger = new LilLogger("CombatManager");
     private readonly IRandomProvider randomProvider;
-
-    private CombatInstance combatInstance;
+    private readonly ICombatInstanceFactory combatInstanceFactory;
+    private ICombatInstance combatInstance;
 
     List<ICombatant> playerChars;
 
-    public CombatManager(IRandomProvider randomProvider)
+    public CombatManager(IRandomProvider randomProvider, ICombatInstanceFactory combatInstanceFactory)
     {
         if (instance == null)
         {
@@ -28,8 +28,14 @@ public class CombatManager : ICombatManager
             logger.Log("Duplicate CombatManager instances", LogLevel.Error);
         }
         this.randomProvider = randomProvider;
+        this.combatInstanceFactory = combatInstanceFactory;
         playerChars = new List<ICombatant>();
         playerChars.Add(new PlayerCombatant(randomProvider));
+    }
+
+    public static void ClearInstance()
+    {
+        instance = null;
     }
 
     public IDisposable Subscribe(IObserver<CombatManagerUpdateEvent> observer)
@@ -42,14 +48,14 @@ public class CombatManager : ICombatManager
         if (randomProvider.ThingHappens(0.25f))
         {
             var chars = new List<ICombatant>(playerChars.ToArray());
-            combatInstance = new CombatInstance(chars);
+            combatInstance = combatInstanceFactory.CreateInstance(chars);
             UpdateObservers(new CombatManagerUpdateEvent(CombatManagerUpdateEvent.UpdateType.EnteredCombat));
         }
     }
 
     public void Update()
     {
-        if (combatInstance == null || combatInstance.IsDone())
+        if (combatInstance == null)
         {
             return;
         }
@@ -70,7 +76,6 @@ public class CombatManager : ICombatManager
             observer.OnNext(evt);
         }
     }
-
 
     public bool InCombat()
     {
