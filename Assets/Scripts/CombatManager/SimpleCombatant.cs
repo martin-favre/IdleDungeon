@@ -2,19 +2,25 @@ using System.Collections.Generic;
 
 class SimpleCombatant : ICombatant
 {
-    public SimpleCombatant()
+    private readonly CombatAttributes attributes = new CombatAttributes();
+
+    public void BeAttacked(int attackStat)
     {
+        int dmg = attributes.CalculateDamage(attackStat);
+        attributes.Damage(dmg);
     }
 
-    public void BeAttacked(int AttackStat)
+    public bool IsDead()
     {
-        throw new System.NotImplementedException();
+        return attributes.IsDead();
     }
 
     public void PerformAction(List<ICombatant> enemies)
     {
-        if(enemies.Count == 0) return;
+        if (enemies.Count == 0) return;
         ICombatant target = enemies[0];
-        target.BeAttacked(1);
+        target.BeAttacked(attributes.Attack);
     }
+
+    
 }

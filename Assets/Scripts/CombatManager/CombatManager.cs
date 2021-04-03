@@ -15,6 +15,8 @@ public class CombatManager : ICombatManager
 
     private CombatInstance combatInstance;
 
+    List<ICombatant> playerChars;
+
     public CombatManager(IRandomProvider randomProvider)
     {
         if (instance == null)
@@ -26,6 +28,8 @@ public class CombatManager : ICombatManager
             logger.Log("Duplicate CombatManager instances", LogLevel.Error);
         }
         this.randomProvider = randomProvider;
+        playerChars = new List<ICombatant>();
+        playerChars.Add(new PlayerCombatant(randomProvider));
     }
 
     public IDisposable Subscribe(IObserver<CombatManagerUpdateEvent> observer)
@@ -37,14 +41,15 @@ public class CombatManager : ICombatManager
     {
         if (randomProvider.ThingHappens(0.25f))
         {
-            combatInstance = new CombatInstance();
+            var chars = new List<ICombatant>(playerChars.ToArray());
+            combatInstance = new CombatInstance(chars);
             UpdateObservers(new CombatManagerUpdateEvent(CombatManagerUpdateEvent.UpdateType.EnteredCombat));
         }
     }
 
     public void Update()
     {
-        if (combatInstance == null || !combatInstance.IsDone())
+        if (combatInstance == null || combatInstance.IsDone())
         {
             return;
         }
@@ -52,6 +57,7 @@ public class CombatManager : ICombatManager
         combatInstance.Update();
         if (combatInstance.IsDone())
         {
+            if (playerChars[0].IsDead()) Debug.Log("Player is dead");
             combatInstance = null;
             UpdateObservers(new CombatManagerUpdateEvent(CombatManagerUpdateEvent.UpdateType.LeftCombat));
         }
@@ -66,7 +72,8 @@ public class CombatManager : ICombatManager
     }
 
 
-    public bool InCombat() {
+    public bool InCombat()
+    {
         return combatInstance != null;
     }
 }

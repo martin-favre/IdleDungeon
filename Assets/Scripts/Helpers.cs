@@ -30,7 +30,7 @@ public static class Helpers
         return a.x == b.x && a.z == b.z;
     }
 
-    public static T GetRandom<T>(List<T> items, IRandomProvider random)
+    public static T GetRandom<T>(IList<T> items, IRandomProvider random)
     {
         if(items.Count == 0) throw new Exception("Can't get a random item from an empty list");
         var index = random.RandomInt(0, items.Count -1);
