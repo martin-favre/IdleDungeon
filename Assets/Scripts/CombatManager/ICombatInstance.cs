@@ -9,7 +9,7 @@ public class CombatInstanceFactory : ICombatInstanceFactory
 {
     public ICombatInstance CreateInstance(List<ICombatant> playerChars)
     {
-        return new CombatInstance(playerChars);
+        return new CombatInstance(playerChars, new EnemyFactory());
     }
 }
 

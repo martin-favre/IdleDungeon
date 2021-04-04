@@ -9,20 +9,18 @@ public class CombatResults
 public class CombatInstance : ICombatInstance
 {
 
-    float startTime;
     List<ICombatant> goodGuys;
     List<ICombatant> badGuys;
 
-    public CombatInstance(List<ICombatant> playerChars)
+    public CombatInstance(List<ICombatant> playerChars, IEnemyFactory enemyFactory)
     {
-        startTime = UnityTime.Instance.Time;
         if (playerChars.Count < 1) throw new System.Exception("Starting combat without player");
         this.goodGuys = playerChars;
-        badGuys = new List<ICombatant>();
-        badGuys.Add(new SimpleCombatant());
+        badGuys = enemyFactory.GenerateEnemies();
     }
     public void Update()
     {
+        if (IsDone()) return;
         foreach (var combatant in goodGuys)
         {
             combatant.PerformAction(badGuys);
