@@ -17,6 +17,7 @@ public class PlayerMovementComponent : MonoBehaviour
     bool targetProvided = false;
 
     public float MovementSpeed { get => movementSpeed; set => movementSpeed = value; }
+    public Vector3 TargetPosition { get => targetPosition; }
 
     // instantly place the player at this position
     public void SetPosition(Vector3 pos)
@@ -52,7 +53,7 @@ public class PlayerMovementComponent : MonoBehaviour
     private Quaternion CalculateNextRotation()
     {
         var direction = (targetPosition - transform.position).normalized;
-        if(direction == Vector3.zero) return transform.rotation;
+        if (direction == Vector3.zero) return transform.rotation;
         var lookRotation = Quaternion.LookRotation(direction);
         return Quaternion.Lerp(transform.rotation, lookRotation, rotationSpeed * UnityTime.Instance.DeltaTime);
     }

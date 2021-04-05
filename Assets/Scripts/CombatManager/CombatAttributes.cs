@@ -23,10 +23,17 @@ public class CombatAttributes
     public void Damage(int damage)
     {
         currentHp -= damage;
+        if (currentHp <= 0) currentHp = 0;
     }
 
     public bool IsDead()
     {
         return currentHp <= 0;
+    }
+
+    public void Heal(int damage)
+    {
+        currentHp += damage;
+        if (currentHp > maxHp) currentHp = maxHp;
     }
 }

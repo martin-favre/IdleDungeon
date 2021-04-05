@@ -17,8 +17,6 @@ namespace PlayerController
         float startTime;
         float journeyLength;
         private Vector3 originalPos;
-
-
         PlayerMovementComponent movementComponent;
 
         public void Setup(IMap map, Action onGoalReached)
@@ -30,10 +28,10 @@ namespace PlayerController
             movementComponent = GetComponent<PlayerMovementComponent>();
             var pos = Helpers.ToVec3(previousPosition * Constants.tileSize, transform.position.y);
             movementComponent.SetPosition(pos);
-
         }
 
-        private void OnDestroy() {
+        private void OnDestroy()
+        {
             controller.Dispose();
         }
 
@@ -41,6 +39,7 @@ namespace PlayerController
         {
             if (onGoalReached != null) onGoalReached();
         }
+
         private void Update()
         {
             if (controller != null)
@@ -51,12 +50,14 @@ namespace PlayerController
                     previousPosition = controller.Position;
                     if (!controller.IsDone())
                     {
-                        targetPosition = Helpers.ToVec3(previousPosition * Constants.tileSize, Constants.tileSize.y/2);
-                    } else {
+                        targetPosition = Helpers.ToVec3(previousPosition * Constants.tileSize, Constants.tileSize.y / 2);
+                    }
+                    else
+                    {
                         // last step, down a stair
                         // go down a bit, and slower
-                        movementComponent.MovementSpeed = movementComponent.MovementSpeed/2f;
-                        targetPosition = Helpers.ToVec3(previousPosition * Constants.tileSize, (Constants.tileSize.y/2-Constants.tileSize.y*0.2f));
+                        movementComponent.MovementSpeed = movementComponent.MovementSpeed / 2f;
+                        targetPosition = Helpers.ToVec3(previousPosition * Constants.tileSize, (Constants.tileSize.y / 2 - Constants.tileSize.y * 0.2f));
                     }
                     movementComponent.SetTargetPosition(targetPosition);
                 }

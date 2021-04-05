@@ -16,10 +16,17 @@ namespace PlayerController
         private Vector2Int position;
         public Vector2Int Position { get => position; }
 
+        private Vector2Int movementDir;
+
+        public Vector2Int MovementDir { get => movementDir; }
         public float TimePerStep => timePerStep;
+
         public const float timePerStep = 1;
         private float previousStepTime;
         LilLogger logger;
+
+        static PlayerController instance;
+        public static PlayerController Instance { get => instance; }
 
         SimpleObserver<CombatManagerUpdateEvent> combatObserver;
         public PlayerController(IMap map,
@@ -54,14 +61,18 @@ namespace PlayerController
                 logger.Log("Path generated 0 steps", LogLevel.Warning);
                 if (onPathDone != null) onPathDone();
             }
+            if (instance != null) logger.Log("Replacing singleton instance");
+            instance = this;
         }
         public void Update()
         {
-            if(combatManager.InCombat()) return;
+            if (combatManager.InCombat()) return;
             if (timeProvider.Time > previousStepTime + timePerStep && path.Count > 0)
             {
                 previousStepTime = timeProvider.Time;
+                var oldPosition = this.position;
                 this.position = path.Pop();
+                SetMovementDir(oldPosition, this.position);
                 if (path.Count == 0 && onPathDone != null)
                 {
                     onPathDone();
@@ -71,6 +82,11 @@ namespace PlayerController
                     combatManager.PlayerEntersTile(this.position);
                 }
             }
+        }
+
+        private void SetMovementDir(Vector2Int oldPos, Vector2Int newPos)
+        {
+            movementDir = (newPos-oldPos);
         }
 
         public bool IsDone()

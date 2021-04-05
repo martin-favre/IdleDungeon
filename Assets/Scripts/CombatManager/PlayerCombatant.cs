@@ -6,11 +6,13 @@ class PlayerCombatant : ICombatant
     private readonly IRandomProvider random;
     private readonly CombatAttributes attributes = new CombatAttributes();
 
+    public CombatAttributes Attributes => attributes;
+
     public PlayerCombatant(IRandomProvider random)
     {
         this.random = random;
     }
-    
+
     public void PerformAction(List<ICombatant> enemies)
     {
         if (enemies.Count == 0) return;
@@ -24,7 +26,8 @@ class PlayerCombatant : ICombatant
         attributes.Damage(dmg);
     }
 
-    public bool IsDead() {
+    public bool IsDead()
+    {
         return attributes.IsDead();
     }
 }

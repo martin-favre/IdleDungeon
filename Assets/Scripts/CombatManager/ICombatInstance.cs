@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 public interface ICombatInstanceFactory
@@ -13,7 +14,7 @@ public class CombatInstanceFactory : ICombatInstanceFactory
     }
 }
 
-public interface ICombatInstance
+public interface ICombatInstance : IDisposable
 {
     bool IsDone();
     void Update();

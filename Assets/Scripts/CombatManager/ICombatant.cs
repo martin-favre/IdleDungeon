@@ -5,4 +5,6 @@ public interface ICombatant
     void PerformAction(List<ICombatant> enemies);
     void BeAttacked(int attackStat);
     bool IsDead();
+
+    CombatAttributes Attributes { get; }
 }

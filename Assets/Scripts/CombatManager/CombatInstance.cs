@@ -1,4 +1,5 @@
 
+using System;
 using System.Collections.Generic;
 
 public class CombatResults
@@ -6,7 +7,7 @@ public class CombatResults
 
 }
 
-public class CombatInstance : ICombatInstance
+public class CombatInstance : ICombatInstance, ICombatReader
 {
 
     List<ICombatant> goodGuys;
@@ -47,5 +48,21 @@ public class CombatInstance : ICombatInstance
     public bool IsDone()
     {
         return badGuys.Count == 0 || goodGuys.Count == 0;
+    }
+
+    public void Dispose()
+    {
+        goodGuys.Clear();
+        badGuys.Clear();
+    }
+
+    public CombatAttributes[] GetEnemiesAttributes()
+    {
+        CombatAttributes[] arr = new CombatAttributes[badGuys.Count];
+        for (int i = 0; i < badGuys.Count; i++)
+        {
+            arr[i] = badGuys[i].Attributes;
+        }
+        return arr;
     }
 }

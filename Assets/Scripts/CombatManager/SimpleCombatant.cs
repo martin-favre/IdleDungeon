@@ -4,6 +4,8 @@ class SimpleCombatant : ICombatant
 {
     private readonly CombatAttributes attributes = new CombatAttributes();
 
+    public CombatAttributes Attributes => attributes;
+
     public void BeAttacked(int attackStat)
     {
         int dmg = attributes.CalculateDamage(attackStat);

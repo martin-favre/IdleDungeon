@@ -63,7 +63,12 @@ public class CombatManager : ICombatManager
         combatInstance.Update();
         if (combatInstance.IsDone())
         {
-            if (playerChars[0].IsDead()) Debug.Log("Player is dead");
+            if (playerChars[0].IsDead())
+            {
+                Debug.Log("Player is dead");
+                playerChars[0].Attributes.Heal(1000);
+            }
+            combatInstance.Dispose();
             combatInstance = null;
             UpdateObservers(new CombatManagerUpdateEvent(CombatManagerUpdateEvent.UpdateType.LeftCombat));
         }
@@ -80,5 +85,10 @@ public class CombatManager : ICombatManager
     public bool InCombat()
     {
         return combatInstance != null;
+    }
+
+    public ICombatReader GetReader()
+    {
+        return combatInstance != null ? (ICombatReader)combatInstance : null;
     }
 }
