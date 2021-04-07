@@ -19,7 +19,6 @@ namespace GameManager
         private readonly Action fadeOut;
         private readonly Action fadeIn;
         private StateMachine machine;
-
         public IMap GridMap { get => map; set => map = value; }
         public IMapFactory MapFactory { get => mapGenerator; }
         public IMapModifier[] MapModifiers { get => mapModifiers; }
@@ -30,6 +29,10 @@ namespace GameManager
 
         public IPersistentDataStorage DataStorage { get => PlayerPrefsReader.Instance; }
 
+        static IGameManager instance;
+        public static IGameManager Instance { get => instance; }
+        
+
         public GameManager(Action spawnMap, Action spawnPlayer, Action fadeOut, Action fadeIn)
         {
             this.spawnMap = spawnMap;
@@ -37,6 +40,7 @@ namespace GameManager
             this.fadeOut = fadeOut;
             this.fadeIn = fadeIn;
             machine = new StateMachine(new GenerateMapState(this));
+            instance = this;
         }
 
         public void OnGoalReached()

@@ -14,8 +14,12 @@ namespace Tests
         Mock<IRandomProvider> randomMock;
         Mock<ICombatInstanceFactory> combatFactoryMock;
         Mock<ICombatInstance> combatMock;
+        Mock<IMap> mapMock;
 
         CombatManager manager;
+
+        readonly Vector2Int startPos = new Vector2Int(10, 10);
+        readonly Vector2Int goalPos = new Vector2Int(20, 20);
 
 
         [SetUp]
@@ -23,10 +27,13 @@ namespace Tests
         {
             randomMock = new Mock<IRandomProvider>();
             combatMock = new Mock<ICombatInstance>();
+            mapMock = new Mock<IMap>();
+            mapMock.Setup(f => f.Start).Returns(startPos);
+            mapMock.Setup(f => f.Goal).Returns(goalPos);
             combatFactoryMock = new Mock<ICombatInstanceFactory>(MockBehavior.Strict);
             combatFactoryMock.Setup(f => f.CreateInstance(It.IsAny<List<ICombatant>>())).Returns(combatMock.Object);
             CombatManager.ClearInstance();
-            manager = new CombatManager(randomMock.Object, combatFactoryMock.Object);
+            manager = new CombatManager(randomMock.Object, combatFactoryMock.Object, mapMock.Object);
         }
 
         [Test]
@@ -35,8 +42,32 @@ namespace Tests
             randomMock.Setup(f => f.ThingHappens(It.IsAny<float>())).Returns(true);
             manager.PlayerEntersTile(Vector2Int.zero);
             combatFactoryMock.Verify(f => f.CreateInstance(It.IsAny<List<ICombatant>>()), Times.AtLeastOnce);
-
         }
+
+        [Test]
+        public void ShouldNotSpawnCombatInstanceWhenEnteringGoal()
+        {
+            randomMock.Setup(f => f.ThingHappens(It.IsAny<float>())).Returns(true);
+            manager.PlayerEntersTile(goalPos);
+            combatFactoryMock.Verify(f => f.CreateInstance(It.IsAny<List<ICombatant>>()), Times.Never);
+        }
+        [Test]
+        public void ShouldNotSpawnCombatInstanceWhenJustOutsideStart()
+        {
+            randomMock.Setup(f => f.ThingHappens(It.IsAny<float>())).Returns(true);
+            Vector2Int[] posToTest =
+            {
+                new Vector2Int(0, 0),
+                new Vector2Int(1, 0),
+                new Vector2Int(0, 1),
+            };
+            foreach (var item in posToTest)
+            {
+                manager.PlayerEntersTile(startPos + item);
+                combatFactoryMock.Verify(f => f.CreateInstance(It.IsAny<List<ICombatant>>()), Times.Never);
+            }
+        }
+
 
         [Test]
         public void ShouldAlsoNotSpawnCombatInstanceRandomly()

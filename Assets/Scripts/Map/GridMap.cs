@@ -9,6 +9,7 @@ public class GridMap : IMap
     private Vector2Int goal;
 
     private Vector2Int start;
+    private static IMap instance;
 
     public GridMap(Vector2Int size)
     {
@@ -27,6 +28,7 @@ public class GridMap : IMap
 
     public Vector2Int Goal { get => goal; set => goal = value; }
     public Vector2Int Start { get => start; set => start = value; }
+    public static IMap Instance { get => instance; set => instance = value; }
 
     public bool InsideMap(Vector2Int position)
     {

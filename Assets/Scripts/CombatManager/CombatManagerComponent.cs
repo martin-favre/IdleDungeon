@@ -6,8 +6,14 @@ public class CombatManagerComponent : MonoBehaviour
     {
         if (CombatManager.Instance == null)
         {
-            CombatManager.Instance = new CombatManager(SystemRandom.Instance, new CombatInstanceFactory());
+            // Will be executed after GameManagerComponent thanks to Unity Settings
+            CombatManager.Instance = new CombatManager(SystemRandom.Instance, new CombatInstanceFactory(), GameManager.GameManager.Instance.GridMap);
         }
+    }
+
+    private void Setup()
+    {
+        
     }
     private void Update()
     {
