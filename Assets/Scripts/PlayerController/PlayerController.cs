@@ -12,21 +12,11 @@ namespace PlayerController
     {
         private readonly Action onPathDone;
         private readonly ICombatManager combatManager;
-        private readonly IPlayerMover playerMover;
         public ICombatManager CombatManager { get => combatManager; }
+        private readonly IPlayerMover playerMover;
         private readonly Stack<Vector2Int> path;
         private Vector2Int position;
-        public Vector2Int Position
-        {
-            get => position;
-            set
-            {
-                movementDir = value - position;
-                position = value;
-            }
-        }
-        private Vector2Int movementDir;
-        public Vector2Int MovementDir { get => movementDir; }
+        public Vector2Int Position{ get => position; set => position = value; }
         LilLogger logger;
         static PlayerController instance;
         public static PlayerController Instance { get => instance; }
@@ -73,11 +63,6 @@ namespace PlayerController
         public void Update()
         {
             if (!machine.IsTerminated()) machine.Update();
-        }
-
-        public bool IsDone()
-        {
-            return path.Count == 0;
         }
 
         public void Dispose()
