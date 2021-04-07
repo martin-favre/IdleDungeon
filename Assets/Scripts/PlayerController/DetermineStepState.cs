@@ -13,6 +13,10 @@ public class DetermineStepState : State
     public DetermineStepState(IPlayerController controller)
     {
         this.controller = controller;
+    }
+
+    public override void OnEntry()
+    {
         if (controller.HasNextStep())
         {
             var nextStep = controller.GetNextStep();

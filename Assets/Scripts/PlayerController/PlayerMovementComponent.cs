@@ -45,6 +45,10 @@ public class PlayerMovementComponent : MonoBehaviour, IPlayerMover
     // The player will start moving towards this position
     private void Update()
     {
+    }
+
+    private void FixedUpdate()
+    {
         if (moving)
         {
             bool done;
@@ -62,19 +66,21 @@ public class PlayerMovementComponent : MonoBehaviour, IPlayerMover
             (transform.rotation, done) = CalculateNextRotation();
             if (done)
             {
+                // transform.LookAt(positionToLookAt);
                 rotating = false;
                 onRotateDone();
             }
         }
+
     }
 
     private (Quaternion, bool) CalculateNextRotation()
     {
         var direction = (positionToLookAt - transform.position).normalized;
-        if (direction == Vector3.zero) return (transform.rotation, true);
+        if (direction == Vector3.zero) return (transform.rotation, true); // Basically if we're on the position we want to look at, then things go bananas 
         var lookRotation = Quaternion.LookRotation(direction);
         var newRot = Quaternion.Lerp(transform.rotation, lookRotation, rotationSpeed * UnityTime.Instance.DeltaTime);
-        if (Helpers.Approximately(newRot, lookRotation, 0.001f)) return (newRot, true);
+        if (Helpers.Approximately(newRot, transform.rotation, 0.00000001f)) return (lookRotation, true);
         return (newRot, false);
     }
 
@@ -82,9 +88,9 @@ public class PlayerMovementComponent : MonoBehaviour, IPlayerMover
     {
         float distCovered = (UnityTime.Instance.Time - startTime) * movementSpeed;
         float fractionOfJourney = distCovered / journeyLength;
-        if ((transform.position - targetPosition).magnitude < 0.001f)
+        if ((transform.position - targetPosition).magnitude < 0.00001f)
         {
-            return (targetPosition, true);
+            return (transform.position, true);
         }
         return (Vector3.Lerp(originalPos, targetPosition, fractionOfJourney), false);
     }
@@ -92,6 +98,18 @@ public class PlayerMovementComponent : MonoBehaviour, IPlayerMover
     public void RotateTowards(Vector2Int posToLookAt, Action notifyDone)
     {
         positionToLookAt = GridPosToRealPos(posToLookAt);
+        var direction = (positionToLookAt - transform.position).normalized;
+        if (direction == Vector3.zero)
+        {
+            notifyDone();
+            return;
+        }
+        var lookRotation = Quaternion.LookRotation(direction);
+        if (lookRotation == transform.rotation)
+        {
+            notifyDone();
+            return;
+        }
         onRotateDone = notifyDone;
         rotating = true;
     }

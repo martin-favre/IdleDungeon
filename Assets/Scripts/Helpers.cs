@@ -38,8 +38,8 @@ public static class Helpers
     }
 
     // thanks https://answers.unity.com/questions/288338/how-do-i-compare-quaternions.html
-    public static bool Approximately(this Quaternion quatA, Quaternion value, float acceptableRange)
+    public static bool Approximately(Quaternion quatA, Quaternion quatB, float acceptableRange)
     {
-        return 1 - Mathf.Abs(Quaternion.Dot(quatA, value)) < acceptableRange;
+        return 1 - Mathf.Abs(Quaternion.Dot(quatA, quatB)) < acceptableRange;
     }
 }
