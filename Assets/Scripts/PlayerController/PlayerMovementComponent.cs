@@ -80,7 +80,8 @@ public class PlayerMovementComponent : MonoBehaviour, IPlayerMover
         if (direction == Vector3.zero) return (transform.rotation, true); // Basically if we're on the position we want to look at, then things go bananas 
         var lookRotation = Quaternion.LookRotation(direction);
         var newRot = Quaternion.Lerp(transform.rotation, lookRotation, rotationSpeed * UnityTime.Instance.DeltaTime);
-        if (Helpers.Approximately(newRot, transform.rotation, 0.00000001f)) return (lookRotation, true);
+        var ridiculousMargin = 0.00000001f; // if it's too big, the jump to the correct rotation looks odd, if it's too small the rotation takes forever
+        if (Helpers.Approximately(newRot, transform.rotation, ridiculousMargin)) return (lookRotation, true);
         return (newRot, false);
     }
 
@@ -88,7 +89,8 @@ public class PlayerMovementComponent : MonoBehaviour, IPlayerMover
     {
         float distCovered = (UnityTime.Instance.Time - startTime) * movementSpeed;
         float fractionOfJourney = distCovered / journeyLength;
-        if ((transform.position - targetPosition).magnitude < 0.00001f)
+        var ridiculousMargin = 0.00000001f; // if it's too big, there'll be a small jerk between steps, if it's too small the movement takes forever
+        if ((transform.position - targetPosition).magnitude < ridiculousMargin)
         {
             return (transform.position, true);
         }
