@@ -14,25 +14,82 @@ namespace Tests
         Mock<IPlayerMover> playerMoverMock;
         Action onRotateDone;
         Action onMoveDone;
-        Mock<ICombatManager> combatManager;
+        Mock<ICombatManager> combatManagerMock;
 
         Mock<IPlayerController> playerMock;
 
         [SetUp]
         public void Setup()
         {
-            combatManager = new Mock<ICombatManager>();
+            combatManagerMock = new Mock<ICombatManager>();
             playerMoverMock = new Mock<IPlayerMover>();
             playerMoverMock.Setup(f => f.MoveTowards(It.IsAny<Vector2Int>(), It.IsAny<Action>())).Callback<Vector2Int, Action>((v, e) => onMoveDone = e);
-            playerMoverMock.Setup(f => f.RotateTowards(It.IsAny<Vector2Int>(), It.IsAny<Action>())).Callback<Vector2Int, Action>((v, e)=> onRotateDone = e);
+            playerMoverMock.Setup(f => f.RotateTowards(It.IsAny<Vector2Int>(), It.IsAny<Action>())).Callback<Vector2Int, Action>((v, e) => onRotateDone = e);
             playerMock = new Mock<IPlayerController>();
+            playerMock.Setup(f => f.CombatManager).Returns(combatManagerMock.Object);
         }
 
         [Test]
         public void ShouldNotifyPathFinishedIfPathDone()
         {
             DetermineStepState state = new DetermineStepState(playerMock.Object);
+            state.OnEntry();
+            state.OnDuring();
+            playerMock.Verify(f => f.NotifyPathFinished(), Times.Once);
+        }
 
+        [Test]
+        public void ShouldRequestToLookAtNextPos()
+        {
+            playerMock.Setup(f => f.HasNextStep()).Returns(true);
+            playerMock.Setup(f => f.GetNextStep()).Returns(new Vector2Int(15, 13));
+            DetermineStepState state = new DetermineStepState(playerMock.Object);
+            state.OnEntry();
+            state.OnDuring();
+            playerMock.Verify(f => f.RequestLookAt(It.Is<Vector2Int>(v2 => v2 == new Vector2Int(15, 13))), Times.Once);
+        }
+
+        [Test]
+        public void ShouldProgressOnEvent()
+        {
+            playerMock.Setup(f => f.HasNextStep()).Returns(true);
+            playerMock.Setup(f => f.GetNextStep()).Returns(new Vector2Int(15, 13));
+            DetermineStepState state = new DetermineStepState(playerMock.Object);
+            state.OnEntry();
+            Assert.IsNull(state.OnDuring());
+
+            for (int i = 0; i < 10; i++)
+            {
+                // spin to show we're not changing
+                Assert.IsNull(state.OnDuring());
+            }
+
+            state.HandleEvent(new DetermineStepState.TurningFinishedEvent());
+            Assert.IsNotNull(state.OnDuring());
+        }
+        [Test]
+        public void GoToAwaitCombatStateIfCombatStarted()
+        {
+            playerMock.Setup(f => f.HasNextStep()).Returns(true);
+            playerMock.Setup(f => f.GetNextStep()).Returns(new Vector2Int(15, 13));
+            playerMock.Setup(f => f.Position).Returns(new Vector2Int(15, 13));
+            combatManagerMock.Setup(f => f.PlayerEntersTile(It.Is<Vector2Int>(v2 => v2 == new Vector2Int(15, 13)))).Returns(true);
+            DetermineStepState state = new DetermineStepState(playerMock.Object);
+            state.OnEntry();
+            state.HandleEvent(new DetermineStepState.TurningFinishedEvent());
+            Assert.IsTrue(state.OnDuring() is AwaitCombatState);
+        }
+        [Test]
+        public void GoToTargetStateIfNotCombatStarted()
+        {
+            playerMock.Setup(f => f.HasNextStep()).Returns(true);
+            playerMock.Setup(f => f.GetNextStep()).Returns(new Vector2Int(15, 13));
+            playerMock.Setup(f => f.Position).Returns(new Vector2Int(15, 13));
+            combatManagerMock.Setup(f => f.PlayerEntersTile(It.Is<Vector2Int>(v2 => v2 == new Vector2Int(15, 13)))).Returns(false);
+            DetermineStepState state = new DetermineStepState(playerMock.Object);
+            state.OnEntry();
+            state.HandleEvent(new DetermineStepState.TurningFinishedEvent());
+            Assert.IsTrue(state.OnDuring() is GoToTargetState);
         }
     }
 }
