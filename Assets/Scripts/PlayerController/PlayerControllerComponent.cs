@@ -22,12 +22,15 @@ namespace PlayerController
         public void Setup(IMap map, Action onGoalReached)
         {
             this.onGoalReached = onGoalReached;
-            controller = new PlayerController(map, UnityTime.Instance, new DepthFirst(), OnDone, CombatManager.Instance);
+            movementComponent = GetComponent<PlayerMovementComponent>();
+            controller = new PlayerController(map,
+                                              new DepthFirst(),
+                                              OnDone,
+                                              CombatManager.Instance,
+                                              movementComponent);
             previousPosition = controller.Position;
 
-            movementComponent = GetComponent<PlayerMovementComponent>();
-            var pos = Helpers.ToVec3(previousPosition * Constants.tileSize, transform.position.y);
-            movementComponent.SetPosition(pos);
+            movementComponent.SetPosition(previousPosition);
         }
 
         private void OnDestroy()
@@ -45,22 +48,6 @@ namespace PlayerController
             if (controller != null)
             {
                 controller.Update();
-                if (controller.Position != previousPosition)
-                {
-                    previousPosition = controller.Position;
-                    if (!controller.IsDone())
-                    {
-                        targetPosition = Helpers.ToVec3(previousPosition * Constants.tileSize, Constants.tileSize.y / 2);
-                    }
-                    else
-                    {
-                        // last step, down a stair
-                        // go down a bit, and slower
-                        movementComponent.MovementSpeed = movementComponent.MovementSpeed / 2f;
-                        targetPosition = Helpers.ToVec3(previousPosition * Constants.tileSize, (Constants.tileSize.y / 2 - Constants.tileSize.y * 0.2f));
-                    }
-                    movementComponent.SetTargetPosition(targetPosition);
-                }
             }
         }
     }

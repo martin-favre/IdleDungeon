@@ -3,46 +3,59 @@
 using System;
 using System.Collections.Generic;
 using Logging;
+using StateMachineCollection;
 using UnityEngine;
 
 namespace PlayerController
 {
-    public class PlayerController : IDisposable
+    public class PlayerController : IPlayerController, IDisposable
     {
-        private readonly ITimeProvider timeProvider;
         private readonly Action onPathDone;
         private readonly ICombatManager combatManager;
+        private readonly IPlayerMover playerMover;
+        public ICombatManager CombatManager { get => combatManager; }
         private readonly Stack<Vector2Int> path;
         private Vector2Int position;
-        public Vector2Int Position { get => position; }
-
+        public Vector2Int Position
+        {
+            get => position;
+            set
+            {
+                movementDir = value - position;
+                position = value;
+            }
+        }
         private Vector2Int movementDir;
-
         public Vector2Int MovementDir { get => movementDir; }
-        public float TimePerStep => timePerStep;
-
-        public const float timePerStep = 1;
-        private float previousStepTime;
         LilLogger logger;
-
         static PlayerController instance;
         public static PlayerController Instance { get => instance; }
-
         SimpleObserver<CombatManagerUpdateEvent> combatObserver;
+        StateMachine machine;
+
+        public Vector3 WorldPosition { get => playerMover.WorldPosition; }
         public PlayerController(IMap map,
-                                ITimeProvider timeProvider,
                                 IPathFinder pathFinder,
                                 Action onPathDone,
-                                ICombatManager combatManager)
+                                ICombatManager combatManager,
+                                IPlayerMover playerMover)
         {
             logger = new LilLogger("PlayerController");
-            Debug.Assert(timeProvider != null);
             Debug.Assert(pathFinder != null);
             Debug.Assert(map != null);
             this.position = map.Start;
-            this.timeProvider = timeProvider;
             this.onPathDone = onPathDone;
             this.combatManager = combatManager;
+            this.playerMover = playerMover;
+            path = pathFinder.FindPath(position, map.Goal, map);
+            if (path.Count == 0)
+            {
+                logger.Log("Path generated 0 steps", LogLevel.Warning);
+                if (onPathDone != null) onPathDone();
+            }
+
+            machine = new StateMachine(new DetermineStepState(this));
+
             combatObserver = new SimpleObserver<CombatManagerUpdateEvent>(combatManager, (e) =>
             {
                 if (e.Type == CombatManagerUpdateEvent.UpdateType.EnteredCombat)
@@ -51,42 +64,15 @@ namespace PlayerController
                 }
                 else
                 {
-                    Debug.Log("Player left combat");
+                    machine.RaiseEvent(new AwaitCombatState.CombatFinishedEvent());
                 }
             });
-            path = pathFinder.FindPath(position, map.Goal, map);
-            previousStepTime = 0; // so it will trigger right away 
-            if (path.Count == 0)
-            {
-                logger.Log("Path generated 0 steps", LogLevel.Warning);
-                if (onPathDone != null) onPathDone();
-            }
             if (instance != null) logger.Log("Replacing singleton instance");
             instance = this;
         }
         public void Update()
         {
-            if (combatManager.InCombat()) return;
-            if (timeProvider.Time > previousStepTime + timePerStep && path.Count > 0)
-            {
-                previousStepTime = timeProvider.Time;
-                var oldPosition = this.position;
-                this.position = path.Pop();
-                SetMovementDir(oldPosition, this.position);
-                if (path.Count == 0 && onPathDone != null)
-                {
-                    onPathDone();
-                }
-                else
-                {
-                    combatManager.PlayerEntersTile(this.position);
-                }
-            }
-        }
-
-        private void SetMovementDir(Vector2Int oldPos, Vector2Int newPos)
-        {
-            movementDir = (newPos-oldPos);
+            if (!machine.IsTerminated()) machine.Update();
         }
 
         public bool IsDone()
@@ -97,6 +83,31 @@ namespace PlayerController
         public void Dispose()
         {
             combatObserver.Dispose();
+        }
+
+        public bool HasNextStep()
+        {
+            return path.Count != 0;
+        }
+
+        public Vector2Int GetNextStep()
+        {
+            return path.Pop();
+        }
+
+        public void NotifyPathFinished()
+        {
+            onPathDone();
+        }
+
+        public void RequestLookAt(Vector2Int position)
+        {
+            playerMover.RotateTowards(position, () => machine.RaiseEvent(new DetermineStepState.TurningFinishedEvent()));
+        }
+
+        public void RequestMoveTo(Vector2Int position)
+        {
+            playerMover.MoveTowards(position, () => machine.RaiseEvent(new GoToTargetState.PositionReachedEvent()));
         }
     }
 }

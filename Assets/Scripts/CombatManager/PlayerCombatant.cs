@@ -22,8 +22,8 @@ class PlayerCombatant : ICombatant
 
     public void BeAttacked(int attackStat)
     {
-        int dmg = attributes.CalculateDamage(attackStat);
-        attributes.Damage(dmg);
+        // int dmg = attributes.CalculateDamage(attackStat);
+        // attributes.Damage(dmg);
     }
 
     public bool IsDead()

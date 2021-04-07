@@ -32,8 +32,14 @@ public static class Helpers
 
     public static T GetRandom<T>(IList<T> items, IRandomProvider random)
     {
-        if(items.Count == 0) throw new Exception("Can't get a random item from an empty list");
-        var index = random.RandomInt(0, items.Count -1);
+        if (items.Count == 0) throw new Exception("Can't get a random item from an empty list");
+        var index = random.RandomInt(0, items.Count - 1);
         return items[index];
+    }
+
+    // thanks https://answers.unity.com/questions/288338/how-do-i-compare-quaternions.html
+    public static bool Approximately(this Quaternion quatA, Quaternion value, float acceptableRange)
+    {
+        return 1 - Mathf.Abs(Quaternion.Dot(quatA, value)) < acceptableRange;
     }
 }

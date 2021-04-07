@@ -21,6 +21,6 @@ public class CombatManagerUpdateEvent
 
 public interface ICombatManager : IObservable<CombatManagerUpdateEvent>
 {
-    void PlayerEntersTile(Vector2Int tile);
+    bool PlayerEntersTile(Vector2Int tile);
     bool InCombat();
 }

@@ -35,15 +35,12 @@ public class EnemyVisualizerComponent : MonoBehaviour
         enemyObj = PrefabLoader.Instance.Instantiate(prefab);
         enemyObj.transform.SetParent(transform);
 
-        var playerGridPos = PlayerController.PlayerController.Instance.Position;
-        var movementDir = PlayerController.PlayerController.Instance.MovementDir;
-        var myGridPos = playerGridPos + movementDir;
+        var myGridPos = PlayerController.PlayerController.Instance.Position;
 
         var realPos = Helpers.ToVec3(myGridPos * Constants.tileSize, Constants.tileSize.y / 2);
-        var playerRealPos = Helpers.ToVec3(playerGridPos * Constants.tileSize, Constants.tileSize.y / 2);
         enemyObj.transform.position = realPos;
-        enemyObj.transform.LookAt(playerRealPos);
-        enemyObj.transform.Rotate(new Vector3(90, 0, 0));
+        enemyObj.transform.LookAt(PlayerController.PlayerController.Instance.WorldPosition);
+        enemyObj.transform.Rotate(new Vector3(90, 0, 0)); // The 3d model is a unity plane which is only visible from above, need to flip it sideways.
     }
 
     private void HideEnemies()

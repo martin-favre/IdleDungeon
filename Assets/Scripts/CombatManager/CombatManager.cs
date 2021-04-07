@@ -43,14 +43,16 @@ public class CombatManager : ICombatManager
         return new SimpleUnsubscriber<CombatManagerUpdateEvent>(observers, observer);
     }
 
-    public void PlayerEntersTile(Vector2Int tile)
+    public bool PlayerEntersTile(Vector2Int tile)
     {
         if (randomProvider.ThingHappens(0.25f))
         {
             var chars = new List<ICombatant>(playerChars.ToArray());
             combatInstance = combatInstanceFactory.CreateInstance(chars);
             UpdateObservers(new CombatManagerUpdateEvent(CombatManagerUpdateEvent.UpdateType.EnteredCombat));
+            return true;
         }
+        return false;
     }
 
     public void Update()
