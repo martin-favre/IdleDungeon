@@ -3,14 +3,14 @@ using System.Collections.Generic;
 
 public interface ICombatInstanceFactory
 {
-    ICombatInstance CreateInstance(List<ICombatant> playerChars);
+    ICombatInstance CreateInstance(ICombatant[] playerChars, IEventRecipient<ICombatUpdateEvent> evRecipient);
 }
 
 public class CombatInstanceFactory : ICombatInstanceFactory
 {
-    public ICombatInstance CreateInstance(List<ICombatant> playerChars)
+    public ICombatInstance CreateInstance(ICombatant[] playerChars, IEventRecipient<ICombatUpdateEvent> evRecipient)
     {
-        return new CombatInstance(playerChars, new EnemyFactory());
+        return new CombatInstance(playerChars, new EnemyFactory(), evRecipient);
     }
 }
 

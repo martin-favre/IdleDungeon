@@ -20,7 +20,7 @@ namespace PlayerController
         LilLogger logger;
         static PlayerController instance;
         public static PlayerController Instance { get => instance; }
-        SimpleObserver<CombatManagerUpdateEvent> combatObserver;
+        SimpleObserver<ICombatUpdateEvent> combatObserver;
         StateMachine machine;
 
         public Vector3 WorldPosition { get => playerMover.WorldPosition; }
@@ -46,13 +46,13 @@ namespace PlayerController
 
             machine = new StateMachine(new DetermineStepState(this));
 
-            combatObserver = new SimpleObserver<CombatManagerUpdateEvent>(combatManager, (e) =>
+            combatObserver = new SimpleObserver<ICombatUpdateEvent>(combatManager, (e) =>
             {
-                if (e.Type == CombatManagerUpdateEvent.UpdateType.EnteredCombat)
+                if (e is EnteredCombatEvent)
                 {
                     Debug.Log("Player enters combat");
                 }
-                else
+                else if(e is ExitedCombatEvent)
                 {
                     machine.RaiseEvent(new AwaitCombatState.CombatFinishedEvent());
                 }

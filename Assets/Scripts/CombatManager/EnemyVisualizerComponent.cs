@@ -4,7 +4,7 @@ using UnityEngine;
 public class EnemyVisualizerComponent : MonoBehaviour
 {
     const string enemyGameObjectPrefab = "Prefabs/EnemyObj3D";
-    SimpleObserver<CombatManagerUpdateEvent> observer;
+    SimpleObserver<ICombatUpdateEvent> observer;
     GameObject enemyObj; // will be a list
 
     [SerializeField]
@@ -12,14 +12,14 @@ public class EnemyVisualizerComponent : MonoBehaviour
 
     private void Start()
     {
-        observer = new SimpleObserver<CombatManagerUpdateEvent>(CombatManager.Instance, (e) =>
+        observer = new SimpleObserver<ICombatUpdateEvent>(CombatManager.Instance, (e) =>
         {
-            if (e.Type == CombatManagerUpdateEvent.UpdateType.EnteredCombat)
+            if (e is EnteredCombatEvent)
             {
                 Debug.Log("EnemyVisualizerComponent shows enemies");
                 ShowEnemies();
             }
-            else
+            else if(e is ExitedCombatEvent)
             {
                 Debug.Log("EnemyVisualizerComponent hides enemies");
                 HideEnemies();

@@ -20,6 +20,7 @@ namespace Tests
 
         readonly Vector2Int startPos = new Vector2Int(10, 10);
         readonly Vector2Int goalPos = new Vector2Int(20, 20);
+        Mock<IEventRecipient<ICombatUpdateEvent>> eventRecipientMock;
 
 
         [SetUp]
@@ -30,8 +31,10 @@ namespace Tests
             mapMock = new Mock<IMap>();
             mapMock.Setup(f => f.Start).Returns(startPos);
             mapMock.Setup(f => f.Goal).Returns(goalPos);
+            eventRecipientMock = new Mock<IEventRecipient<ICombatUpdateEvent>>();
             combatFactoryMock = new Mock<ICombatInstanceFactory>(MockBehavior.Strict);
-            combatFactoryMock.Setup(f => f.CreateInstance(It.IsAny<List<ICombatant>>())).Returns(combatMock.Object);
+            combatFactoryMock.Setup(f => f.CreateInstance(It.IsAny<ICombatant[]>(),
+                It.IsAny<IEventRecipient<ICombatUpdateEvent>>())).Returns(combatMock.Object);
             CombatManager.ClearInstance();
             manager = new CombatManager(randomMock.Object, combatFactoryMock.Object, mapMock.Object);
         }
@@ -41,7 +44,7 @@ namespace Tests
         {
             randomMock.Setup(f => f.ThingHappens(It.IsAny<float>())).Returns(true);
             manager.PlayerEntersTile(Vector2Int.zero);
-            combatFactoryMock.Verify(f => f.CreateInstance(It.IsAny<List<ICombatant>>()), Times.AtLeastOnce);
+            combatFactoryMock.Verify(f => f.CreateInstance(It.IsAny<ICombatant[]>(), It.IsAny<IEventRecipient<ICombatUpdateEvent>>()), Times.AtLeastOnce);
         }
 
         [Test]
@@ -49,7 +52,7 @@ namespace Tests
         {
             randomMock.Setup(f => f.ThingHappens(It.IsAny<float>())).Returns(true);
             manager.PlayerEntersTile(goalPos);
-            combatFactoryMock.Verify(f => f.CreateInstance(It.IsAny<List<ICombatant>>()), Times.Never);
+            combatFactoryMock.Verify(f => f.CreateInstance(It.IsAny<ICombatant[]>(), It.IsAny<IEventRecipient<ICombatUpdateEvent>>()), Times.Never);
         }
         [Test]
         public void ShouldNotSpawnCombatInstanceWhenJustOutsideStart()
@@ -64,7 +67,7 @@ namespace Tests
             foreach (var item in posToTest)
             {
                 manager.PlayerEntersTile(startPos + item);
-                combatFactoryMock.Verify(f => f.CreateInstance(It.IsAny<List<ICombatant>>()), Times.Never);
+                combatFactoryMock.Verify(f => f.CreateInstance(It.IsAny<ICombatant[]>(), It.IsAny<IEventRecipient<ICombatUpdateEvent>>()), Times.Never);
             }
         }
 
@@ -74,7 +77,7 @@ namespace Tests
         {
             randomMock.Setup(f => f.ThingHappens(It.IsAny<float>())).Returns(false);
             manager.PlayerEntersTile(Vector2Int.zero);
-            combatFactoryMock.Verify(f => f.CreateInstance(It.IsAny<List<ICombatant>>()), Times.Never);
+            combatFactoryMock.Verify(f => f.CreateInstance(It.IsAny<ICombatant[]>(), It.IsAny<IEventRecipient<ICombatUpdateEvent>>()), Times.Never);
         }
 
         [Test]
@@ -97,12 +100,12 @@ namespace Tests
         [Test]
         public void ShouldGetEventOnNewCombatInstance()
         {
-            CombatManagerUpdateEvent evt = null;
-            SimpleObserver<CombatManagerUpdateEvent> observer = new SimpleObserver<CombatManagerUpdateEvent>(manager, (e) => { evt = e; });
+            ICombatUpdateEvent evt = null;
+            SimpleObserver<ICombatUpdateEvent> observer = new SimpleObserver<ICombatUpdateEvent>(manager, (e) => { evt = e; });
             randomMock.Setup(f => f.ThingHappens(It.IsAny<float>())).Returns(true);
             manager.PlayerEntersTile(Vector2Int.zero);
             Assert.IsNotNull(evt);
-            Assert.AreEqual(evt.Type, CombatManagerUpdateEvent.UpdateType.EnteredCombat);
+            Assert.IsTrue(evt is EnteredCombatEvent);
             Assert.IsTrue(manager.InCombat());
 
             observer.Dispose();
@@ -117,15 +120,15 @@ namespace Tests
         [Test]
         public void ShouldGetEventOnCombatDone()
         {
-            CombatManagerUpdateEvent evt = null;
-            SimpleObserver<CombatManagerUpdateEvent> observer = new SimpleObserver<CombatManagerUpdateEvent>(manager, (e) => { evt = e; });
+            ICombatUpdateEvent evt = null;
+            SimpleObserver<ICombatUpdateEvent> observer = new SimpleObserver<ICombatUpdateEvent>(manager, (e) => { evt = e; });
             randomMock.Setup(f => f.ThingHappens(It.IsAny<float>())).Returns(true);
             manager.PlayerEntersTile(Vector2Int.zero);
             combatMock.Setup(f => f.IsDone()).Returns(true);
             manager.Update();
 
             Assert.IsNotNull(evt);
-            Assert.AreEqual(evt.Type, CombatManagerUpdateEvent.UpdateType.LeftCombat);
+            Assert.IsTrue(evt is ExitedCombatEvent);
             Assert.IsFalse(manager.InCombat());
             observer.Dispose();
         }

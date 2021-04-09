@@ -18,6 +18,7 @@ namespace Tests
 
         List<ICombatant> enemies;
         List<ICombatant> players;
+        Mock<IEventRecipient<ICombatUpdateEvent>> eventRecipientMock;
 
         [SetUp]
         public void Setup()
@@ -25,11 +26,11 @@ namespace Tests
             playerMock = new Mock<ICombatant>();
             players = new List<ICombatant>();
             players.Add(playerMock.Object);
-
+            eventRecipientMock = new Mock<IEventRecipient<ICombatUpdateEvent>>();
             enemies = new List<ICombatant>();
             enemyFactoryMock = new Mock<IEnemyFactory>();
             enemyFactoryMock.Setup(f => f.GenerateEnemies()).Returns(enemies);
-            combatInstance = new CombatInstance(players, enemyFactoryMock.Object);
+            combatInstance = new CombatInstance(players.ToArray(), enemyFactoryMock.Object, eventRecipientMock.Object);
         }
 
         [Test]
@@ -86,8 +87,10 @@ namespace Tests
             var enemyMock = new Mock<ICombatant>();
             enemies.Add(enemyMock.Object);
             combatInstance.Update();
-            playerMock.Verify(foo => foo.PerformAction(It.IsAny<List<ICombatant>>()), Times.Once); // Should only have happened once
-            playerMock.Verify(foo => foo.PerformAction(It.Is<List<ICombatant>>(l => l.Equals(enemies))), Times.Once); // And only on the enemies
+            playerMock.Verify(foo => foo.PerformAction(It.IsAny<List<ICombatant>>(), It.IsAny<ICombatReader>(),
+                It.Is<IEventRecipient<ICombatUpdateEvent>>(e => e == eventRecipientMock.Object)), Times.Once); // Should only have happened once
+            playerMock.Verify(foo => foo.PerformAction(It.Is<List<ICombatant>>(l => l.Equals(enemies)), It.IsAny<ICombatReader>(),
+                It.Is<IEventRecipient<ICombatUpdateEvent>>(e => e == eventRecipientMock.Object)), Times.Once); // And only on the enemies
         }
 
         [Test]
@@ -96,8 +99,10 @@ namespace Tests
             var enemyMock = new Mock<ICombatant>();
             enemies.Add(enemyMock.Object);
             combatInstance.Update();
-            enemyMock.Verify(foo => foo.PerformAction(It.IsAny<List<ICombatant>>()), Times.Once); // Should only have happened once
-            enemyMock.Verify(foo => foo.PerformAction(It.Is<List<ICombatant>>(l => l.Equals(players))), Times.Once); // And only on the enemies
+            enemyMock.Verify(foo => foo.PerformAction(It.IsAny<List<ICombatant>>(), It.IsAny<ICombatReader>(),
+                It.Is<IEventRecipient<ICombatUpdateEvent>>(e => e == eventRecipientMock.Object)), Times.Once); // Should only have happened once
+            enemyMock.Verify(foo => foo.PerformAction(It.Is<List<ICombatant>>(l => l.Contains(players[0])), It.IsAny<ICombatReader>(),
+                It.Is<IEventRecipient<ICombatUpdateEvent>>(e => e == eventRecipientMock.Object)), Times.Once); // And only on the enemies
         }
     }
 }

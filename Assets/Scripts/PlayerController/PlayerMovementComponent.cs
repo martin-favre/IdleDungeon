@@ -18,8 +18,6 @@ public class PlayerMovementComponent : MonoBehaviour, IPlayerMover
     private float startTime;
     private Vector3 originalPos;
     private float journeyLength;
-    bool targetProvided = false;
-
     public float MovementSpeed { get => movementSpeed; set => movementSpeed = value; }
 
     public Vector3 WorldPosition { get => transform.position; }

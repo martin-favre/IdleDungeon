@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 public interface ICombatant
 {
-    void PerformAction(List<ICombatant> enemies);
+    void PerformAction(List<ICombatant> enemies, ICombatReader combat, IEventRecipient<ICombatUpdateEvent> evRecipient);
     void BeAttacked(int attackStat);
     bool IsDead();
 

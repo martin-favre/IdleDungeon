@@ -17,11 +17,12 @@ class SimpleCombatant : ICombatant
         return attributes.IsDead();
     }
 
-    public void PerformAction(List<ICombatant> enemies)
+    public void PerformAction(List<ICombatant> enemies, ICombatReader combat, IEventRecipient<ICombatUpdateEvent> evRecipient)
     {
         if (enemies.Count == 0) return;
         ICombatant target = enemies[0];
         target.BeAttacked(attributes.Attack);
+        evRecipient.RecieveEvent(new CombatActionEvent(combat, target, this));
     }
 
     

@@ -3,20 +3,18 @@ using System;
 using System.Collections.Generic;
 using Logging;
 using UnityEngine;
-public class CombatManager : ICombatManager
+public class CombatManager : ICombatManager, IEventRecipient<ICombatUpdateEvent>
 {
 
     private static CombatManager instance;
     public static CombatManager Instance { get => instance; set => instance = value; }
 
-    private List<IObserver<CombatManagerUpdateEvent>> observers = new List<IObserver<CombatManagerUpdateEvent>>();
+    private List<IObserver<ICombatUpdateEvent>> observers = new List<IObserver<ICombatUpdateEvent>>();
     static readonly LilLogger logger = new LilLogger("CombatManager");
     private readonly IRandomProvider randomProvider;
     private readonly ICombatInstanceFactory combatInstanceFactory;
     private readonly IMap map;
     private ICombatInstance combatInstance;
-
-    List<ICombatant> playerChars;
 
     public CombatManager(IRandomProvider randomProvider, ICombatInstanceFactory combatInstanceFactory, IMap map)
     {
@@ -31,8 +29,6 @@ public class CombatManager : ICombatManager
         this.randomProvider = randomProvider;
         this.combatInstanceFactory = combatInstanceFactory;
         this.map = map;
-        playerChars = new List<ICombatant>();
-        playerChars.Add(new PlayerCombatant(randomProvider));
     }
 
     public static void ClearInstance()
@@ -40,9 +36,9 @@ public class CombatManager : ICombatManager
         instance = null;
     }
 
-    public IDisposable Subscribe(IObserver<CombatManagerUpdateEvent> observer)
+    public IDisposable Subscribe(IObserver<ICombatUpdateEvent> observer)
     {
-        return new SimpleUnsubscriber<CombatManagerUpdateEvent>(observers, observer);
+        return new SimpleUnsubscriber<ICombatUpdateEvent>(observers, observer);
     }
 
     public bool PlayerEntersTile(Vector2Int tile)
@@ -50,9 +46,8 @@ public class CombatManager : ICombatManager
         if(map.Goal == tile || (map.Start - tile).magnitude <= 1) return false;
         if (randomProvider.ThingHappens(0.25f))
         {
-            var chars = new List<ICombatant>(playerChars.ToArray());
-            combatInstance = combatInstanceFactory.CreateInstance(chars);
-            UpdateObservers(new CombatManagerUpdateEvent(CombatManagerUpdateEvent.UpdateType.EnteredCombat));
+            combatInstance = combatInstanceFactory.CreateInstance(PlayerCharacters.Instance.GetAllPlayersChars(), this);
+            UpdateObservers(new EnteredCombatEvent((ICombatReader)combatInstance));
             return true;
         }
         return false;
@@ -68,18 +63,13 @@ public class CombatManager : ICombatManager
         combatInstance.Update();
         if (combatInstance.IsDone())
         {
-            if (playerChars[0].IsDead())
-            {
-                Debug.Log("Player is dead");
-                playerChars[0].Attributes.Heal(1000);
-            }
             combatInstance.Dispose();
             combatInstance = null;
-            UpdateObservers(new CombatManagerUpdateEvent(CombatManagerUpdateEvent.UpdateType.LeftCombat));
+            UpdateObservers(new ExitedCombatEvent(null));
         }
     }
 
-    private void UpdateObservers(CombatManagerUpdateEvent evt)
+    private void UpdateObservers(ICombatUpdateEvent evt)
     {
         foreach (var observer in observers)
         {
@@ -95,5 +85,10 @@ public class CombatManager : ICombatManager
     public ICombatReader GetReader()
     {
         return combatInstance != null ? (ICombatReader)combatInstance : null;
+    }
+
+    public void RecieveEvent(ICombatUpdateEvent ev)
+    {
+        UpdateObservers(ev);
     }
 }
