@@ -3,8 +3,11 @@ using System.Collections.Generic;
 class SimpleCombatant : ICombatant
 {
     private readonly CombatAttributes attributes = new CombatAttributes();
+    private readonly TurnProgress turnProgress = new TurnProgress();
 
     public CombatAttributes Attributes => attributes;
+
+    public ITurnProgress TurnProgress => turnProgress;
 
     public void BeAttacked(int attackStat)
     {
@@ -25,5 +28,5 @@ class SimpleCombatant : ICombatant
         evRecipient.RecieveEvent(new CombatActionEvent(combat, target, this));
     }
 
-    
+
 }

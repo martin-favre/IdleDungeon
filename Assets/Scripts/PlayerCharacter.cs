@@ -7,8 +7,11 @@ public class PlayerCharacter : ICombatant
     private readonly IRandomProvider random;
     private readonly IEventRecipient<PlayerCharacterUpdateEvent> playerEvRecipient;
     private readonly CombatAttributes attributes = new CombatAttributes();
+    private readonly TurnProgress turnProgress = new TurnProgress();
 
     public CombatAttributes Attributes => attributes;
+
+    public ITurnProgress TurnProgress => turnProgress;
 
     public PlayerCharacter(IRandomProvider random,
                             IEventRecipient<PlayerCharacterUpdateEvent> playerEvRecipient)

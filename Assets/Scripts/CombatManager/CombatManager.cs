@@ -14,9 +14,10 @@ public class CombatManager : ICombatManager, IEventRecipient<ICombatUpdateEvent>
     private readonly IRandomProvider randomProvider;
     private readonly ICombatInstanceFactory combatInstanceFactory;
     private readonly IMap map;
+    private readonly ITimeProvider timeProvider;
     private ICombatInstance combatInstance;
 
-    public CombatManager(IRandomProvider randomProvider, ICombatInstanceFactory combatInstanceFactory, IMap map)
+    public CombatManager(IRandomProvider randomProvider, ICombatInstanceFactory combatInstanceFactory, IMap map, ITimeProvider timeProvider)
     {
         if (instance == null)
         {
@@ -29,6 +30,7 @@ public class CombatManager : ICombatManager, IEventRecipient<ICombatUpdateEvent>
         this.randomProvider = randomProvider;
         this.combatInstanceFactory = combatInstanceFactory;
         this.map = map;
+        this.timeProvider = timeProvider;
     }
 
     public static void ClearInstance()
@@ -46,8 +48,8 @@ public class CombatManager : ICombatManager, IEventRecipient<ICombatUpdateEvent>
         if(map.Goal == tile || (map.Start - tile).magnitude <= 1) return false;
         if (randomProvider.ThingHappens(0.25f))
         {
-            combatInstance = combatInstanceFactory.CreateInstance(PlayerCharacters.Instance.GetAllPlayersChars(), this);
-            UpdateObservers(new EnteredCombatEvent((ICombatReader)combatInstance));
+            combatInstance = combatInstanceFactory.CreateInstance(PlayerCharacters.Instance.GetAllPlayersChars(), this, timeProvider);
+            UpdateObservers(new EnteredCombatEvent(combatInstance.CombatReader));
             return true;
         }
         return false;
@@ -84,7 +86,7 @@ public class CombatManager : ICombatManager, IEventRecipient<ICombatUpdateEvent>
 
     public ICombatReader GetReader()
     {
-        return combatInstance != null ? (ICombatReader)combatInstance : null;
+        return combatInstance != null ? combatInstance.CombatReader : null;
     }
 
     public void RecieveEvent(ICombatUpdateEvent ev)

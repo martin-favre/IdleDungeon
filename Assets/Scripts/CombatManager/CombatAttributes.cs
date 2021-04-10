@@ -1,12 +1,14 @@
 
 public class CombatAttributes
 {
-    public int Attack { get => 2; }
-    public int Defence { get => 1; }
-    public int Speed { get => 1; }
-
     public int Hp { get => currentHp; }
+    public int Attack { get => attack; set => attack = value; }
+    public int Defence { get => defence; set => defence = value; }
+    public int Speed { get => speed; set => speed = value; }
 
+    private int attack = 20;
+    private int defence = 1;
+    private int speed = 30;
     private int maxHp = 100;
     private int currentHp;
 
