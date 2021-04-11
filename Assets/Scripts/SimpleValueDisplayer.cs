@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class SimpleValueDisplayer : MonoBehaviour
 {
 
-    public class ValueHook
+    public class ValueHook : IDisposable
     {
         string lastValue = "";
 
@@ -14,6 +14,11 @@ public class SimpleValueDisplayer : MonoBehaviour
         public void UpdateValue(string value)
         {
             lastValue = value;
+        }
+
+        public void Dispose()
+        {
+            SimpleValueDisplayer.Instance.UnregisterValue(this);
         }
 
         ~ValueHook()

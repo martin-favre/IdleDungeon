@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 class SimpleCombatant : ICombatant
@@ -5,9 +6,13 @@ class SimpleCombatant : ICombatant
     private readonly CombatAttributes attributes = new CombatAttributes();
     private readonly TurnProgress turnProgress = new TurnProgress();
 
+    private readonly Guid guid = Guid.NewGuid();
+
     public CombatAttributes Attributes => attributes;
 
     public ITurnProgress TurnProgress => turnProgress;
+
+    public Guid UniqueId => guid;
 
     public void BeAttacked(int attackStat)
     {

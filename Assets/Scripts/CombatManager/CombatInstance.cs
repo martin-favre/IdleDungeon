@@ -11,7 +11,6 @@ public class CombatInstance : ICombatInstance, ICombatReader
 {
 
     List<ICombatant> goodGuys;
-    Dictionary<ICombatant, float> combatProgress = new Dictionary<ICombatant, float>();
     List<ICombatant> badGuys;
     private readonly IEventRecipient<ICombatUpdateEvent> evRecipient;
     private readonly ITimeProvider timeProvider;
@@ -59,17 +58,25 @@ public class CombatInstance : ICombatInstance, ICombatReader
 
     private bool ItsTheirTurn(ICombatant combatant)
     {
-        if(combatant.TurnProgress == null) return true;
-        return combatant.TurnProgress.IncrementTurnProgress(combatant.Attributes.Speed*timeProvider.DeltaTime);
+        if (combatant.TurnProgress == null) return true;
+        return combatant.TurnProgress.IncrementTurnProgress(combatant.Attributes.Speed * timeProvider.DeltaTime);
     }
 
     private void CleanOutDeadGuys(List<ICombatant> combatants)
     {
+        List<ICombatant> deadCombatants = new List<ICombatant>();
         foreach (var item in combatants)
         {
-            if (item.IsDead()) combatProgress.Remove(item);
+            deadCombatants.Add(item);
         }
+
         combatants.RemoveAll((c) => c.IsDead());
+        // When we throw event the we want the combatants list to be correct
+        foreach (var item in deadCombatants)
+        {
+            if (item.IsDead()) evRecipient.RecieveEvent(new CombatantDied(this, item));
+        }
+
     }
 
     public bool IsDone()
@@ -83,14 +90,9 @@ public class CombatInstance : ICombatInstance, ICombatReader
         badGuys.Clear();
     }
 
-    public CombatAttributes[] GetEnemiesAttributes()
+    public ICombatant[] GetEnemies()
     {
-        CombatAttributes[] arr = new CombatAttributes[badGuys.Count];
-        for (int i = 0; i < badGuys.Count; i++)
-        {
-            arr[i] = badGuys[i].Attributes;
-        }
-        return arr;
+        return badGuys.ToArray();
     }
 
     public IDisposable Subscribe(IObserver<ICombatUpdateEvent> observer)

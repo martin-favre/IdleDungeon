@@ -28,6 +28,22 @@ public class ExitedCombatEvent : ICombatUpdateEvent
 
 }
 
+public class CombatantDied : ICombatUpdateEvent
+{
+    private readonly ICombatReader combat;
+    private readonly ICombatant victim;
+
+    public CombatantDied(ICombatReader combat, ICombatant victim)
+    {
+        this.combat = combat;
+        this.victim = victim;
+    }
+
+    public ICombatReader Combat => combat;
+
+    public ICombatant Victim => victim;
+}
+
 public class CombatActionEvent : ICombatUpdateEvent
 {
     private readonly ICombatReader combat;

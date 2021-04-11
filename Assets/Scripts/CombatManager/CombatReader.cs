@@ -1,5 +1,5 @@
 
 public interface ICombatReader
 {
-    CombatAttributes[] GetEnemiesAttributes();
+    ICombatant[] GetEnemies();
 }

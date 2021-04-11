@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 
@@ -9,15 +10,20 @@ public class PlayerCharacter : ICombatant
     private readonly CombatAttributes attributes = new CombatAttributes();
     private readonly TurnProgress turnProgress = new TurnProgress();
 
+    private Guid guid = Guid.NewGuid();
+
     public CombatAttributes Attributes => attributes;
 
     public ITurnProgress TurnProgress => turnProgress;
+
+    public Guid UniqueId => guid;
 
     public PlayerCharacter(IRandomProvider random,
                             IEventRecipient<PlayerCharacterUpdateEvent> playerEvRecipient)
     {
         this.random = random;
         this.playerEvRecipient = playerEvRecipient;
+        attributes.Attack = 90;
     }
 
     public void PerformAction(List<ICombatant> enemies, ICombatReader combat, IEventRecipient<ICombatUpdateEvent> evRecipient)
@@ -37,6 +43,6 @@ public class PlayerCharacter : ICombatant
 
     public bool IsDead()
     {
-        return attributes.IsDead();
+        return false;
     }
 }

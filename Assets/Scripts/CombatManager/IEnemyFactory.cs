@@ -12,6 +12,9 @@ public class EnemyFactory : IEnemyFactory
     {
         var ret = new List<ICombatant>();
         ret.Add(new SimpleCombatant());
+        ret.Add(new SimpleCombatant());
+        ret.Add(new SimpleCombatant());
+        ret.Add(new SimpleCombatant());
         return ret;
     }
 }

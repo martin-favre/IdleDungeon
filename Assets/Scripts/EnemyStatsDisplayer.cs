@@ -1,29 +1,47 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyStatsDisplayer : MonoBehaviour
 {
-    SimpleValueDisplayer.ValueHook displayer;
+    Dictionary<Guid, SimpleValueDisplayer.ValueHook> displayers = new Dictionary<Guid, SimpleValueDisplayer.ValueHook>();
     SimpleObserver<ICombatUpdateEvent> observer;
 
     void Awake()
     {
-        displayer = SimpleValueDisplayer.Instance.RegisterValue();
         observer = new SimpleObserver<ICombatUpdateEvent>(CombatManager.Instance, (e) =>
         {
-            UpdateText(e.Combat);
+            if (e is EnteredCombatEvent)
+            {
+                foreach (var enemy in e.Combat.GetEnemies())
+                {
+                    displayers[enemy.UniqueId] = SimpleValueDisplayer.Instance.RegisterValue();
+                }
+            }
+
+            if (e is ExitedCombatEvent)
+            {
+                foreach (var item in displayers)
+                {
+                    item.Value.Dispose();
+                }
+                displayers.Clear();
+            }
+            else
+            {
+                UpdateText(e.Combat);
+            }
         });
     }
 
     private void UpdateText(ICombatReader combat)
     {
-        string s = "";
         if (combat != null)
         {
-            foreach (var enemy in combat.GetEnemiesAttributes())
+            foreach (var item in combat.GetEnemies())
             {
-                s += "Enemy HP: " + enemy.Hp + "\n";
+                displayers[item.UniqueId].UpdateValue("Enemy HP: " + item.Attributes.Hp);
             }
         }
-        displayer.UpdateValue(s);
     }
 }

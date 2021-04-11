@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 public interface ICombatant
@@ -7,4 +8,6 @@ public interface ICombatant
     bool IsDead();
     CombatAttributes Attributes { get; }
     ITurnProgress TurnProgress { get; }
+
+    Guid UniqueId { get; }
 }
