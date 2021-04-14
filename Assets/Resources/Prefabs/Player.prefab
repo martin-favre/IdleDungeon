@@ -94,7 +94,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6350811459267688189}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fd8df1f8ad4fa6c438619dde7703d194, type: 3}
   m_Name: 
@@ -190,6 +190,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cabe6fdc7c3f3f43a59e78de814b467, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  positionToLookAt: {x: 0, y: 0, z: 0}
   targetPosition: {x: 0, y: 0, z: 0}
   rotationSpeed: 5
   movementSpeed: 10
