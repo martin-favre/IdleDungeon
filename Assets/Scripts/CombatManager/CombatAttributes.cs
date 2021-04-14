@@ -8,7 +8,7 @@ public class CombatAttributes
 
     private int attack = 20;
     private int defence = 1;
-    private int speed = 30;
+    private int speed = 100;
     private int maxHp = 100;
     private int currentHp;
 
