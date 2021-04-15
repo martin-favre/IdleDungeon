@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 class SimpleCombatant : ICombatant
 {
-    private readonly CombatAttributes attributes = new CombatAttributes();
+    private readonly SimpleCombatAttributes attributes = new SimpleCombatAttributes();
     private readonly TurnProgress turnProgress = new TurnProgress();
 
     private readonly Guid guid = Guid.NewGuid();
 
-    public CombatAttributes Attributes => attributes;
+    public ICombatAttributes Attributes => attributes;
 
     public ITurnProgress TurnProgress => turnProgress;
 
@@ -16,8 +16,7 @@ class SimpleCombatant : ICombatant
 
     public void BeAttacked(int attackStat)
     {
-        int dmg = attributes.CalculateDamage(attackStat);
-        attributes.Damage(dmg);
+        attributes.Damage(attackStat);
     }
 
     public bool IsDead()

@@ -5,15 +5,20 @@ using UnityEngine;
 public class PlayerPrefsReader : IPersistentDataStorage
 {
     private static PlayerPrefsReader instance;
-    public static PlayerPrefsReader Instance { get => instance; set => instance = value; }
+    public static PlayerPrefsReader Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = new PlayerPrefsReader();
+                instance.ClearStorage(); // clear all during development
+            }
+            return instance;
+        }
+    }
 
     Dictionary<string, List<IObserver<IPersistentStorageUpdateEvent>>> observers = new Dictionary<string, List<IObserver<IPersistentStorageUpdateEvent>>>();
-
-    static PlayerPrefsReader()
-    {
-        instance = new PlayerPrefsReader();
-        instance.ClearStorage(); // clear all during development
-    }
 
     public float GetFloat(string key)
     {
@@ -71,7 +76,10 @@ public class PlayerPrefsReader : IPersistentDataStorage
 
     private void NotifyObservers(string key, IPersistentStorageUpdateEvent evt)
     {
-        foreach (var observer in observers[key])
+        List<IObserver<IPersistentStorageUpdateEvent>> keyObservers;
+        bool success = observers.TryGetValue(key, out keyObservers);
+        if(!success) return;
+        foreach (var observer in keyObservers)
         {
             observer.OnNext(evt);
         }

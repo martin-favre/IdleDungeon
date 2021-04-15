@@ -24,7 +24,7 @@ namespace Tests
 
         Mock<ITurnProgress> turnProgressMock;
 
-        CombatAttributes attributes;
+        SimpleCombatAttributes attributes;
 
         [SetUp]
         public void Setup()
@@ -41,8 +41,7 @@ namespace Tests
             turnProgressMock = new Mock<ITurnProgress>();
             turnProgressMock.Setup(f => f.IncrementTurnProgress(It.IsAny<float>())).Returns(true); // By default it's always everyone's turn
             playerMock.Setup(f => f.TurnProgress).Returns(turnProgressMock.Object);
-            attributes = new CombatAttributes();
-            attributes.Speed = (int)TurnProgress.MaxTurnProgress;
+            attributes = new SimpleCombatAttributes();
             playerMock.Setup(f => f.Attributes).Returns(attributes);
             combatInstance = new CombatInstance(players.ToArray(), enemyFactoryMock.Object, eventRecipientMock.Object, timeMock.Object);
         }

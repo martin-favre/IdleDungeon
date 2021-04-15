@@ -1,25 +1,26 @@
 
-public class CombatAttributes
+public interface ICombatAttributes
+{
+    int Hp { get; }
+    int Attack { get; }
+    int Speed { get; }
+    void Damage(int damage);
+    bool IsDead();
+}
+
+public class SimpleCombatAttributes : ICombatAttributes
 {
     public int Hp { get => currentHp; }
     public int Attack { get => attack; set => attack = value; }
-    public int Defence { get => defence; set => defence = value; }
     public int Speed { get => speed; set => speed = value; }
-
     private int attack = 20;
-    private int defence = 1;
     private int speed = 100;
     private int maxHp = 100;
     private int currentHp;
 
-    public CombatAttributes()
+    public SimpleCombatAttributes()
     {
         currentHp = maxHp;
-    }
-
-    public int CalculateDamage(int attack)
-    {
-        return attack - Defence;
     }
 
     public void Damage(int damage)
@@ -33,9 +34,4 @@ public class CombatAttributes
         return currentHp <= 0;
     }
 
-    public void Heal(int damage)
-    {
-        currentHp += damage;
-        if (currentHp > maxHp) currentHp = maxHp;
-    }
 }
