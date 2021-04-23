@@ -1,28 +1,22 @@
 using System;
 using System.Collections.Generic;
 
-public class PlayerCharacterUpdateEvent
+public interface IPlayerCharacterUpdateEvent
 {
-    private readonly PlayerCharacter character;
 
-    public PlayerCharacterUpdateEvent(PlayerCharacter character)
-    {
-        this.character = character;
-    }
-
-    public PlayerCharacter Character => character;
 }
+
 
 /*
     Responsible for creating/loading/storing and distributing the PlayerCharacters
 */
-public class PlayerCharacters : IObservable<PlayerCharacterUpdateEvent>, IEventRecipient<PlayerCharacterUpdateEvent>
+public class PlayerCharacters : IObservable<IPlayerCharacterUpdateEvent>, IEventRecipient<IPlayerCharacterUpdateEvent>
 {
     static PlayerCharacters instance;
 
     List<PlayerCharacter> playerChars = new List<PlayerCharacter>();
 
-    List<IObserver<PlayerCharacterUpdateEvent>> observers = new List<IObserver<PlayerCharacterUpdateEvent>>();
+    List<IObserver<IPlayerCharacterUpdateEvent>> observers = new List<IObserver<IPlayerCharacterUpdateEvent>>();
 
     static PlayerCharacters()
     {
@@ -41,7 +35,7 @@ public class PlayerCharacters : IObservable<PlayerCharacterUpdateEvent>, IEventR
         return playerChars.ToArray();
     }
 
-    public void RecieveEvent(PlayerCharacterUpdateEvent ev)
+    public void RecieveEvent(IPlayerCharacterUpdateEvent ev)
     {
         foreach (var observer in observers)
         {
@@ -49,8 +43,8 @@ public class PlayerCharacters : IObservable<PlayerCharacterUpdateEvent>, IEventR
         }
     }
 
-    public IDisposable Subscribe(IObserver<PlayerCharacterUpdateEvent> observer)
+    public IDisposable Subscribe(IObserver<IPlayerCharacterUpdateEvent> observer)
     {
-        return new SimpleUnsubscriber<PlayerCharacterUpdateEvent>(observers, observer);
+        return new SimpleUnsubscriber<IPlayerCharacterUpdateEvent>(observers, observer);
     }
 }

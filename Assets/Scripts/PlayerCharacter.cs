@@ -1,13 +1,24 @@
 using System;
 using System.Collections.Generic;
 
+public class PlayerCharacterAttributeUpdateEvent : IPlayerCharacterUpdateEvent
+{
+    private readonly ICombatAttributes attributes;
+
+    public PlayerCharacterAttributeUpdateEvent(ICombatAttributes attributes)
+    {
+        this.attributes = attributes;
+    }
+
+    public ICombatAttributes Attributes => attributes;
+}
 
 // Represents a Character the player owns. i.e. not an enemy.
 public class PlayerCharacter : ICombatant
 {
     private readonly IRandomProvider random;
-    private readonly IEventRecipient<PlayerCharacterUpdateEvent> playerEvRecipient;
-    private readonly PlayerAttributes attributes = new PlayerAttributes(PlayerPrefsReader.Instance);
+    private readonly IEventRecipient<IPlayerCharacterUpdateEvent> playerEvRecipient;
+    private readonly PlayerAttributes attributes;
     private readonly TurnProgress turnProgress = new TurnProgress();
 
     private Guid guid = Guid.NewGuid();
@@ -19,10 +30,11 @@ public class PlayerCharacter : ICombatant
     public Guid UniqueId => guid;
 
     public PlayerCharacter(IRandomProvider random,
-                            IEventRecipient<PlayerCharacterUpdateEvent> playerEvRecipient)
+                            IEventRecipient<IPlayerCharacterUpdateEvent> playerEvRecipient)
     {
         this.random = random;
         this.playerEvRecipient = playerEvRecipient;
+        attributes = new PlayerAttributes(PlayerPrefsReader.Instance, playerEvRecipient);
     }
 
     public void PerformAction(List<ICombatant> enemies, ICombatReader combat, IEventRecipient<ICombatUpdateEvent> evRecipient)
@@ -36,7 +48,7 @@ public class PlayerCharacter : ICombatant
     public void BeAttacked(int attackStat)
     {
         attributes.Damage(attackStat);
-        playerEvRecipient.RecieveEvent(new PlayerCharacterUpdateEvent(this));
+        playerEvRecipient.RecieveEvent(new PlayerCharacterAttributeUpdateEvent(attributes));
     }
 
     public bool IsDead()
