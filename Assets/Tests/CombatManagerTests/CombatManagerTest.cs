@@ -35,10 +35,10 @@ namespace Tests
             eventRecipientMock = new Mock<IEventRecipient<ICombatUpdateEvent>>();
             combatFactoryMock = new Mock<ICombatInstanceFactory>(MockBehavior.Strict);
             combatFactoryMock.Setup(f => f.CreateInstance(It.IsAny<ICombatant[]>(),
-                It.IsAny<IEventRecipient<ICombatUpdateEvent>>(), It.IsAny<ITimeProvider>())).Returns(combatMock.Object);
+                It.IsAny<IEventRecipient<ICombatUpdateEvent>>())).Returns(combatMock.Object);
             CombatManager.ClearInstance();
             timeProviderMock = new Mock<ITimeProvider>();
-            manager = new CombatManager(randomMock.Object, combatFactoryMock.Object, mapMock.Object, timeProviderMock.Object);
+            manager = new CombatManager(randomMock.Object, combatFactoryMock.Object, mapMock.Object);
         }
 
         [Test]
@@ -46,8 +46,8 @@ namespace Tests
         {
             randomMock.Setup(f => f.ThingHappens(It.IsAny<float>())).Returns(true);
             manager.PlayerEntersTile(Vector2Int.zero);
-            combatFactoryMock.Verify(f => f.CreateInstance(It.IsAny<ICombatant[]>(), 
-            It.IsAny<IEventRecipient<ICombatUpdateEvent>>(), It.IsAny<ITimeProvider>()), Times.AtLeastOnce);
+            combatFactoryMock.Verify(f => f.CreateInstance(It.IsAny<ICombatant[]>(),
+            It.IsAny<IEventRecipient<ICombatUpdateEvent>>()), Times.AtLeastOnce);
         }
 
         [Test]
@@ -55,8 +55,8 @@ namespace Tests
         {
             randomMock.Setup(f => f.ThingHappens(It.IsAny<float>())).Returns(true);
             manager.PlayerEntersTile(goalPos);
-            combatFactoryMock.Verify(f => f.CreateInstance(It.IsAny<ICombatant[]>(), 
-                It.IsAny<IEventRecipient<ICombatUpdateEvent>>(), It.IsAny<ITimeProvider>()), Times.Never);
+            combatFactoryMock.Verify(f => f.CreateInstance(It.IsAny<ICombatant[]>(),
+                It.IsAny<IEventRecipient<ICombatUpdateEvent>>()), Times.Never);
         }
         [Test]
         public void ShouldNotSpawnCombatInstanceWhenJustOutsideStart()
@@ -71,8 +71,8 @@ namespace Tests
             foreach (var item in posToTest)
             {
                 manager.PlayerEntersTile(startPos + item);
-                combatFactoryMock.Verify(f => f.CreateInstance(It.IsAny<ICombatant[]>(), 
-                    It.IsAny<IEventRecipient<ICombatUpdateEvent>>(), It.IsAny<ITimeProvider>()), Times.Never);
+                combatFactoryMock.Verify(f => f.CreateInstance(It.IsAny<ICombatant[]>(),
+                    It.IsAny<IEventRecipient<ICombatUpdateEvent>>()), Times.Never);
             }
         }
 
@@ -82,8 +82,8 @@ namespace Tests
         {
             randomMock.Setup(f => f.ThingHappens(It.IsAny<float>())).Returns(false);
             manager.PlayerEntersTile(Vector2Int.zero);
-            combatFactoryMock.Verify(f => f.CreateInstance(It.IsAny<ICombatant[]>(), 
-            It.IsAny<IEventRecipient<ICombatUpdateEvent>>(), It.IsAny<ITimeProvider>()), Times.Never);
+            combatFactoryMock.Verify(f => f.CreateInstance(It.IsAny<ICombatant[]>(),
+            It.IsAny<IEventRecipient<ICombatUpdateEvent>>()), Times.Never);
         }
 
         [Test]
