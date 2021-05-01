@@ -5,18 +5,18 @@ public class PlayerAttributes : ICombatAttributes
     private readonly IPersistentDataStorage storage;
     private readonly IEventRecipient<IPlayerCharacterUpdateEvent> recipient;
 
-    public int MaxHp { get => maxHp; }
+    public double MaxHp { get => maxHp; }
     
-    public int CurrentHp { get => currentHp; }
+    public double CurrentHp { get => currentHp; }
 
-    public int Attack { get => attack; }
+    public double Attack { get => attack; }
 
-    public int Speed => 100;
+    public double Speed => 100;
 
-    private int attack;
+    private double attack;
 
-    private int maxHp = 100;
-    private int currentHp;
+    private double maxHp = 100;
+    private double currentHp;
 
     SimpleObserver<Upgrade> attackinessObserver;
     SimpleObserver<Upgrade> healthinessObserver;
@@ -35,13 +35,13 @@ public class PlayerAttributes : ICombatAttributes
 
     void SetMaxHp(int level)
     {
-        int oldMaxHp = maxHp;
-        float oldCurrentHpPart = ((float)currentHp) / ((float)oldMaxHp);
+        double oldMaxHp = maxHp;
+        double oldCurrentHpPart = currentHp / oldMaxHp;
         maxHp = 50 + level * 50;
         // If maxhp goes up, correct the currenthp to be percentually the same as before
         if (maxHp > oldMaxHp)
         {
-            currentHp = Mathf.RoundToInt(oldCurrentHpPart * maxHp);
+            currentHp = oldCurrentHpPart * maxHp;
         }
         recipient.RecieveEvent(new PlayerCharacterAttributeUpdateEvent(this));
     }
@@ -51,7 +51,7 @@ public class PlayerAttributes : ICombatAttributes
         attack = 2 + level * 2;
     }
 
-    public void Damage(int damage)
+    public void Damage(double damage)
     {
         currentHp -= damage;
         if (currentHp <= 0) currentHp = 0;

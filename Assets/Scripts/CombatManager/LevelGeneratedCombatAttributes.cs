@@ -2,16 +2,16 @@ using UnityEngine;
 
 public class LevelGeneratedCombatAttributes : ICombatAttributes
 {
-    public int MaxHp { get => maxHp; }
-    public int CurrentHp { get => currentHp; }
-    public int Attack { get => attack; }
-    public int Speed { get => speed; }
+    public double MaxHp { get => maxHp; }
+    public double CurrentHp { get => currentHp; }
+    public double Attack { get => attack; }
+    public double Speed { get => speed; }
 
 
-    readonly private int attack;
-    readonly private int speed;
-    readonly private int maxHp;
-    private int currentHp;
+    readonly private double attack;
+    readonly private double speed;
+    readonly private double maxHp;
+    private double currentHp;
 
     public LevelGeneratedCombatAttributes(int currentLevel)
     {
@@ -23,7 +23,7 @@ public class LevelGeneratedCombatAttributes : ICombatAttributes
         currentHp = maxHp;
     }
 
-    public void Damage(int damage)
+    public void Damage(double damage)
     {
         currentHp -= damage;
         if (currentHp <= 0) currentHp = 0;

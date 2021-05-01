@@ -1,9 +1,9 @@
 public interface ICombatAttributes
 {
-    int MaxHp { get; }
-    int CurrentHp { get; }
-    int Attack { get; }
-    int Speed { get; }
-    void Damage(int damage);
+    double MaxHp { get; }
+    double CurrentHp { get; }
+    double Attack { get; }
+    double Speed { get; }
+    void Damage(double damage);
     bool IsDead();
 }

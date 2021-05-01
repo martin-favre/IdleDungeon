@@ -14,7 +14,7 @@ class SimpleCombatant : ICombatant
 
     public Guid UniqueId => guid;
 
-    public void BeAttacked(int attackStat)
+    public void BeAttacked(double attackStat)
     {
         attributes.Damage(attackStat);
     }

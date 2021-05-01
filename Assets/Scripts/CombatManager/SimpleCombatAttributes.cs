@@ -2,21 +2,21 @@
 // Simple CombatAttributes that's just get/set
 public class SimpleCombatAttributes : ICombatAttributes
 {
-    public int MaxHp { get => maxHp; }
-    public int CurrentHp { get => currentHp; }
-    public int Attack { get => attack; set => attack = value; }
-    public int Speed { get => speed; set => speed = value; }
-    private int attack = 20;
-    private int speed = 100;
-    private int maxHp = 100;
-    private int currentHp;
+    public double MaxHp { get => maxHp; }
+    public double CurrentHp { get => currentHp; }
+    public double Attack { get => attack; set => attack = value; }
+    public double Speed { get => speed; set => speed = value; }
+    private double attack = 20;
+    private double speed = 100;
+    private double maxHp = 100;
+    private double currentHp;
 
     public SimpleCombatAttributes()
     {
         currentHp = maxHp;
     }
 
-    public void Damage(int damage)
+    public void Damage(double damage)
     {
         currentHp -= damage;
         if (currentHp <= 0) currentHp = 0;

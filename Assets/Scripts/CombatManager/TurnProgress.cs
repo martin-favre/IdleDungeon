@@ -1,12 +1,12 @@
 public interface ITurnProgress
 {
     void ResetTurnProgress();
-    bool IncrementTurnProgress(float speed);
+    bool IncrementTurnProgress(double speed);
 }
 public class TurnProgress : ITurnProgress
 {
-    public const float MaxTurnProgress = 100;
-    private float turnProgress;
+    public const double MaxTurnProgress = 100;
+    private double turnProgress;
 
     public void ResetTurnProgress()
     {
@@ -14,7 +14,7 @@ public class TurnProgress : ITurnProgress
     }
 
     // Return true if it's their turn
-    public bool IncrementTurnProgress(float speed)
+    public bool IncrementTurnProgress(double speed)
     {
         turnProgress += speed;
         if (turnProgress >= MaxTurnProgress)

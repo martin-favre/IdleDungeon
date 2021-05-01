@@ -18,7 +18,7 @@ class LevelGeneratedCombatant : ICombatant
         attributes = new LevelGeneratedCombatAttributes(currentLevel);
     }
 
-    public void BeAttacked(int attackStat)
+    public void BeAttacked(double attackStat)
     {
         attributes.Damage(attackStat);
     }

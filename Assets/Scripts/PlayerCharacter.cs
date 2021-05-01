@@ -45,7 +45,7 @@ public class PlayerCharacter : ICombatant
         evRecipient.RecieveEvent(new CombatActionEvent(combat, enemy, this));
     }
 
-    public void BeAttacked(int attackStat)
+    public void BeAttacked(double attackStat)
     {
         attributes.Damage(attackStat);
         playerEvRecipient.RecieveEvent(new PlayerCharacterAttributeUpdateEvent(attributes));
