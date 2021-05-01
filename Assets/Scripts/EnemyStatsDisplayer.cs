@@ -40,7 +40,7 @@ public class EnemyStatsDisplayer : MonoBehaviour
         {
             foreach (var item in combat.GetEnemies())
             {
-                displayers[item.UniqueId].UpdateValue("Enemy HP: " + item.Attributes.Hp);
+                displayers[item.UniqueId].UpdateValue("Enemy HP: " + item.Attributes.CurrentHp + "/" + item.Attributes.MaxHp);
             }
         }
     }

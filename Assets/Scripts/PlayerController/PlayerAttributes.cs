@@ -5,7 +5,9 @@ public class PlayerAttributes : ICombatAttributes
     private readonly IPersistentDataStorage storage;
     private readonly IEventRecipient<IPlayerCharacterUpdateEvent> recipient;
 
-    public int Hp { get => currentHp; }
+    public int MaxHp { get => maxHp; }
+    
+    public int CurrentHp { get => currentHp; }
 
     public int Attack { get => attack; }
 
