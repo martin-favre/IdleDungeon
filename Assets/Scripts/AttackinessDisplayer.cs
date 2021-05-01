@@ -1,7 +1,7 @@
 using UnityEngine;
 
 
-public class HealthinessDisplayer : MonoBehaviour
+public class AttackinessDisplayer : MonoBehaviour
 {
     SimpleValueDisplayer.ValueHook levelHook;
     SimpleValueDisplayer.ValueHook costHook;
@@ -12,13 +12,13 @@ public class HealthinessDisplayer : MonoBehaviour
     {
         levelHook = SimpleValueDisplayer.Instance.RegisterValue();
         costHook = SimpleValueDisplayer.Instance.RegisterValue();
-        observer = new SimpleObserver<Upgrade>(UpgradeManager.Instance.Healthiness, UpdateValue);
-        UpdateValue(UpgradeManager.Instance.Healthiness);
+        observer = new SimpleObserver<Upgrade>(UpgradeManager.Instance.Attackiness, UpdateValue);
+        UpdateValue(UpgradeManager.Instance.Attackiness);
     }
 
-    void UpdateValue(Upgrade healhiness)
+    void UpdateValue(Upgrade attackiness)
     {
-        levelHook.UpdateValue("Healhiness Level: " + healhiness.Level);
-        costHook.UpdateValue("Healhiness Cost: " + healhiness.Cost);
+        levelHook.UpdateValue("Attackiness Level: " + Mathf.RoundToInt((float)attackiness.Level));
+        costHook.UpdateValue("Attackiness Cost: " + Mathf.RoundToInt((float)attackiness.Cost));
     }
 }

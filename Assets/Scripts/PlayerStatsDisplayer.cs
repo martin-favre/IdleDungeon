@@ -21,6 +21,6 @@ public class PlayerStatsDisplayer : MonoBehaviour
 
     private void UpdateText(ICombatAttributes attributes)
     {
-        displayer.UpdateValue("Player HP: " + attributes.CurrentHp + "/" + attributes.MaxHp);
+        displayer.UpdateValue("Player HP: " + Mathf.RoundToInt((float)attributes.CurrentHp) + "/" + Mathf.RoundToInt((float)attributes.MaxHp));
     }
 }

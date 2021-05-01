@@ -10,7 +10,7 @@ public abstract class Upgrade : IObservable<Upgrade>
 
     private List<IObserver<Upgrade>> observers = new List<IObserver<Upgrade>>();
 
-    public int Cost { get => Mathf.RoundToInt(baseCost * Mathf.Pow(costMultiplier, level)); }
+    public float Cost { get => baseCost * Mathf.Pow(costMultiplier, level); }
     public int Level { get => level; }
     public abstract string StorageKey { get; }
 
