@@ -9,7 +9,8 @@ public class CombatManagerComponent : MonoBehaviour
             // Will be executed after GameManagerComponent thanks to Unity Settings
             CombatManager.Instance = new CombatManager(SystemRandom.Instance, new CombatInstanceFactory(
                 UnityTime.Instance,
-                PlayerPrefsReader.Instance
+                PlayerPrefsReader.Instance,
+                PlayerWallet.Instance
             ), GameManager.GameManager.Instance.GridMap);
         }
     }

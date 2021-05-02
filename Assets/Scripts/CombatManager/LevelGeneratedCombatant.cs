@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 class LevelGeneratedCombatant : ICombatant
 {
@@ -14,8 +15,13 @@ class LevelGeneratedCombatant : ICombatant
 
     public Guid UniqueId => guid;
 
+    readonly double experienceWorth;
+    public double ExperienceWorth => experienceWorth;
+        
+
     public LevelGeneratedCombatant(int currentLevel) {
         attributes = new LevelGeneratedCombatAttributes(currentLevel);
+        experienceWorth = 10 + Mathf.RoundToInt(10 * Mathf.Pow(1.07f, (float)currentLevel));
     }
 
     public void BeAttacked(double attackStat)

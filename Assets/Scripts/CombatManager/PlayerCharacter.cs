@@ -29,6 +29,8 @@ public class PlayerCharacter : ICombatant
 
     public Guid UniqueId => guid;
 
+    public double ExperienceWorth => 0; // Players are not worth experience :D
+
     public PlayerCharacter(IRandomProvider random,
                             IEventRecipient<IPlayerCharacterUpdateEvent> playerEvRecipient)
     {

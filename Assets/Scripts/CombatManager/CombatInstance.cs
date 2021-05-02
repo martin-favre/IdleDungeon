@@ -14,52 +14,77 @@ public class CombatInstance : ICombatInstance, ICombatReader
     List<ICombatant> badGuys;
     private readonly IEventRecipient<ICombatUpdateEvent> evRecipient;
     private readonly ITimeProvider timeProvider;
+    private readonly IPlayerWallet wallet;
 
     public ICombatReader CombatReader => this;
 
     public CombatInstance(ICombatant[] playerChars,
     IEnemyFactory enemyFactory,
     IEventRecipient<ICombatUpdateEvent> evRecipient,
-    ITimeProvider timeProvider)
+    ITimeProvider timeProvider,
+    IPlayerWallet wallet
+    )
     {
         if (playerChars.Length < 1) throw new System.Exception("Starting combat without player");
         this.goodGuys = new List<ICombatant>(playerChars);
         badGuys = enemyFactory.GenerateEnemies();
-        this.evRecipient = evRecipient;
+        this.evRecipient = evRecipient; 
         this.timeProvider = timeProvider;
+        this.wallet = wallet;
         goodGuys.ForEach(e => e.TurnProgress.ResetTurnProgress());
         badGuys.ForEach(e => e.TurnProgress.ResetTurnProgress());
     }
     public void Update()
     {
         if (IsDone()) return;
-        foreach (var combatant in goodGuys)
         {
-            if (ItsTheirTurn(combatant))
+            ICombatant[] goodGuysCopy = goodGuys.ToArray(); // to avoid modifying the original while iterating
+            foreach (var combatant in goodGuysCopy)
             {
-                combatant.PerformAction(badGuys, this, evRecipient);
-                CleanOutDeadGuys(badGuys);
-                CleanOutDeadGuys(goodGuys);
-                if (IsDone()) return;
+                if (ItsTheirTurn(combatant) && !combatant.IsDead())
+                {
+                    combatant.PerformAction(badGuys, this, evRecipient);
+                    GenerateCurrencyFromDeads(badGuys);
+                    CleanOutDeadGuys(badGuys);
+                    CleanOutDeadGuys(goodGuys);
+                    if (IsDone()) return;
+                }
             }
         }
 
-        foreach (var combatant in badGuys)
         {
-            if (ItsTheirTurn(combatant))
+
+            ICombatant[] badGuysCopy = badGuys.ToArray();
+            foreach (var combatant in badGuysCopy)
             {
-                combatant.PerformAction(goodGuys, this, evRecipient);
-                CleanOutDeadGuys(badGuys);
-                CleanOutDeadGuys(goodGuys);
-                if (IsDone()) return;
+                if (ItsTheirTurn(combatant) && !combatant.IsDead())
+                {
+                    combatant.PerformAction(goodGuys, this, evRecipient);
+                    GenerateCurrencyFromDeads(badGuys);
+                    CleanOutDeadGuys(badGuys);
+                    CleanOutDeadGuys(goodGuys);
+                    if (IsDone()) return;
+                }
             }
         }
+    }
+
+    private void GenerateCurrencyFromDeads(List<ICombatant> badGuys)
+    {
+        badGuys.ForEach((c) =>
+        {
+            if (c.IsDead())
+            {
+                wallet.AddExperience(c.ExperienceWorth);
+            }
+        });
     }
 
     private bool ItsTheirTurn(ICombatant combatant)
     {
         if (combatant.TurnProgress == null) return true;
-        return combatant.TurnProgress.IncrementTurnProgress(combatant.Attributes.Speed * timeProvider.DeltaTime);
+        bool itsTheirTurn = combatant.TurnProgress.IncrementTurnProgress(combatant.Attributes.Speed * timeProvider.DeltaTime);
+        return itsTheirTurn;
     }
 
     private void CleanOutDeadGuys(List<ICombatant> combatants)

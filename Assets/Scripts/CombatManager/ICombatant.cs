@@ -7,6 +7,9 @@ public interface ICombatant
     void BeAttacked(double attackStat);
     bool IsDead();
     ICombatAttributes Attributes { get; }
+
+    double ExperienceWorth { get; }
+
     ITurnProgress TurnProgress { get; }
 
     Guid UniqueId { get; }

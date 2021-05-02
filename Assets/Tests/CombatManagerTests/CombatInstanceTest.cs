@@ -24,6 +24,8 @@ namespace Tests
 
         Mock<ITurnProgress> turnProgressMock;
 
+        Mock<IPlayerWallet> walletMock;
+
         SimpleCombatAttributes attributes;
 
         [SetUp]
@@ -32,18 +34,19 @@ namespace Tests
             playerMock = new Mock<ICombatant>();
             players = new List<ICombatant>();
             players.Add(playerMock.Object);
-            eventRecipientMock = new Mock<IEventRecipient<ICombatUpdateEvent>>();
+            eventRecipientMock = new Mock<IEventRecipient<ICombatUpdateEvent>>(); 
             enemies = new List<ICombatant>();
             enemyFactoryMock = new Mock<IEnemyFactory>();
             enemyFactoryMock.Setup(f => f.GenerateEnemies()).Returns(enemies);
             timeMock = new Mock<ITimeProvider>();
             timeMock.Setup(f => f.DeltaTime).Returns(1); // Since turnprogression is DeltaTime*speed this makes calculating it easier
             turnProgressMock = new Mock<ITurnProgress>();
-            turnProgressMock.Setup(f => f.IncrementTurnProgress(It.IsAny<float>())).Returns(true); // By default it's always everyone's turn
+            turnProgressMock.Setup(f => f.IncrementTurnProgress(It.IsAny<double>())).Returns(true); // By default it's always everyone's turn
             playerMock.Setup(f => f.TurnProgress).Returns(turnProgressMock.Object);
             attributes = new SimpleCombatAttributes();
             playerMock.Setup(f => f.Attributes).Returns(attributes);
-            combatInstance = new CombatInstance(players.ToArray(), enemyFactoryMock.Object, eventRecipientMock.Object, timeMock.Object);
+            walletMock = new Mock<IPlayerWallet>();
+            combatInstance = new CombatInstance(players.ToArray(), enemyFactoryMock.Object, eventRecipientMock.Object, timeMock.Object, walletMock.Object);
         }
 
         [Test]
@@ -124,7 +127,7 @@ namespace Tests
             var enemyMock = new Mock<ICombatant>();
             enemies.Add(enemyMock.Object);
 
-            turnProgressMock.Setup(f => f.IncrementTurnProgress(It.IsAny<float>())).Returns(true);
+            turnProgressMock.Setup(f => f.IncrementTurnProgress(It.IsAny<double>())).Returns(true);
             combatInstance.Update();
             playerMock.Verify(foo => foo.PerformAction(It.IsAny<List<ICombatant>>(), It.IsAny<ICombatReader>(),
                 It.Is<IEventRecipient<ICombatUpdateEvent>>(e => e == eventRecipientMock.Object)), Times.Once); // Should only have happened once
@@ -135,7 +138,7 @@ namespace Tests
             var enemyMock = new Mock<ICombatant>();
             enemies.Add(enemyMock.Object);
 
-            turnProgressMock.Setup(f => f.IncrementTurnProgress(It.IsAny<float>())).Returns(false);
+            turnProgressMock.Setup(f => f.IncrementTurnProgress(It.IsAny<double>())).Returns(false);
             combatInstance.Update();
             playerMock.Verify(foo => foo.PerformAction(It.IsAny<List<ICombatant>>(), It.IsAny<ICombatReader>(),
                 It.Is<IEventRecipient<ICombatUpdateEvent>>(e => e == eventRecipientMock.Object)), Times.Never); // Should only have happened once
