@@ -1,6 +1,7 @@
 public interface IUpgradeManager
 {
     Upgrade Attackiness { get; }
+    Upgrade Healthiness { get; }
 }
 public class UpgradeManager : IUpgradeManager
 {
@@ -13,13 +14,13 @@ public class UpgradeManager : IUpgradeManager
 
     static UpgradeManager()
     {
-        instance = new UpgradeManager(PlayerPrefsReader.Instance);
+        instance = new UpgradeManager(PlayerPrefsReader.Instance, PlayerWallet.Instance);
     }
 
-    public UpgradeManager(IPersistentDataStorage storage)
+    public UpgradeManager(IPersistentDataStorage storage, IPlayerWallet wallet)
     {
-        attackiness = new AttackinessUpgrade(0, storage);
-        healthiness = new HealthinessUpgrade(0, storage);
+        attackiness = new AttackinessUpgrade(0, storage, wallet);
+        healthiness = new HealthinessUpgrade(0, storage, wallet);
     }
 
 }

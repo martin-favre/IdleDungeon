@@ -21,14 +21,14 @@ public class PlayerAttributes : ICombatAttributes
     SimpleObserver<Upgrade> attackinessObserver;
     SimpleObserver<Upgrade> healthinessObserver;
 
-    public PlayerAttributes(IPersistentDataStorage storage, IEventRecipient<IPlayerCharacterUpdateEvent> recipient)
+    public PlayerAttributes(IPersistentDataStorage storage, IEventRecipient<IPlayerCharacterUpdateEvent> recipient, IUpgradeManager upgradeManager)
     {
         this.storage = storage;
         this.recipient = recipient;
-        attackinessObserver = new SimpleObserver<Upgrade>(UpgradeManager.Instance.Attackiness, (u) => SetAttack(u.Level));
-        SetAttack(UpgradeManager.Instance.Attackiness.Level);
-        healthinessObserver = new SimpleObserver<Upgrade>(UpgradeManager.Instance.Healthiness, (u) => SetMaxHp(u.Level));
-        SetMaxHp(UpgradeManager.Instance.Healthiness.Level);
+        attackinessObserver = new SimpleObserver<Upgrade>(upgradeManager.Attackiness, (u) => SetAttack(u.Level));
+        SetAttack(upgradeManager.Attackiness.Level);
+        healthinessObserver = new SimpleObserver<Upgrade>(upgradeManager.Healthiness, (u) => SetMaxHp(u.Level));
+        SetMaxHp(upgradeManager.Healthiness.Level);
         currentHp = maxHp; // todo, store currenthp in DB
     }
 

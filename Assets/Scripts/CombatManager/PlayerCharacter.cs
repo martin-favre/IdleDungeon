@@ -36,7 +36,7 @@ public class PlayerCharacter : ICombatant
     {
         this.random = random;
         this.playerEvRecipient = playerEvRecipient;
-        attributes = new PlayerAttributes(PlayerPrefsReader.Instance, playerEvRecipient);
+        attributes = new PlayerAttributes(PlayerPrefsReader.Instance, playerEvRecipient, UpgradeManager.Instance);
     }
 
     public void PerformAction(List<ICombatant> enemies, ICombatReader combat, IEventRecipient<ICombatUpdateEvent> evRecipient)
