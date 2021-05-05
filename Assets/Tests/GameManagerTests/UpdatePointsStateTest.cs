@@ -19,6 +19,8 @@ namespace Tests
         Mock<IGameManager> gameManagerMock;
         Mock<IPersistentDataStorage> persistentStorageMock;
 
+        Mock<IPlayerCharacters> playerCharsMock;
+
         [SetUp]
         public void Setup()
         {
@@ -31,8 +33,10 @@ namespace Tests
 
             persistentStorageMock = new Mock<IPersistentDataStorage>();
             gameManagerMock = new Mock<IGameManager>();
+            playerCharsMock = new Mock<IPlayerCharacters>();
             gameManagerMock.Setup(foo => foo.MapFactory).Returns(mapGeneratorMock.Object);
             gameManagerMock.Setup(foo => foo.DataStorage).Returns(persistentStorageMock.Object);
+            gameManagerMock.Setup(foo => foo.PlayerChars).Returns(playerCharsMock.Object);
             
         }
 
