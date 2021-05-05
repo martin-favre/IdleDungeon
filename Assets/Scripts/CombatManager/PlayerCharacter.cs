@@ -55,6 +55,6 @@ public class PlayerCharacter : ICombatant
 
     public bool IsDead()
     {
-        return false;
+        return attributes.IsDead();
     }
 }

@@ -11,6 +11,7 @@ namespace GameManager
         IRandomProvider RandomProvider { get; }
 
         IPersistentDataStorage DataStorage { get; }
+        IPlayerCharacters PlayerChars { get; }
 
         void SpawnMap();
         void SpawnPlayer();

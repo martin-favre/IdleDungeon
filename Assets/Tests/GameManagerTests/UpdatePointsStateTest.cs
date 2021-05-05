@@ -39,26 +39,46 @@ namespace Tests
         [Test]
         public void ShouldTransitionDirectly()
         {
-            var state = new UpdatePointsState(gameManagerMock.Object);
+            var state = new UpdatePointsState(gameManagerMock.Object, false);
             state.OnEntry();
             Assert.IsTrue(state.OnDuring() is GenerateMapState);
         }
 
         [Test]
-        public void ShouldIncrementLevelByOne()
+        public void ShouldIncrementLevelByOneIfCompletedMap()
         {
             persistentStorageMock.Setup(foo => foo.GetInt(It.Is<string>((s) => s.Equals(Constants.currentLevelKey)), It.IsAny<int>())).Returns(5);
             
-            var state = new UpdatePointsState(gameManagerMock.Object);
+            var state = new UpdatePointsState(gameManagerMock.Object, false);
             state.OnEntry();
             persistentStorageMock.Verify(foo => foo.SetInt(It.Is<string>((s) => s.Equals(Constants.currentLevelKey)), It.Is<int>(i => i == 6)));
         }
+        [Test]
+        public void ShouldDecrementLevelByOneIfPlayerDied()
+        {
+            persistentStorageMock.Setup(foo => foo.GetInt(It.Is<string>((s) => s.Equals(Constants.currentLevelKey)), It.IsAny<int>())).Returns(5);
+            
+            var state = new UpdatePointsState(gameManagerMock.Object, true);
+            state.OnEntry();
+            persistentStorageMock.Verify(foo => foo.SetInt(It.Is<string>((s) => s.Equals(Constants.currentLevelKey)), It.Is<int>(i => i == 4)));
+        }
+
+        [Test]
+        public void ShouldStayOnLevel0IfPlayerDied()
+        {
+            persistentStorageMock.Setup(foo => foo.GetInt(It.Is<string>((s) => s.Equals(Constants.currentLevelKey)), It.IsAny<int>())).Returns(0);
+            
+            var state = new UpdatePointsState(gameManagerMock.Object, true);
+            state.OnEntry();
+            persistentStorageMock.Verify(foo => foo.SetInt(It.Is<string>((s) => s.Equals(Constants.currentLevelKey)), It.Is<int>(i => i == 0)));
+        }
+
 
         [Test]
         public void LevelShouldDefaultToZero()
         {   
 
-            var state = new UpdatePointsState(gameManagerMock.Object);
+            var state = new UpdatePointsState(gameManagerMock.Object, false);
             state.OnEntry();
             persistentStorageMock.Verify(foo => foo.GetInt(It.Is<string>((s) => s.Equals(Constants.currentLevelKey)), It.Is<int>(i => i == 0)));
             // It defaults to 0, so when we call OnEntry, it becomes 1

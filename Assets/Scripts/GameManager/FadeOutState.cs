@@ -4,12 +4,14 @@ using StateMachineCollection;
 public class FadeOutState : State
 {
     private readonly IGameManager manager;
+    private readonly bool playerDied;
     public const float fadeoutTime = 1.5f;
     private readonly float startTime;
 
-    public FadeOutState(IGameManager manager)
+    public FadeOutState(IGameManager manager, bool playerDied)
     {
         this.manager = manager;
+        this.playerDied = playerDied;
         startTime = manager.TimeProvider.Time;
     }
 
@@ -22,7 +24,7 @@ public class FadeOutState : State
     {
         if (manager.TimeProvider.Time > startTime + fadeoutTime)
         {
-            return new UpdatePointsState(manager);
+            return new UpdatePointsState(manager, playerDied);
         }
         return StateMachine.NoTransition();
     }

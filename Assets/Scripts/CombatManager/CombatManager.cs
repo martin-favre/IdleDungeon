@@ -1,6 +1,7 @@
 
 using System;
 using System.Collections.Generic;
+using GameManager;
 using Logging;
 using UnityEngine;
 public class CombatManager : ICombatManager, IEventRecipient<ICombatUpdateEvent>
@@ -43,7 +44,7 @@ public class CombatManager : ICombatManager, IEventRecipient<ICombatUpdateEvent>
 
     public bool PlayerEntersTile(Vector2Int tile)
     {
-        if(map.Goal == tile || (map.Start - tile).magnitude <= 1) return false;
+        if (map.Goal == tile || (map.Start - tile).magnitude <= 1) return false;
         if (randomProvider.ThingHappens(0.25f))
         {
             combatInstance = combatInstanceFactory.CreateInstance(PlayerCharacters.Instance.GetAllPlayersChars(), this);
@@ -63,9 +64,10 @@ public class CombatManager : ICombatManager, IEventRecipient<ICombatUpdateEvent>
         combatInstance.Update();
         if (combatInstance.IsDone())
         {
+            var result = combatInstance.Result == ICombatInstance.CombatResult.PlayerLost ? ExitedCombatEvent.CombatResult.PlayerLost : ExitedCombatEvent.CombatResult.PlayerWon;
             combatInstance.Dispose();
             combatInstance = null;
-            UpdateObservers(new ExitedCombatEvent(null));
+            UpdateObservers(new ExitedCombatEvent(null, result));
         }
     }
 

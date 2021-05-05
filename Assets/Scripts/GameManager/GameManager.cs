@@ -22,16 +22,12 @@ namespace GameManager
         public IMap GridMap { get => map; set => map = value; }
         public IMapFactory MapFactory { get => mapGenerator; }
         public IMapModifier[] MapModifiers { get => mapModifiers; }
-
         public ITimeProvider TimeProvider { get => UnityTime.Instance; }
-
         public IRandomProvider RandomProvider { get => SystemRandom.Instance; }
-
         public IPersistentDataStorage DataStorage { get => PlayerPrefsReader.Instance; }
-
         static IGameManager instance;
         public static IGameManager Instance { get => instance; }
-        
+        public IPlayerCharacters PlayerChars { get => PlayerCharacters.Instance; }
 
         public GameManager(Action spawnMap, Action spawnPlayer, Action fadeOut, Action fadeIn)
         {
@@ -47,7 +43,10 @@ namespace GameManager
         {
             machine.RaiseEvent(new PlayerReachedGoalEvent());
         }
-
+        public void OnPlayerDied()
+        {
+            machine.RaiseEvent(new PlayerDiedEvent());
+        }
         public void Update()
         {
             if (!machine.IsTerminated())

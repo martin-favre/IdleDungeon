@@ -16,7 +16,7 @@ namespace PlayerController
         private readonly IPlayerMover playerMover;
         private readonly Stack<Vector2Int> path;
         private Vector2Int position;
-        public Vector2Int Position{ get => position; set => position = value; }
+        public Vector2Int Position { get => position; set => position = value; }
         LilLogger logger;
         static PlayerController instance;
         public static PlayerController Instance { get => instance; }
@@ -27,6 +27,7 @@ namespace PlayerController
         public PlayerController(IMap map,
                                 IPathFinder pathFinder,
                                 Action onPathDone,
+                                Action OnPlayerDied,
                                 ICombatManager combatManager,
                                 IPlayerMover playerMover)
         {
@@ -52,9 +53,21 @@ namespace PlayerController
                 {
                     Debug.Log("Player enters combat");
                 }
-                else if(e is ExitedCombatEvent)
+                else if (e is ExitedCombatEvent)
                 {
-                    machine.RaiseEvent(new AwaitCombatState.CombatFinishedEvent());
+                    var ev = e as ExitedCombatEvent;
+                    if (ev.Result == ExitedCombatEvent.CombatResult.PlayerWon)
+                    {
+                        machine.RaiseEvent(new AwaitCombatState.CombatFinishedEvent());
+                    }
+                    else if (ev.Result == ExitedCombatEvent.CombatResult.PlayerLost)
+                    {
+                        OnPlayerDied();
+                    }
+                    else
+                    {
+                        logger.Log("Unknown event ", LogLevel.Error);
+                    }
                 }
             });
             if (instance != null) logger.Log("Replacing singleton instance");

@@ -27,4 +27,9 @@ public class SimpleCombatAttributes : ICombatAttributes
         return currentHp <= 0;
     }
 
+    public void Heal(double healing)
+    {
+        currentHp += healing;
+        if (currentHp > maxHp) currentHp = maxHp;
+    }
 }

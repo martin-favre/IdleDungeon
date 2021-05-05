@@ -34,4 +34,9 @@ public class LevelGeneratedCombatAttributes : ICombatAttributes
         return currentHp <= 0;
     }
 
+    public void Heal(double healing)
+    {
+        currentHp += healing;
+        if (currentHp > maxHp) currentHp = maxHp;
+    }
 }

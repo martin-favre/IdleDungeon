@@ -6,7 +6,7 @@ public class PlayerAttributes : ICombatAttributes
     private readonly IEventRecipient<IPlayerCharacterUpdateEvent> recipient;
 
     public double MaxHp { get => maxHp; }
-    
+
     public double CurrentHp { get => currentHp; }
 
     public double Attack { get => attack; }
@@ -45,10 +45,10 @@ public class PlayerAttributes : ICombatAttributes
         }
         recipient.RecieveEvent(new PlayerCharacterAttributeUpdateEvent(this));
     }
-    
+
     void SetAttack(int level)
     {
-        attack = 2 + level * 2;
+        attack = 5 + level * 5;
     }
 
     public void Damage(double damage)
@@ -57,8 +57,15 @@ public class PlayerAttributes : ICombatAttributes
         if (currentHp <= 0) currentHp = 0;
     }
 
+    public void Heal(double healing)
+    {
+        currentHp += healing;
+        if(currentHp > maxHp) currentHp = maxHp;
+    }
+
+
     public bool IsDead()
     {
-        return false; // Temporary during development to avoid dying all the time
+        return currentHp <= 0;
     }
 }

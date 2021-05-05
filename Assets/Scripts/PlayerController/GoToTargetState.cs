@@ -13,9 +13,14 @@ public class GoToTargetState : State
         controller.RequestMoveTo(controller.Position);
     }
 
-    public override void HandleEvent(IStateEvent happening)
+    public override EventResult HandleEvent(IStateEvent happening)
     {
-        if (happening is PositionReachedEvent) positionReached = true;
+        if (happening is PositionReachedEvent)
+        {
+            positionReached = true;
+            return EventResult.EventHandled;
+        }
+        return EventResult.EventNotHandled;
     }
 
     public override State OnDuring()

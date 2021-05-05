@@ -18,6 +18,7 @@ public class CombatInstance : ICombatInstance, ICombatReader
 
     public ICombatReader CombatReader => this;
 
+    public ICombatInstance.CombatResult Result { get => goodGuys.Count > 0 ? ICombatInstance.CombatResult.PlayerWon : ICombatInstance.CombatResult.PlayerLost; }
     public CombatInstance(ICombatant[] playerChars,
     IEnemyFactory enemyFactory,
     IEventRecipient<ICombatUpdateEvent> evRecipient,
@@ -28,12 +29,13 @@ public class CombatInstance : ICombatInstance, ICombatReader
         if (playerChars.Length < 1) throw new System.Exception("Starting combat without player");
         this.goodGuys = new List<ICombatant>(playerChars);
         badGuys = enemyFactory.GenerateEnemies();
-        this.evRecipient = evRecipient; 
+        this.evRecipient = evRecipient;
         this.timeProvider = timeProvider;
         this.wallet = wallet;
         goodGuys.ForEach(e => e.TurnProgress.ResetTurnProgress());
         badGuys.ForEach(e => e.TurnProgress.ResetTurnProgress());
     }
+
     public void Update()
     {
         if (IsDone()) return;

@@ -19,13 +19,14 @@ namespace PlayerController
         private Vector3 originalPos;
         PlayerMovementComponent movementComponent;
 
-        public void Setup(IMap map, Action onGoalReached)
+        public void Setup(IMap map, Action onGoalReached, Action OnPlayerDied)
         {
             this.onGoalReached = onGoalReached;
             movementComponent = GetComponent<PlayerMovementComponent>();
             controller = new PlayerController(map,
                                               new DepthFirst(),
                                               OnDone,
+                                              OnPlayerDied,
                                               CombatManager.Instance,
                                               movementComponent);
             previousPosition = controller.Position;

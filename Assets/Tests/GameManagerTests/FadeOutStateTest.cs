@@ -43,7 +43,7 @@ namespace Tests
         [Test]
         public void ShouldSpawnObjectsOnEntry()
         {
-            var state = new FadeOutState(gameManagerMock.Object);
+            var state = new FadeOutState(gameManagerMock.Object, true);
             state.OnEntry();
             gameManagerMock.Verify (foo => foo.FadeOut());
         }
@@ -52,7 +52,7 @@ namespace Tests
         [Test]
         public void ShouldTransitionOnAfterAWhile()
         {
-            var state = new FadeOutState(gameManagerMock.Object);
+            var state = new FadeOutState(gameManagerMock.Object, true);
             state.OnEntry();
             timeProviderMock.Setup(foo => foo.Time).Returns(0);
             for(int i = 0; i < 10; i++) {

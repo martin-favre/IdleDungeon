@@ -6,16 +6,20 @@ public interface IPlayerCharacterUpdateEvent
 
 }
 
+public interface IPlayerCharacters : IObservable<IPlayerCharacterUpdateEvent>
+{
+    PlayerCharacter[] GetAllPlayersChars();
+}
+
 
 /*
     Responsible for creating/loading/storing and distributing the PlayerCharacters
 */
-public class PlayerCharacters : IObservable<IPlayerCharacterUpdateEvent>, IEventRecipient<IPlayerCharacterUpdateEvent>
+public class PlayerCharacters : IPlayerCharacters, IEventRecipient<IPlayerCharacterUpdateEvent>
 {
     static PlayerCharacters instance;
-
+    public static IPlayerCharacters Instance { get => instance; }
     List<PlayerCharacter> playerChars = new List<PlayerCharacter>();
-
     List<IObserver<IPlayerCharacterUpdateEvent>> observers = new List<IObserver<IPlayerCharacterUpdateEvent>>();
 
     static PlayerCharacters()
@@ -27,8 +31,6 @@ public class PlayerCharacters : IObservable<IPlayerCharacterUpdateEvent>, IEvent
     {
         playerChars.Add(new PlayerCharacter(randomProvider, this));
     }
-
-    public static PlayerCharacters Instance { get => instance; }
 
     public PlayerCharacter[] GetAllPlayersChars()
     {

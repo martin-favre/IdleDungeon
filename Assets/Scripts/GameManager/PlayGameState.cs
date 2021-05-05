@@ -6,12 +6,17 @@ namespace GameManager
 
     public class PlayerReachedGoalEvent : IStateEvent
     {
+    }
+
+    public class PlayerDiedEvent : IStateEvent
+    {
 
     }
     public class PlayGameState : State
     {
         private readonly IGameManager manager;
         private bool goalReached = false;
+        private bool playerDied = false;
 
         public PlayGameState(IGameManager manager)
         {
@@ -24,20 +29,32 @@ namespace GameManager
             manager.SpawnPlayer();
             manager.FadeIn();
         }
-        public override void HandleEvent(IStateEvent happening)
+        public override EventResult HandleEvent(IStateEvent happening)
         {
             if (happening is PlayerReachedGoalEvent)
             {
-                var ev = happening as PlayerReachedGoalEvent;
                 goalReached = true;
                 Debug.Log("Hurrah");
+                return EventResult.EventHandled;
             }
+            if (happening is PlayerDiedEvent)
+            {
+                playerDied = true;
+                Debug.Log("Boho");
+                return EventResult.EventHandled;
+            }
+            return EventResult.EventNotHandled;
         }
 
         public override State OnDuring()
         {
-            if(goalReached) {
-                return new FadeOutState(manager);
+            if (playerDied)
+            {
+                return new FadeOutState(manager, true);
+            }
+            if (goalReached)
+            {
+                return new FadeOutState(manager, false);
             }
             return StateMachine.NoTransition();
         }

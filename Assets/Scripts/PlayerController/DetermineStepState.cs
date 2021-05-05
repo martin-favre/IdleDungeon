@@ -30,12 +30,14 @@ public class DetermineStepState : State
         }
     }
 
-    public override void HandleEvent(IStateEvent happening)
+    public override EventResult HandleEvent(IStateEvent happening)
     {
         if (happening is TurningFinishedEvent)
         {
             turningFinished = true;
+            return EventResult.EventHandled;
         }
+            return EventResult.EventNotHandled;
     }
 
     public override State OnDuring()

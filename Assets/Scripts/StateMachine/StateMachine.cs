@@ -1,12 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Logging;
 namespace StateMachineCollection
 {
 
     public interface IStateEvent
     {
+    }
+
+    public enum EventResult
+    {
+        EventHandled,
+        EventNotHandled
     }
 
     public abstract class State
@@ -21,7 +27,10 @@ namespace StateMachineCollection
         public abstract State OnDuring();
         public virtual void OnExit() { }
 
-        public virtual void HandleEvent(IStateEvent happening) { }
+        public virtual EventResult HandleEvent(IStateEvent happening)
+        {
+            return EventResult.EventNotHandled;
+        }
         protected void TerminateMachine()
         {
             machineTerminated = true;
@@ -33,6 +42,7 @@ namespace StateMachineCollection
     {
         State activeState;
         bool isFirstEntryExecuted = false;
+        static readonly LilLogger logger = new LilLogger(typeof(StateMachine).ToString());
         public StateMachine(State initialState)
         {
             if (initialState == null) throw new System.Exception("Initial state is null");
@@ -77,7 +87,11 @@ namespace StateMachineCollection
         {
             if (activeState != null && !activeState.MachineTerminated)
             {
-                activeState.HandleEvent(ev);
+                var result = activeState.HandleEvent(ev);
+                if (result == EventResult.EventNotHandled)
+                {
+                    logger.Log("Unhandled event in statemachine", LogLevel.Warning);
+                }
             }
         }
 
