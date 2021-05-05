@@ -7,7 +7,12 @@ using UnityEngine;
 namespace GameManager
 {
 
-    public class GameManager : IGameManager
+    public interface PlayerCallbacks
+    {
+        void OnPlayerDied();
+        void OnPlayerReachedGoal();
+    }
+    public class GameManager : IGameManager, PlayerCallbacks
     {
         private readonly IMapFactory mapGenerator = new BlockyRecursiveBacktracker();
         private readonly IMapModifier[] mapModifiers = {
@@ -18,6 +23,7 @@ namespace GameManager
         private readonly Action spawnPlayer;
         private readonly Action fadeOut;
         private readonly Action fadeIn;
+        private readonly IGameManagerComponent component;
         private StateMachine machine;
         public IMap GridMap { get => map; set => map = value; }
         public IMapFactory MapFactory { get => mapGenerator; }
@@ -29,17 +35,14 @@ namespace GameManager
         public static IGameManager Instance { get => instance; }
         public IPlayerCharacters PlayerChars { get => PlayerCharacters.Instance; }
 
-        public GameManager(Action spawnMap, Action spawnPlayer, Action fadeOut, Action fadeIn)
+        public GameManager(IGameManagerComponent component)
         {
-            this.spawnMap = spawnMap;
-            this.spawnPlayer = spawnPlayer;
-            this.fadeOut = fadeOut;
-            this.fadeIn = fadeIn;
             machine = new StateMachine(new GenerateMapState(this));
             instance = this;
+            this.component = component;
         }
 
-        public void OnGoalReached()
+        public void OnPlayerReachedGoal()
         {
             machine.RaiseEvent(new PlayerReachedGoalEvent());
         }
@@ -57,22 +60,22 @@ namespace GameManager
 
         public void SpawnMap()
         {
-            this.spawnMap();
+            component.SpawnMap();
         }
 
         public void SpawnPlayer()
         {
-            this.spawnPlayer();
+            component.SpawnPlayer();
         }
 
         public void FadeOut()
         {
-            this.fadeOut();
+            component.FadeOut();
         }
 
         public void FadeIn()
         {
-            this.fadeIn();
+            component.FadeIn();
         }
     }
 }

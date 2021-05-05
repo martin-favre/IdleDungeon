@@ -4,7 +4,7 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 using Moq;
-using PlayerController;
+
 using GameManager;
 
 namespace Tests

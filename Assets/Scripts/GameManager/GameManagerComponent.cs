@@ -1,10 +1,17 @@
-using PlayerController;
+
 using UnityEngine;
 
 namespace GameManager
 {
+    public interface IGameManagerComponent
+    {
+        void SpawnMap();
+        void SpawnPlayer();
+        void FadeIn();
+        void FadeOut();
+    }
 
-    public class GameManagerComponent : MonoBehaviour
+    public class GameManagerComponent : MonoBehaviour, IGameManagerComponent
     {
         private GameManager manager;
         private GameObject map;
@@ -15,14 +22,14 @@ namespace GameManager
 
         private void Awake()
         {
-            manager = new GameManager(SpawnMap, SpawnPlayer, FadeOut, FadeIn);
+            manager = new GameManager(this);
         }
         private void Update()
         {
             manager.Update();
         }
 
-        void SpawnMap()
+        public void SpawnMap()
         {
             if (map != null)
             {
@@ -36,7 +43,7 @@ namespace GameManager
             comp.Setup(manager.GridMap);
         }
 
-        void SpawnPlayer()
+        public void SpawnPlayer()
         {
             if (player != null)
             {
@@ -49,18 +56,18 @@ namespace GameManager
             const float initialHeight = 2f;
             player.transform.position = Helpers.ToVec3(manager.GridMap.Start, Constants.tileSize.x / 2f + initialHeight);
             var comp = player.GetComponent<PlayerControllerComponent>();
-            comp.Setup(manager.GridMap, manager.OnGoalReached, manager.OnPlayerDied);
+            comp.Setup(manager.GridMap, manager);
         }
 
-        void FadeOut()
+        public void FadeOut()
         {
-            if(!fade) return;
+            if (!fade) return;
             fade.FadeOut();
         }
 
-        void FadeIn()
+        public void FadeIn()
         {
-            if(!fade) return;
+            if (!fade) return;
             fade.FadeIn();
         }
     }

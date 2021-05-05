@@ -104,11 +104,11 @@ public class EnemyVisualizerComponent : MonoBehaviour
 
     void CentralizeEnemies()
     {
-        var myGridPos = PlayerController.PlayerController.Instance.Position;
+        var myGridPos = PlayerController.Instance.Position;
         var realPos = Helpers.ToVec3(myGridPos * Constants.tileSize, Constants.tileSize.y / 2);
         enemyObjects.ForEach(e => e.Item2.transform.position = realPos);
 
-        var playerWorldPos = PlayerController.PlayerController.Instance.WorldPosition;
+        var playerWorldPos = PlayerController.Instance.WorldPosition;
         enemyObjects.ForEach(e => e.Item2.transform.LookAt(playerWorldPos));
     }
 
@@ -120,7 +120,7 @@ public class EnemyVisualizerComponent : MonoBehaviour
             Debug.Assert(enemyObjects.Count >= 2);
             var leftEnemy = enemyObjects[0].Item2;
             var rightEnemy = enemyObjects[1].Item2;
-            var playerWorldPos = PlayerController.PlayerController.Instance.WorldPosition;
+            var playerWorldPos = PlayerController.Instance.WorldPosition;
             var dirToPlayer = (new Vector3(playerWorldPos.x, leftEnemy.transform.position.y, playerWorldPos.z) - leftEnemy.transform.position).normalized;
             var dirLeftOfPlayer = Quaternion.AngleAxis(90, Vector3.up) * dirToPlayer;
             leftEnemy.transform.position += dirLeftOfPlayer * (Constants.tileSize.x / 4f);
@@ -139,7 +139,7 @@ public class EnemyVisualizerComponent : MonoBehaviour
             var leftEnemy = enemyObjects[0].Item2;
             var rightEnemy = enemyObjects[1].Item2;
             var frontEnemy = enemyObjects[2].Item2;
-            var playerWorldPos = PlayerController.PlayerController.Instance.WorldPosition;
+            var playerWorldPos = PlayerController.Instance.WorldPosition;
             var dirToPlayer = (new Vector3(playerWorldPos.x, leftEnemy.transform.position.y, playerWorldPos.z) - leftEnemy.transform.position).normalized;
             var dirLeftOfPlayer = Quaternion.AngleAxis(90, Vector3.up) * dirToPlayer;
             leftEnemy.transform.position += dirLeftOfPlayer * (Constants.tileSize.x / 4f);
@@ -162,7 +162,7 @@ public class EnemyVisualizerComponent : MonoBehaviour
             var frontRight = enemyObjects[1].Item2;
             var backLeft = enemyObjects[2].Item2;
             var backRight = enemyObjects[3].Item2;
-            var playerWorldPos = PlayerController.PlayerController.Instance.WorldPosition;
+            var playerWorldPos = PlayerController.Instance.WorldPosition;
             var dirToPlayer = (new Vector3(playerWorldPos.x, frontLeft.transform.position.y, playerWorldPos.z) - frontLeft.transform.position).normalized;
             var dirLeftOfPlayer = Quaternion.AngleAxis(90, Vector3.up) * dirToPlayer;
             frontLeft.transform.position += dirLeftOfPlayer * (Constants.tileSize.x / 4f);
