@@ -1,24 +1,25 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-public abstract class Upgrade : IObservable<Upgrade>
+public class Upgrade : IObservable<Upgrade>
 {
     private int level;
     private readonly float baseCost;
     private readonly float costMultiplier;
+    private readonly string storageKey;
     private readonly IPersistentDataStorage storage;
     private readonly IPlayerWallet wallet;
     private List<IObserver<Upgrade>> observers = new List<IObserver<Upgrade>>();
 
     public float Cost { get => baseCost * Mathf.Pow(costMultiplier, level); }
     public int Level { get => level; }
-    public abstract string StorageKey { get; }
 
-    public Upgrade(int initialLevel, float baseCost, float costMultiplier, IPersistentDataStorage storage, IPlayerWallet wallet)
+    public Upgrade(int initialLevel, float baseCost, float costMultiplier, string storageKey, IPersistentDataStorage storage, IPlayerWallet wallet)
     {
-        level = storage.GetInt(StorageKey, initialLevel);
+        level = storage.GetInt(storageKey, initialLevel);
         this.baseCost = baseCost;
         this.costMultiplier = costMultiplier;
+        this.storageKey = storageKey;
         this.storage = storage;
         this.wallet = wallet;
     }
@@ -28,7 +29,7 @@ public abstract class Upgrade : IObservable<Upgrade>
         {
             wallet.RemoveExperience(Cost);
             level++;
-            storage.SetInt(StorageKey, level);
+            storage.SetInt(storageKey, level);
             NotifyObservers();
         }
     }

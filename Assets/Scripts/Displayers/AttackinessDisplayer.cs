@@ -12,8 +12,9 @@ public class AttackinessDisplayer : MonoBehaviour
     {
         levelHook = SimpleValueDisplayer.Instance.RegisterValue();
         costHook = SimpleValueDisplayer.Instance.RegisterValue();
-        observer = new SimpleObserver<Upgrade>(UpgradeManager.Instance.Attackiness, UpdateValue);
-        UpdateValue(UpgradeManager.Instance.Attackiness);
+        var upgrade = UpgradeManager.Instance.GetUpgrade(UpgradeType.AttackinessLevel1);
+        observer = new SimpleObserver<Upgrade>(upgrade, UpdateValue);
+        UpdateValue(upgrade);
     }
 
     void UpdateValue(Upgrade attackiness)

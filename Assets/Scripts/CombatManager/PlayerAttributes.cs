@@ -25,10 +25,16 @@ public class PlayerAttributes : ICombatAttributes
     {
         this.storage = storage;
         this.recipient = recipient;
-        attackinessObserver = new SimpleObserver<Upgrade>(upgradeManager.Attackiness, (u) => SetAttack(u.Level));
-        SetAttack(upgradeManager.Attackiness.Level);
-        healthinessObserver = new SimpleObserver<Upgrade>(upgradeManager.Healthiness, (u) => SetMaxHp(u.Level));
-        SetMaxHp(upgradeManager.Healthiness.Level);
+        {
+            var upgrade = UpgradeManager.Instance.GetUpgrade(UpgradeType.AttackinessLevel1);
+            attackinessObserver = new SimpleObserver<Upgrade>(upgrade, (u) => SetAttack(u.Level));
+            SetAttack(upgrade.Level);
+        }
+        {
+            var upgrade = UpgradeManager.Instance.GetUpgrade(UpgradeType.HealthinessLevel1);
+            healthinessObserver = new SimpleObserver<Upgrade>(upgrade, (u) => SetMaxHp(u.Level));
+            SetMaxHp(upgrade.Level);
+        }
         currentHp = maxHp; // todo, store currenthp in DB
     }
 
@@ -60,7 +66,7 @@ public class PlayerAttributes : ICombatAttributes
     public void Heal(double healing)
     {
         currentHp += healing;
-        if(currentHp > maxHp) currentHp = maxHp;
+        if (currentHp > maxHp) currentHp = maxHp;
     }
 
 
