@@ -6,7 +6,9 @@ public enum UpgradeType
     AttackinessLevel1,
     AttackinessLevel2,
     AttackinessLevel3,
-    HealthinessLevel1
+    HealthinessLevel1,
+    HealthinessLevel2,
+    HealthinessLevel3
 }
 
 public interface IUpgradeManager
@@ -32,10 +34,12 @@ public class UpgradeManager : IUpgradeManager
     {
         upgrades = new Dictionary<UpgradeType, Upgrade>
         {
-            {UpgradeType.AttackinessLevel1, new Upgrade(0, 50, 1.07f, "attackinessLevel1", storage, wallet)},
+            {UpgradeType.AttackinessLevel1, new Upgrade(1, 50, 1.07f, "attackinessLevel1", storage, wallet)},
             {UpgradeType.AttackinessLevel2, new Upgrade(0, 1000, 1.09f, "attackinessLevel2", storage, wallet)},
             {UpgradeType.AttackinessLevel3, new Upgrade(0, 10000, 1.11f, "attackinessLevel3", storage, wallet)},
-            {UpgradeType.HealthinessLevel1, new Upgrade(0, 50, 1.07f, "healthinessLevel1", storage, wallet)}
+            {UpgradeType.HealthinessLevel1, new Upgrade(1, 50, 1.07f, "healthinessLevel1", storage, wallet)},
+            {UpgradeType.HealthinessLevel2, new Upgrade(0, 1000, 1.09f, "healthinessLevel2", storage, wallet)},
+            {UpgradeType.HealthinessLevel3, new Upgrade(0, 10000, 1.011f, "healthinessLevel3", storage, wallet)}
         };
     }
     public Upgrade GetUpgrade(UpgradeType type)
@@ -48,6 +52,5 @@ public class UpgradeManager : IUpgradeManager
             return null;
         }
         return upgrade;
-
     }
 }
