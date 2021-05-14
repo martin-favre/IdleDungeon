@@ -4,12 +4,12 @@ using UnityEngine;
 public class LevelDisplayer : MonoBehaviour
 {
     SimpleValueDisplayer.ValueHook valueHook;
-    KeyObserver<IPersistentStorageUpdateEvent, string> observer;
+    KeyObserver<string, IPersistentStorageUpdateEvent> observer;
     private void Start()
     {
         valueHook = SimpleValueDisplayer.Instance.RegisterValue();
         UpdateText(PlayerPrefsReader.Instance.GetInt(Constants.currentLevelKey, 0));
-        observer = new KeyObserver<IPersistentStorageUpdateEvent, string>(
+        observer = new KeyObserver<string, IPersistentStorageUpdateEvent>(
             PlayerPrefsReader.Instance,
             Constants.currentLevelKey,
             (evt) =>

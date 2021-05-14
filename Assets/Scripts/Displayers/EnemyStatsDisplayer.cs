@@ -7,7 +7,7 @@ public class EnemyStatsDisplayer : MonoBehaviour
     Dictionary<Guid, SimpleValueDisplayer.ValueHook> displayers = new Dictionary<Guid, SimpleValueDisplayer.ValueHook>();
     SimpleObserver<ICombatUpdateEvent> observer;
 
-    void Awake()
+    void Start()
     {
         observer = new SimpleObserver<ICombatUpdateEvent>(CombatManager.Instance, (e) =>
         {

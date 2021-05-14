@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Logging;
 
@@ -11,46 +12,86 @@ public enum UpgradeType
     HealthinessLevel3
 }
 
-public interface IUpgradeManager
+public interface IUpgradeManager : IKeyObservable<string, Upgrade>
 {
+    void LevelUpUpgrade(string identifier);
+    Upgrade GetUpgrade(string identifier);
+    void SetUpgrade(string identifier, Upgrade upgrade);
 
-    Upgrade GetUpgrade(UpgradeType type);
+    //For upgrades to publish their updates
+    public void NotifyUpdate(string identifier);
+
 }
 public class UpgradeManager : IUpgradeManager
 {
     static readonly UpgradeManager instance;
-    Dictionary<UpgradeType, Upgrade> upgrades;
+    Dictionary<string, Upgrade> upgrades;
 
     public static UpgradeManager Instance => instance;
 
     private static readonly LilLogger logger = new LilLogger(typeof(UpgradeManager).ToString());
 
+    Dictionary<string, List<IObserver<Upgrade>>> observers;
+
     static UpgradeManager()
     {
-        instance = new UpgradeManager(PlayerPrefsReader.Instance, PlayerWallet.Instance);
+        instance = new UpgradeManager();
     }
 
-    public UpgradeManager(IPersistentDataStorage storage, IPlayerWallet wallet)
+    public UpgradeManager()
     {
-        upgrades = new Dictionary<UpgradeType, Upgrade>
-        {
-            {UpgradeType.AttackinessLevel1, new Upgrade(1, 50, 1.07f, "attackinessLevel1", storage, wallet)},
-            {UpgradeType.AttackinessLevel2, new Upgrade(0, 1000, 1.09f, "attackinessLevel2", storage, wallet)},
-            {UpgradeType.AttackinessLevel3, new Upgrade(0, 10000, 1.11f, "attackinessLevel3", storage, wallet)},
-            {UpgradeType.HealthinessLevel1, new Upgrade(1, 50, 1.07f, "healthinessLevel1", storage, wallet)},
-            {UpgradeType.HealthinessLevel2, new Upgrade(0, 1000, 1.09f, "healthinessLevel2", storage, wallet)},
-            {UpgradeType.HealthinessLevel3, new Upgrade(0, 10000, 1.011f, "healthinessLevel3", storage, wallet)}
-        };
+        upgrades = new Dictionary<string, Upgrade>();
+        observers = new Dictionary<string, List<IObserver<Upgrade>>>();
     }
-    public Upgrade GetUpgrade(UpgradeType type)
+    public void LevelUpUpgrade(string identifier)
+    {
+        Upgrade upgrade = GetUpgrade(identifier);
+        if(upgrade == null) return;
+        upgrade.LevelUp();
+        NotifyUpdate(identifier);
+    }
+
+    public void SetUpgrade(string identifier, Upgrade upgrade)
+    {
+        if (upgrades.ContainsKey(identifier))
+        {
+            logger.Log("Replacing upgrade " + identifier, LogLevel.Warning);
+        }
+        upgrades[identifier] = upgrade;
+        NotifyUpdate(identifier);
+    }
+
+    public IDisposable Subscribe(string key, IObserver<Upgrade> observer)
+    {
+        return new KeyUnsubscriber<string, Upgrade>(observers, key, observer);
+    }
+
+    public void NotifyUpdate(string identifier)
+    {
+        List<IObserver<Upgrade>> obs;
+        bool success = observers.TryGetValue(identifier, out obs);
+        if (!success) return;
+
+        Upgrade upgrade = GetUpgrade(identifier);
+        if(upgrade == null) return;
+        foreach (var observer in obs)
+        {
+            observer.OnNext(upgrade);
+        }
+    }
+
+    public Upgrade GetUpgrade(string identifier)
     {
         Upgrade upgrade;
-        bool success = upgrades.TryGetValue(type, out upgrade);
-        if (!success)
+        bool success = upgrades.TryGetValue(identifier, out upgrade);
+        if (success)
         {
-            logger.Log("Unknown Upgradetype " + type.ToString(), LogLevel.Warning);
+            return upgrade;
+        }
+        else
+        {
+            logger.Log("Unknown Upgradetype " + identifier, LogLevel.Warning);
             return null;
         }
-        return upgrade;
     }
 }

@@ -24,12 +24,12 @@ public class PlayerCharacters : IPlayerCharacters, IEventRecipient<IPlayerCharac
 
     static PlayerCharacters()
     {
-        instance = new PlayerCharacters(SystemRandom.Instance);
+        instance = new PlayerCharacters(SystemRandom.Instance, UpgradeManager.Instance);
     }
 
-    public PlayerCharacters(IRandomProvider randomProvider)
+    public PlayerCharacters(IRandomProvider randomProvider, IUpgradeManager upgradeManager)
     {
-        playerChars.Add(new PlayerCharacter(randomProvider, this));
+        playerChars.Add(new PlayerCharacter(randomProvider, this, upgradeManager, 0));
     }
 
     public PlayerCharacter[] GetAllPlayersChars()

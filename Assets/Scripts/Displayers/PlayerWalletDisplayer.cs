@@ -5,7 +5,7 @@ public class PlayerWalletDisplayer : MonoBehaviour
     SimpleValueDisplayer.ValueHook displayer;
     SimpleObserver<IPlayerWalletUpdateEvent> observer;
 
-    void Awake()
+    void Start()
     {
         displayer = SimpleValueDisplayer.Instance.RegisterValue();
         UpdateText(PlayerWallet.Instance);

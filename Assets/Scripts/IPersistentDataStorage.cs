@@ -44,7 +44,7 @@ public class StringPersistentStorageUpdateEvent : IPersistentStorageUpdateEvent
 
 
 // Interface to hide PlayerPrefs
-public interface IPersistentDataStorage : IKeyObservable<IPersistentStorageUpdateEvent, string>
+public interface IPersistentDataStorage : IKeyObservable<string, IPersistentStorageUpdateEvent>
 {
     int GetInt(string key);
     int GetInt(string key, int defaultValue);

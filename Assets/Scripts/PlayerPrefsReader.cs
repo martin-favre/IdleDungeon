@@ -87,8 +87,8 @@ public class PlayerPrefsReader : IPersistentDataStorage
 
     // key is which value you want to subscribe to
     // You'll get an OnNext called whenever this value is written to
-    public IDisposable Subscribe(IObserver<IPersistentStorageUpdateEvent> observer, string key)
+    public IDisposable Subscribe(string key, IObserver<IPersistentStorageUpdateEvent> observer)
     {
-        return new KeyUnsubscriber<IPersistentStorageUpdateEvent, string>(observers, key, observer);
+        return new KeyUnsubscriber<string, IPersistentStorageUpdateEvent>(observers, key, observer);
     }
 }

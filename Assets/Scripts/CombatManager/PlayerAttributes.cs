@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerAttributes : ICombatAttributes
@@ -19,42 +20,36 @@ public class PlayerAttributes : ICombatAttributes
     private double maxHp = 100;
     private double currentHp;
 
-    SimpleObserver<Upgrade> attackinessLevel1Observer;
-    SimpleObserver<Upgrade> attackinessLevel2Observer;
-    SimpleObserver<Upgrade> attackinessLevel3Observer;
-    SimpleObserver<Upgrade> healthinessLevel1Observer;
-    SimpleObserver<Upgrade> healthinessLevel2Observer;
-    SimpleObserver<Upgrade> healthinessLevel3Observer;
-    Upgrade attackinessLevel1;
-    Upgrade attackinessLevel2;
-    Upgrade attackinessLevel3;
-    Upgrade healthinessLevel1;
-    Upgrade healthinessLevel2;
-    Upgrade healthinessLevel3;
-
-    public PlayerAttributes(IPersistentDataStorage storage, IEventRecipient<IPlayerCharacterUpdateEvent> recipient, IUpgradeManager upgradeManager)
+    List<MultiplierUpgrade> attackUpgrades;
+    public PlayerAttributes(IPersistentDataStorage storage, IEventRecipient<IPlayerCharacterUpdateEvent> recipient, IUpgradeManager upgradeManager, int playerIdentifier)
     {
         this.storage = storage;
         this.recipient = recipient;
-        {
-            attackinessLevel1 = UpgradeManager.Instance.GetUpgrade(UpgradeType.AttackinessLevel1);
-            attackinessLevel1Observer = new SimpleObserver<Upgrade>(attackinessLevel1, (u) => SetAttackiness(u, attackinessLevel2, attackinessLevel3));
-            attackinessLevel2 = UpgradeManager.Instance.GetUpgrade(UpgradeType.AttackinessLevel2);
-            attackinessLevel2Observer = new SimpleObserver<Upgrade>(attackinessLevel2, (u) => SetAttackiness(attackinessLevel1, u, attackinessLevel3));
-            attackinessLevel3 = UpgradeManager.Instance.GetUpgrade(UpgradeType.HealthinessLevel1);
-            attackinessLevel3Observer = new SimpleObserver<Upgrade>(attackinessLevel3, (u) => SetAttackiness(attackinessLevel1, attackinessLevel2, u));
 
-            healthinessLevel1 = UpgradeManager.Instance.GetUpgrade(UpgradeType.HealthinessLevel1);
-            healthinessLevel1Observer = new SimpleObserver<Upgrade>(healthinessLevel1, (u) => SetMaxHp(healthinessLevel1, healthinessLevel2, healthinessLevel3));
-            healthinessLevel2 = UpgradeManager.Instance.GetUpgrade(UpgradeType.HealthinessLevel2);
-            healthinessLevel2Observer = new SimpleObserver<Upgrade>(healthinessLevel2, (u) => SetMaxHp(healthinessLevel1, healthinessLevel2, healthinessLevel3));
-            healthinessLevel3 = UpgradeManager.Instance.GetUpgrade(UpgradeType.HealthinessLevel3);
-            healthinessLevel3Observer = new SimpleObserver<Upgrade>(healthinessLevel3, (u) => SetMaxHp(healthinessLevel1, healthinessLevel2, healthinessLevel3));
-        }
+        attackUpgrades = new List<MultiplierUpgrade>()
+        {
+            new MultiplierUpgrade(5, 1, 50, 1.07f, GetAttackinessUpgradeKey(0, playerIdentifier), storage, PlayerWallet.Instance, upgradeManager),
+            new MultiplierUpgrade(50, 0, 1000, 1.09f, GetAttackinessUpgradeKey(1, playerIdentifier), storage, PlayerWallet.Instance, upgradeManager),
+            new MultiplierUpgrade(500, 0, 10000, 1.11f, GetAttackinessUpgradeKey(2, playerIdentifier), storage, PlayerWallet.Instance, upgradeManager),
+            new MultiplierUpgrade(5, 1, 50, 1.07f, GetHealthinessUpgradeKey(0, playerIdentifier), storage, PlayerWallet.Instance, upgradeManager),
+            new MultiplierUpgrade(50, 0, 1000, 1.09f, GetHealthinessUpgradeKey(1, playerIdentifier), storage, PlayerWallet.Instance, upgradeManager),
+            new MultiplierUpgrade(500, 0, 10000, 1.11f, GetHealthinessUpgradeKey(2, playerIdentifier), storage, PlayerWallet.Instance, upgradeManager),
+        };
+
+
+
         currentHp = maxHp; // todo, store currenthp in DB
-        SetAttackiness(attackinessLevel1, attackinessLevel2, attackinessLevel3);
-        SetMaxHp(healthinessLevel1, healthinessLevel2, healthinessLevel3);
     }
+
+    public static string GetAttackinessUpgradeKey(int upgradeIndex, int player)
+    {
+        return "attackinesslevel" + upgradeIndex + "player" + player;
+    }
+    public static string GetHealthinessUpgradeKey(int upgradeIndex, int player)
+    {
+        return "healthinesslevel" + upgradeIndex + "player" + player;
+    }
+
 
     private void SetAttackiness(Upgrade attackinessLevel1, Upgrade attackinessLevel2, Upgrade attackinessLevel3)
     {

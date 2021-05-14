@@ -6,14 +6,14 @@ public class IncreaseUpgradeButton : MonoBehaviour
 {
 
     [SerializeField]
-    private UpgradeType upgradeType;
+    private string upgradeType;
     [SerializeField]
     private TMP_Text levelText;
     [SerializeField]
     private TMP_Text costText;
 
     private static readonly LilLogger logger = new LilLogger(typeof(IncreaseUpgradeButton).ToString());
-    SimpleObserver<Upgrade> observer;
+    KeyObserver<string, Upgrade> observer;
     void Awake()
     {
         if (levelText == null) logger.Log("Missing field " + nameof(levelText), LogLevel.Warning);
@@ -21,21 +21,12 @@ public class IncreaseUpgradeButton : MonoBehaviour
     }
     void Start()
     {
-        var upgrade = UpgradeManager.Instance.GetUpgrade(upgradeType);
-        if (upgrade != null)
-        {
-            observer = new SimpleObserver<Upgrade>(upgrade, UpdateText);
-            UpdateText(upgrade);
-        }
+        observer = new KeyObserver<string, Upgrade>(UpgradeManager.Instance, upgradeType, UpdateText);
     }
 
     public void LevelUp()
     {
-        var upgrade = UpgradeManager.Instance.GetUpgrade(upgradeType);
-        if (upgrade != null)
-        {
-            upgrade.LevelUp();
-        }
+        UpgradeManager.Instance.LevelUpUpgrade(upgradeType);
     }
 
     void UpdateText(Upgrade upgrade)
@@ -47,6 +38,14 @@ public class IncreaseUpgradeButton : MonoBehaviour
         if (costText)
         {
             costText.text = "Cost:" + Mathf.CeilToInt(upgrade.Cost);
+        }
+    }
+
+    private void OnEnable()
+    {
+        var upgrade = UpgradeManager.Instance.GetUpgrade(upgradeType);
+        if(upgrade!= null) {
+            UpdateText(upgrade);
         }
     }
 }

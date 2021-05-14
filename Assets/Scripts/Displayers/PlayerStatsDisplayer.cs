@@ -5,7 +5,7 @@ public class PlayerStatsDisplayer : MonoBehaviour
     SimpleValueDisplayer.ValueHook displayer;
     SimpleObserver<IPlayerCharacterUpdateEvent> observer;
 
-    void Awake()
+    void Start()
     {
         displayer = SimpleValueDisplayer.Instance.RegisterValue();
         var chars = PlayerCharacters.Instance.GetAllPlayersChars();

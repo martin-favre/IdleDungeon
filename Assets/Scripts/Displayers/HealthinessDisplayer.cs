@@ -6,14 +6,13 @@ public class HealthinessDisplayer : MonoBehaviour
     SimpleValueDisplayer.ValueHook levelHook;
     SimpleValueDisplayer.ValueHook costHook;
 
-    SimpleObserver<Upgrade> observer;
+    KeyObserver<string, Upgrade> observer;
 
-    void Awake()
+    void Start()
     {
         levelHook = SimpleValueDisplayer.Instance.RegisterValue();
         costHook = SimpleValueDisplayer.Instance.RegisterValue();
-        observer = new SimpleObserver<Upgrade>(UpgradeManager.Instance.GetUpgrade(UpgradeType.HealthinessLevel1), UpdateValue);
-        UpdateValue(UpgradeManager.Instance.GetUpgrade(UpgradeType.HealthinessLevel1));
+        observer = new KeyObserver<string, Upgrade>(UpgradeManager.Instance, PlayerAttributes.GetHealthinessUpgradeKey(0, 0), UpdateValue);
     }
 
     void UpdateValue(Upgrade healhiness)

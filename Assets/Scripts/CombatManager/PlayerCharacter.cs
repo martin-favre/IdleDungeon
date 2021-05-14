@@ -32,11 +32,11 @@ public class PlayerCharacter : ICombatant
     public double ExperienceWorth => 0; // Players are not worth experience :D
 
     public PlayerCharacter(IRandomProvider random,
-                            IEventRecipient<IPlayerCharacterUpdateEvent> playerEvRecipient)
+                            IEventRecipient<IPlayerCharacterUpdateEvent> playerEvRecipient, IUpgradeManager upgradeManager, int playerIdentifier)
     {
         this.random = random;
         this.playerEvRecipient = playerEvRecipient;
-        attributes = new PlayerAttributes(PlayerPrefsReader.Instance, playerEvRecipient, UpgradeManager.Instance);
+        attributes = new PlayerAttributes(PlayerPrefsReader.Instance, playerEvRecipient, upgradeManager, playerIdentifier);
     }
 
     public void PerformAction(List<ICombatant> enemies, ICombatReader combat, IEventRecipient<ICombatUpdateEvent> evRecipient)

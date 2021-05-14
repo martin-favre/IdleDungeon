@@ -959,6 +959,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1143400267526332594, guid: 9c02cf42136efe447b74db0a39178844, type: 3}
+      propertyPath: upgradeType
+      value: attackinesslevel0player0
+      objectReference: {fileID: 0}
     - target: {fileID: 2352752612308555976, guid: 9c02cf42136efe447b74db0a39178844, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -981,7 +985,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2804017873073420102, guid: 9c02cf42136efe447b74db0a39178844, type: 3}
       propertyPath: upgradeType
-      value: 3
+      value: healthinesslevel0player0
       objectReference: {fileID: 0}
     - target: {fileID: 5352507842075364938, guid: 9c02cf42136efe447b74db0a39178844, type: 3}
       propertyPath: m_AnchorMax.y
@@ -1093,11 +1097,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5947944635956792630, guid: 9c02cf42136efe447b74db0a39178844, type: 3}
       propertyPath: upgradeType
-      value: 5
+      value: healthinesslevel2player0
       objectReference: {fileID: 0}
     - target: {fileID: 5947944636545524848, guid: 9c02cf42136efe447b74db0a39178844, type: 3}
       propertyPath: upgradeType
-      value: 4
+      value: healthinesslevel1player0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5947944636714688510, guid: 9c02cf42136efe447b74db0a39178844, type: 3}
+      propertyPath: upgradeType
+      value: attackinesslevel2player0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5947944637547214459, guid: 9c02cf42136efe447b74db0a39178844, type: 3}
+      propertyPath: upgradeType
+      value: attackinesslevel1player0
       objectReference: {fileID: 0}
     - target: {fileID: 6108059002474155006, guid: 9c02cf42136efe447b74db0a39178844, type: 3}
       propertyPath: m_AnchorMax.y
