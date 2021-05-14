@@ -21,6 +21,9 @@ public class PlayerAttributes : ICombatAttributes
     private double currentHp;
 
     List<MultiplierUpgrade> attackUpgrades;
+    List<MultiplierUpgrade> healthUpgrades;
+    List<KeyObserver<string, Upgrade>> attackUpgradeObservers;
+    List<KeyObserver<string, Upgrade>> healthUpgradeObservers;
     public PlayerAttributes(IPersistentDataStorage storage, IEventRecipient<IPlayerCharacterUpdateEvent> recipient, IUpgradeManager upgradeManager, int playerIdentifier)
     {
         this.storage = storage;
@@ -31,14 +34,20 @@ public class PlayerAttributes : ICombatAttributes
             new MultiplierUpgrade(5, 1, 50, 1.07f, GetAttackinessUpgradeKey(0, playerIdentifier), storage, PlayerWallet.Instance, upgradeManager),
             new MultiplierUpgrade(50, 0, 1000, 1.09f, GetAttackinessUpgradeKey(1, playerIdentifier), storage, PlayerWallet.Instance, upgradeManager),
             new MultiplierUpgrade(500, 0, 10000, 1.11f, GetAttackinessUpgradeKey(2, playerIdentifier), storage, PlayerWallet.Instance, upgradeManager),
-            new MultiplierUpgrade(5, 1, 50, 1.07f, GetHealthinessUpgradeKey(0, playerIdentifier), storage, PlayerWallet.Instance, upgradeManager),
-            new MultiplierUpgrade(50, 0, 1000, 1.09f, GetHealthinessUpgradeKey(1, playerIdentifier), storage, PlayerWallet.Instance, upgradeManager),
-            new MultiplierUpgrade(500, 0, 10000, 1.11f, GetHealthinessUpgradeKey(2, playerIdentifier), storage, PlayerWallet.Instance, upgradeManager),
         };
 
-
-
+        attackUpgradeObservers = new List<KeyObserver<string, Upgrade>>(attackUpgrades.Count);
+        attackUpgrades.ForEach(upgrade => attackUpgradeObservers.Add(new KeyObserver<string, Upgrade>(UpgradeManager.Instance, upgrade.StorageKey, e => SetAttackiness())));
+        SetAttackiness();
+        healthUpgrades = new List<MultiplierUpgrade>() {
+            new MultiplierUpgrade(50, 1, 50, 1.07f, GetHealthinessUpgradeKey(0, playerIdentifier), storage, PlayerWallet.Instance, upgradeManager),
+            new MultiplierUpgrade(500, 0, 1000, 1.09f, GetHealthinessUpgradeKey(1, playerIdentifier), storage, PlayerWallet.Instance, upgradeManager),
+            new MultiplierUpgrade(5000, 0, 10000, 1.11f, GetHealthinessUpgradeKey(2, playerIdentifier), storage, PlayerWallet.Instance, upgradeManager),
+        };
+        healthUpgradeObservers = new List<KeyObserver<string, Upgrade>>(attackUpgrades.Count);
+        healthUpgrades.ForEach(upgrade => attackUpgradeObservers.Add(new KeyObserver<string, Upgrade>(UpgradeManager.Instance, upgrade.StorageKey, e => SetMaxHp())));
         currentHp = maxHp; // todo, store currenthp in DB
+        SetMaxHp();
     }
 
     public static string GetAttackinessUpgradeKey(int upgradeIndex, int player)
@@ -51,16 +60,19 @@ public class PlayerAttributes : ICombatAttributes
     }
 
 
-    private void SetAttackiness(Upgrade attackinessLevel1, Upgrade attackinessLevel2, Upgrade attackinessLevel3)
+    private void SetAttackiness()
     {
-        attack = attackinessLevel1.Level * 5 + attackinessLevel2.Level * 1000 + attackinessLevel3.Level * 10000;
+        attack = 0;
+        attackUpgrades.ForEach(u => attack += ((MultiplierUpgrade)u).MultipliedValue);
+        recipient.RecieveEvent(new PlayerCharacterAttributeUpdateEvent(this));
     }
 
-    void SetMaxHp(Upgrade healthinessLevel1, Upgrade healthinessLevel2, Upgrade healthinessLevel3)
+    void SetMaxHp()
     {
         double oldMaxHp = maxHp;
         double oldCurrentHpPart = currentHp / oldMaxHp;
-        maxHp = healthinessLevel1.Level * 50 + healthinessLevel2.Level * 1000 + healthinessLevel3.Level * 10000;
+        maxHp = 0;
+        healthUpgrades.ForEach(u => maxHp += ((MultiplierUpgrade)u).MultipliedValue);
         currentHp = oldCurrentHpPart * maxHp;
         recipient.RecieveEvent(new PlayerCharacterAttributeUpdateEvent(this));
     }
@@ -82,12 +94,14 @@ public class PlayerAttributes : ICombatAttributes
     {
         currentHp -= damage;
         if (currentHp <= 0) currentHp = 0;
+        recipient.RecieveEvent(new PlayerCharacterAttributeUpdateEvent(this));
     }
 
     public void Heal(double healing)
     {
         currentHp += healing;
         if (currentHp > maxHp) currentHp = maxHp;
+        recipient.RecieveEvent(new PlayerCharacterAttributeUpdateEvent(this));
     }
 
 

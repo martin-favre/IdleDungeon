@@ -1,6 +1,6 @@
 public class MultiplierUpgrade : Upgrade
 {
-    double MultipliedValue { get => valueMultiplier * Level; }
+    public double MultipliedValue { get => valueMultiplier * Level; }
     private readonly double valueMultiplier;
 
     public MultiplierUpgrade(

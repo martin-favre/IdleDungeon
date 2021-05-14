@@ -13,7 +13,7 @@ public class Upgrade
     public float Cost { get => baseCost * Mathf.Pow(costMultiplier, level); }
     public int Level { get => level; }
 
-    private string StorageKey { get => storageKey; }
+    public string StorageKey { get => storageKey; }
 
     public Upgrade(
         int initialLevel,

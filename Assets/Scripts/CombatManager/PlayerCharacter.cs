@@ -50,7 +50,6 @@ public class PlayerCharacter : ICombatant
     public void BeAttacked(double attackStat)
     {
         attributes.Damage(attackStat);
-        playerEvRecipient.RecieveEvent(new PlayerCharacterAttributeUpdateEvent(attributes));
     }
 
     public bool IsDead()
