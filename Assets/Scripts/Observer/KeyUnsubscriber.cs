@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-public class KeyUnsubscriber<T, Key> : IDisposable
+public class KeyUnsubscriber<Key, T> : IDisposable
 {
     private readonly Dictionary<Key, List<IObserver<T>>> allObserversRef;
     private readonly IObserver<T> myObserver;

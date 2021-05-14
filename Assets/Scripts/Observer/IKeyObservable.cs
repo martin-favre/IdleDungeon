@@ -1,7 +1,7 @@
 namespace System
 {
-    public interface IKeyObservable<out T, Key>
+    public interface IKeyObservable<Key, out T>
     {
-        IDisposable Subscribe(IObserver<T> observer, Key key);
+        IDisposable Subscribe(Key key, IObserver<T> observer);
     }
 }
