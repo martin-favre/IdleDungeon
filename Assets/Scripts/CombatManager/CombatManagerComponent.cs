@@ -10,7 +10,8 @@ public class CombatManagerComponent : MonoBehaviour
             CombatManager.Instance = new CombatManager(SystemRandom.Instance, new CombatInstanceFactory(
                 UnityTime.Instance,
                 PlayerPrefsReader.Instance,
-                PlayerWallet.Instance
+                PlayerWallet.Instance,
+                SystemRandom.Instance
             ), GameManager.GameManager.Instance.GridMap);
         }
     }

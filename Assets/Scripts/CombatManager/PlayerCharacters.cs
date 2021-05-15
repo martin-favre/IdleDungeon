@@ -19,7 +19,7 @@ public class PlayerCharacters : IPlayerCharacters, IEventRecipient<IPlayerCharac
 {
     static PlayerCharacters instance;
     public static IPlayerCharacters Instance { get => instance; }
-    List<PlayerCharacter> playerChars = new List<PlayerCharacter>();
+    List<PlayerCharacter> playerChars;
     List<IObserver<IPlayerCharacterUpdateEvent>> observers = new List<IObserver<IPlayerCharacterUpdateEvent>>();
 
     static PlayerCharacters()
@@ -29,7 +29,13 @@ public class PlayerCharacters : IPlayerCharacters, IEventRecipient<IPlayerCharac
 
     public PlayerCharacters(IRandomProvider randomProvider, IUpgradeManager upgradeManager)
     {
-        playerChars.Add(new PlayerCharacter(randomProvider, this, upgradeManager, 0));
+        playerChars = new List<PlayerCharacter>() {
+            new PlayerCharacter(randomProvider, this, upgradeManager, 0),
+            new PlayerCharacter(randomProvider, this, upgradeManager, 1),
+            new PlayerCharacter(randomProvider, this, upgradeManager, 2),
+            new PlayerCharacter(randomProvider, this, upgradeManager, 3)
+        };
+
     }
 
     public PlayerCharacter[] GetAllPlayersChars()
