@@ -16,4 +16,7 @@ public static class SingletonProvider
     public static ITimeProvider MainTimeProvider { get => timeProvider; set => timeProvider = value; }
     private static IPlayerWallet playerWallet = PlayerWallet.Instance;
     public static IPlayerWallet MainPlayerWallet { get => playerWallet; set => playerWallet = value; }
+    private static IGuidProvider guidProvider = GuidProvider.Instance;
+    public static IGuidProvider MainGuidProvider { get => guidProvider; set => guidProvider = value; }
+
 }
