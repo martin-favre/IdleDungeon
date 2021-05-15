@@ -33,7 +33,7 @@ namespace GameManager
         public IPersistentDataStorage DataStorage { get => PlayerPrefsReader.Instance; }
         static IGameManager instance;
         public static IGameManager Instance { get => instance; }
-        public IPlayerCharacters PlayerChars { get => PlayerCharacters.Instance; }
+        public IPlayerCharacters PlayerChars { get => PlayerRoster.Instance; }
 
         public GameManager(IGameManagerComponent component)
         {

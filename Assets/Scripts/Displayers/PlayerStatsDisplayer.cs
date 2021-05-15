@@ -8,12 +8,12 @@ public class PlayerStatsDisplayer : MonoBehaviour
     void Start()
     {
         displayer = SimpleValueDisplayer.Instance.RegisterValue();
-        var chars = PlayerCharacters.Instance.GetAllPlayersChars();
+        var chars = PlayerRoster.Instance.GetAllPlayersChars();
         if (chars.Length > 0)
         {
             UpdateText(chars[0].Attributes);
         }
-        observer = new SimpleObserver<IPlayerCharacterUpdateEvent>(PlayerCharacters.Instance, (e) =>
+        observer = new SimpleObserver<IPlayerCharacterUpdateEvent>(PlayerRoster.Instance, (e) =>
         {
             if (e is PlayerCharacterAttributeUpdateEvent) UpdateText((e as PlayerCharacterAttributeUpdateEvent).Attributes);
         });

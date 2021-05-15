@@ -47,7 +47,7 @@ public class CombatManager : ICombatManager, IEventRecipient<ICombatUpdateEvent>
         if (map.Goal == tile || (map.Start - tile).magnitude <= 1) return false;
         if (randomProvider.ThingHappens(0.25f))
         {
-            combatInstance = combatInstanceFactory.CreateInstance(PlayerCharacters.Instance.GetAllPlayersChars(), this);
+            combatInstance = combatInstanceFactory.CreateInstance(PlayerRoster.Instance.GetAllPlayersChars(), this);
             UpdateObservers(new EnteredCombatEvent(combatInstance.CombatReader));
             return true;
         }

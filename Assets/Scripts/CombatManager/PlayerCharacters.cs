@@ -15,19 +15,19 @@ public interface IPlayerCharacters : IObservable<IPlayerCharacterUpdateEvent>
 /*
     Responsible for creating/loading/storing and distributing the PlayerCharacters
 */
-public class PlayerCharacters : IPlayerCharacters, IEventRecipient<IPlayerCharacterUpdateEvent>
+public class PlayerRoster : IPlayerCharacters, IEventRecipient<IPlayerCharacterUpdateEvent>
 {
-    static PlayerCharacters instance;
+    static PlayerRoster instance;
     public static IPlayerCharacters Instance { get => instance; }
     List<PlayerCharacter> playerChars;
     List<IObserver<IPlayerCharacterUpdateEvent>> observers = new List<IObserver<IPlayerCharacterUpdateEvent>>();
 
-    static PlayerCharacters()
+    static PlayerRoster()
     {
-        instance = new PlayerCharacters(SystemRandom.Instance, UpgradeManager.Instance);
+        instance = new PlayerRoster(SystemRandom.Instance, UpgradeManager.Instance);
     }
 
-    public PlayerCharacters(IRandomProvider randomProvider, IUpgradeManager upgradeManager)
+    public PlayerRoster(IRandomProvider randomProvider, IUpgradeManager upgradeManager)
     {
         playerChars = new List<PlayerCharacter>() {
             new PlayerCharacter(randomProvider, this, upgradeManager, 0),

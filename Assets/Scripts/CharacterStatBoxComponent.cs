@@ -25,7 +25,7 @@ public class CharacterStatBoxComponent : MonoBehaviour
 
     void SetPlayerIndex(int newPlayerIndex)
     {
-        var chars = PlayerCharacters.Instance.GetAllPlayersChars();
+        var chars = PlayerRoster.Instance.GetAllPlayersChars();
         if (playerIndex < chars.Length)
         {
             if (characterName)
