@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 
 
-public class HealthbarComponent : MonoBehaviour
+public class PlayerHealthbarComponent : MonoBehaviour
 {
 
     [SerializeField]

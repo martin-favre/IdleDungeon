@@ -13,7 +13,7 @@ public class CharacterStatBoxComponent : MonoBehaviour
     [SerializeField]
     private TMP_Text characterName;
     [SerializeField]
-    private HealthbarComponent healthbarComponent;
+    private PlayerHealthbarComponent healthbarComponent;
     [SerializeField]
     private int playerIndex;
 
