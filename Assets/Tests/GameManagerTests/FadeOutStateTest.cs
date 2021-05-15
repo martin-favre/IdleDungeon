@@ -36,8 +36,7 @@ namespace Tests
 
             gameManagerMock = new Mock<IGameManager>();
             gameManagerMock.Setup(foo => foo.MapFactory).Returns(mapGeneratorMock.Object);
-            gameManagerMock.Setup(foo => foo.TimeProvider).Returns(timeProviderMock.Object);
-
+            SingletonProvider.MainTimeProvider = timeProviderMock.Object;
         }
 
         [Test]

@@ -28,12 +28,12 @@ public class PlayerHealthbarComponent : MonoBehaviour
 
     private void UpdatePlayerIndex(int newIndex)
     {
-        var characters = PlayerCharacters.Instance.GetAllPlayersChars();
+        var characters = SingletonProvider.MainPlayerRoster.GetAllPlayersChars();
         if (newIndex >= characters.Length) return;
         if (observer != null) observer.Dispose();
-        observer = new SimpleObserver<IPlayerCharacterUpdateEvent>(PlayerCharacters.Instance, e => UpdateBarFill(PlayerCharacters.Instance.GetAllPlayersChars()[playerIndex].Attributes));
+        observer = new SimpleObserver<IPlayerCharacterUpdateEvent>(SingletonProvider.MainPlayerRoster, e => UpdateBarFill(SingletonProvider.MainPlayerRoster.GetAllPlayersChars()[playerIndex].Attributes));
         playerIndex = newIndex;
-        UpdateBarFill(PlayerCharacters.Instance.GetAllPlayersChars()[playerIndex].Attributes);
+        UpdateBarFill(SingletonProvider.MainPlayerRoster.GetAllPlayersChars()[playerIndex].Attributes);
     }
 
     void UpdateBarFill(ICombatAttributes attributes)

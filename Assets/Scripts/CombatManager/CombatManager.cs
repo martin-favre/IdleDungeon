@@ -12,12 +12,11 @@ public class CombatManager : ICombatManager, IEventRecipient<ICombatUpdateEvent>
 
     private List<IObserver<ICombatUpdateEvent>> observers = new List<IObserver<ICombatUpdateEvent>>();
     static readonly LilLogger logger = new LilLogger("CombatManager");
-    private readonly IRandomProvider randomProvider;
     private readonly ICombatInstanceFactory combatInstanceFactory;
     private readonly IMap map;
     private ICombatInstance combatInstance;
 
-    public CombatManager(IRandomProvider randomProvider, ICombatInstanceFactory combatInstanceFactory, IMap map)
+    public CombatManager(ICombatInstanceFactory combatInstanceFactory, IMap map)
     {
         if (instance == null)
         {
@@ -27,7 +26,6 @@ public class CombatManager : ICombatManager, IEventRecipient<ICombatUpdateEvent>
         {
             logger.Log("Duplicate CombatManager instances", LogLevel.Error);
         }
-        this.randomProvider = randomProvider;
         this.combatInstanceFactory = combatInstanceFactory;
         this.map = map;
     }
@@ -45,7 +43,7 @@ public class CombatManager : ICombatManager, IEventRecipient<ICombatUpdateEvent>
     public bool PlayerEntersTile(Vector2Int tile)
     {
         if (map.Goal == tile || (map.Start - tile).magnitude <= 1) return false;
-        if (randomProvider.ThingHappens(0.25f))
+        if (SingletonProvider.MainRandomProvider.ThingHappens(0.25f))
         {
             combatInstance = combatInstanceFactory.CreateInstance(PlayerRoster.Instance.GetAllPlayersChars(), this);
             UpdateObservers(new EnteredCombatEvent(combatInstance.CombatReader));

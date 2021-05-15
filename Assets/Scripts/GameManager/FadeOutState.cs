@@ -12,7 +12,7 @@ public class FadeOutState : State
     {
         this.manager = manager;
         this.playerDied = playerDied;
-        startTime = manager.TimeProvider.Time;
+        startTime = SingletonProvider.MainTimeProvider.Time;
     }
 
     public override void OnEntry()
@@ -22,7 +22,7 @@ public class FadeOutState : State
 
     public override State OnDuring()
     {
-        if (manager.TimeProvider.Time > startTime + fadeoutTime)
+        if (SingletonProvider.MainTimeProvider.Time > startTime + fadeoutTime)
         {
             return new UpdatePointsState(manager, playerDied);
         }

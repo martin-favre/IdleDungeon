@@ -46,7 +46,7 @@ namespace Tests
             mockPlayerAttributes = new Mock<ICombatAttributes>();
             playerMock.Setup(f => f.Attributes).Returns(mockPlayerAttributes.Object);
             walletMock = new Mock<IPlayerWallet>();
-            combatInstance = new CombatInstance(players.ToArray(), enemyFactoryMock.Object, eventRecipientMock.Object, timeMock.Object, walletMock.Object);
+            combatInstance = new CombatInstance(players.ToArray(), enemyFactoryMock.Object, eventRecipientMock.Object);
         }
 
         [Test]
@@ -158,7 +158,7 @@ namespace Tests
             enemyMock.Setup(f => f.TurnProgress).Returns(turnProgressMock.Object);
             enemies.Add(enemyMock.Object);
             players.Clear();
-            combatInstance = new CombatInstance(players.ToArray(), enemyFactoryMock.Object, eventRecipientMock.Object, timeMock.Object, walletMock.Object);
+            combatInstance = new CombatInstance(players.ToArray(), enemyFactoryMock.Object, eventRecipientMock.Object);
             Assert.AreEqual(ICombatInstance.CombatResult.PlayerLost, combatInstance.Result);
         }
         [Test]

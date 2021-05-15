@@ -28,13 +28,8 @@ namespace GameManager
         public IMap GridMap { get => map; set => map = value; }
         public IMapFactory MapFactory { get => mapGenerator; }
         public IMapModifier[] MapModifiers { get => mapModifiers; }
-        public ITimeProvider TimeProvider { get => UnityTime.Instance; }
-        public IRandomProvider RandomProvider { get => SystemRandom.Instance; }
-        public IPersistentDataStorage DataStorage { get => PlayerPrefsReader.Instance; }
         static IGameManager instance;
         public static IGameManager Instance { get => instance; }
-        public IPlayerCharacters PlayerChars { get => PlayerRoster.Instance; }
-
         public GameManager(IGameManagerComponent component)
         {
             machine = new StateMachine(new GenerateMapState(this));

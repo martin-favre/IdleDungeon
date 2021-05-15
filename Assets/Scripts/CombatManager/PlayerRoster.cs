@@ -6,7 +6,7 @@ public interface IPlayerCharacterUpdateEvent
 
 }
 
-public interface IPlayerCharacters : IObservable<IPlayerCharacterUpdateEvent>
+public interface IPlayerRoster : IObservable<IPlayerCharacterUpdateEvent>
 {
     PlayerCharacter[] GetAllPlayersChars();
 }
@@ -15,10 +15,10 @@ public interface IPlayerCharacters : IObservable<IPlayerCharacterUpdateEvent>
 /*
     Responsible for creating/loading/storing and distributing the PlayerCharacters
 */
-public class PlayerRoster : IPlayerCharacters, IEventRecipient<IPlayerCharacterUpdateEvent>
+public class PlayerRoster : IPlayerRoster, IEventRecipient<IPlayerCharacterUpdateEvent>
 {
     static PlayerRoster instance;
-    public static IPlayerCharacters Instance { get => instance; }
+    public static IPlayerRoster Instance { get => instance; }
     List<PlayerCharacter> playerChars;
     List<IObserver<IPlayerCharacterUpdateEvent>> observers = new List<IObserver<IPlayerCharacterUpdateEvent>>();
 

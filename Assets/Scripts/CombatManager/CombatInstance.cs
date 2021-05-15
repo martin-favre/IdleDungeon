@@ -13,8 +13,6 @@ public class CombatInstance : ICombatInstance, ICombatReader
     List<ICombatant> goodGuys;
     List<ICombatant> badGuys;
     private readonly IEventRecipient<ICombatUpdateEvent> evRecipient;
-    private readonly ITimeProvider timeProvider;
-    private readonly IPlayerWallet wallet;
 
     public ICombatReader CombatReader => this;
 
@@ -28,15 +26,11 @@ public class CombatInstance : ICombatInstance, ICombatReader
     }
     public CombatInstance(ICombatant[] playerChars,
     IEnemyFactory enemyFactory,
-    IEventRecipient<ICombatUpdateEvent> evRecipient,
-    ITimeProvider timeProvider,
-    IPlayerWallet wallet)
+    IEventRecipient<ICombatUpdateEvent> evRecipient)
     {
         this.goodGuys = new List<ICombatant>(playerChars);
         badGuys = enemyFactory.GenerateEnemies();
         this.evRecipient = evRecipient;
-        this.timeProvider = timeProvider;
-        this.wallet = wallet;
         goodGuys.ForEach(e => e.TurnProgress.ResetTurnProgress());
         badGuys.ForEach(e => e.TurnProgress.ResetTurnProgress());
     }
@@ -82,7 +76,7 @@ public class CombatInstance : ICombatInstance, ICombatReader
         {
             if (c.IsDead())
             {
-                wallet.AddExperience(c.ExperienceWorth);
+                SingletonProvider.MainPlayerWallet.AddExperience(c.ExperienceWorth);
             }
         });
     }
@@ -90,7 +84,7 @@ public class CombatInstance : ICombatInstance, ICombatReader
     private bool ItsTheirTurn(ICombatant combatant)
     {
         if (combatant.TurnProgress == null) return true;
-        bool itsTheirTurn = combatant.TurnProgress.IncrementTurnProgress(combatant.Attributes.Speed * timeProvider.DeltaTime);
+        bool itsTheirTurn = combatant.TurnProgress.IncrementTurnProgress(combatant.Attributes.Speed * SingletonProvider.MainTimeProvider.DeltaTime);
         return itsTheirTurn;
     }
 

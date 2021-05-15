@@ -9,23 +9,14 @@ public interface ICombatInstanceFactory
 
 public class CombatInstanceFactory : ICombatInstanceFactory
 {
-    private readonly ITimeProvider timeProvider;
-    private readonly IPersistentDataStorage storage;
-    private readonly IPlayerWallet wallet;
-    private readonly IRandomProvider randomProvider;
-
-    public CombatInstanceFactory(ITimeProvider timeProvider, IPersistentDataStorage storage, IPlayerWallet wallet, IRandomProvider randomProvider)
+    public CombatInstanceFactory()
     {
-        this.timeProvider = timeProvider;
-        this.storage = storage;
-        this.wallet = wallet;
-        this.randomProvider = randomProvider;
     }
 
     public ICombatInstance CreateInstance(ICombatant[] playerChars, IEventRecipient<ICombatUpdateEvent> evRecipient)
     {
-        int currentLevel = storage.GetInt(Constants.currentLevelKey, 1);
-        return new CombatInstance(playerChars, new LevelGeneratedEnemyFactory(currentLevel, randomProvider), evRecipient, timeProvider, wallet);
+        int currentLevel = SingletonProvider.MainDataStorage.GetInt(Constants.currentLevelKey, 1);
+        return new CombatInstance(playerChars, new LevelGeneratedEnemyFactory(currentLevel), evRecipient);
     }
 }
 

@@ -38,7 +38,8 @@ namespace Tests
                 It.IsAny<IEventRecipient<ICombatUpdateEvent>>())).Returns(combatMock.Object);
             CombatManager.ClearInstance();
             timeProviderMock = new Mock<ITimeProvider>();
-            manager = new CombatManager(randomMock.Object, combatFactoryMock.Object, mapMock.Object);
+            SingletonProvider.MainRandomProvider = randomMock.Object;
+            manager = new CombatManager(combatFactoryMock.Object, mapMock.Object);
         }
 
         [Test]

@@ -16,15 +16,12 @@ class LevelGeneratedCombatant : ICombatant
     public Guid UniqueId => guid;
 
     readonly double experienceWorth;
-    private readonly IRandomProvider randomProvider;
-
     public double ExperienceWorth => experienceWorth;
         
 
-    public LevelGeneratedCombatant(int currentLevel, IRandomProvider randomProvider) {
+    public LevelGeneratedCombatant(int currentLevel) {
         attributes = new LevelGeneratedCombatAttributes(currentLevel);
         experienceWorth = 10 + Mathf.RoundToInt(10 * Mathf.Pow(1.07f, (float)currentLevel));
-        this.randomProvider = randomProvider;
     }
 
     public void BeAttacked(double attackStat)
@@ -40,7 +37,7 @@ class LevelGeneratedCombatant : ICombatant
     public void PerformAction(List<ICombatant> enemies, ICombatReader combat, IEventRecipient<ICombatUpdateEvent> evRecipient)
     {
         if (enemies.Count == 0) return;
-        ICombatant target = enemies[randomProvider.RandomInt(0, enemies.Count)];
+        ICombatant target = enemies[SingletonProvider.MainRandomProvider.RandomInt(0, enemies.Count)];
         target.BeAttacked(attributes.Attack);
         evRecipient.RecieveEvent(new CombatActionEvent(combat, target, this));
     }

@@ -5,14 +5,6 @@ namespace GameManager
         IMap GridMap { get; set; }
         IMapFactory MapFactory { get; }
         IMapModifier[] MapModifiers { get; }
-
-        ITimeProvider TimeProvider { get; }
-
-        IRandomProvider RandomProvider { get; }
-
-        IPersistentDataStorage DataStorage { get; }
-        IPlayerCharacters PlayerChars { get; }
-
         void SpawnMap();
         void SpawnPlayer();
         void FadeOut();

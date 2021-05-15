@@ -15,21 +15,18 @@ namespace GameManager
 
         public override void OnEntry()
         {
-            var currentLevel = manager.DataStorage?.GetInt(Constants.currentLevelKey, 0);
-            if (currentLevel.HasValue)
+            var currentLevel = SingletonProvider.MainDataStorage.GetInt(Constants.currentLevelKey, 0);
+            int increment = playerDied ? -1 : 1;
+            var nextLevel = currentLevel + increment;
+            if (nextLevel < 0)
             {
-                int increment = playerDied ? -1 : 1;
-                var nextLevel = currentLevel.Value + increment;
-                if (nextLevel < 0)
-                {
-                    nextLevel = 0;
-                }
-                this.manager.DataStorage?.SetInt(Constants.currentLevelKey, nextLevel);
+                nextLevel = 0;
             }
+            SingletonProvider.MainDataStorage.SetInt(Constants.currentLevelKey, nextLevel);
 
             if (playerDied)
             {
-                foreach (var character in manager.PlayerChars.GetAllPlayersChars())
+                foreach (var character in SingletonProvider.MainPlayerRoster.GetAllPlayersChars())
                 {
                     character.Attributes.Heal(character.Attributes.MaxHp);
                 }
