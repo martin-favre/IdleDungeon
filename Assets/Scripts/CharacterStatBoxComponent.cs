@@ -10,50 +10,99 @@ public class CharacterStatBoxComponent : MonoBehaviour
         "Joe",
         "Eric"
     };
+
+    public enum TargetType
+    {
+        Players,
+        Enemies
+    }
     [SerializeField]
     private TMP_Text characterName;
     [SerializeField]
-    private PlayerHealthbarComponent healthbarComponent;
-    [SerializeField]
-    private int playerIndex;
+    private HealthbarComponent healthbarComponent;
 
-    private int oldPlayerIndex;
+    [SerializeField]
+    private TargetType targetType;
+
+
+    [SerializeField]
+    private int targetIndex;
+    private int oldTargetIndex;
+    SimpleObserver<ICharacterUpdateEvent> characterObserver;
+    SimpleObserver<ICombatUpdateEvent> combatObserver;
     void Start()
     {
-        SetPlayerIndex(playerIndex);
+        UpdateIndex(targetIndex);
+        combatObserver = new SimpleObserver<ICombatUpdateEvent>(CombatManager.Instance, e => UpdateIndex(targetIndex));
     }
 
-    void SetPlayerIndex(int newPlayerIndex)
+    void UpdateIndex(int index)
     {
-        var chars = PlayerRoster.Instance.GetAllPlayersChars();
-        if (playerIndex < chars.Length)
+        var character = GetCharacter(targetIndex);
+        if (character != null)
         {
             if (characterName)
             {
                 characterName.enabled = true;
-                characterName.text = names[playerIndex];
+                characterName.text = targetType == TargetType.Players ? names[targetIndex] : "Rat";
             }
             if (healthbarComponent)
             {
                 healthbarComponent.gameObject.SetActive(true);
-                healthbarComponent.PlayerIndex = playerIndex;
+                healthbarComponent.SetAttributes(character);
             }
+            if (characterObserver != null) characterObserver.Dispose();
+            characterObserver = new SimpleObserver<ICharacterUpdateEvent>(character, e => UpdateIndex(targetIndex));
         }
         else
         {
             if (characterName) characterName.enabled = false;
             if (healthbarComponent) healthbarComponent.gameObject.SetActive(false);
         }
-        oldPlayerIndex = playerIndex;
 
+        oldTargetIndex = index;
+    }
+
+    ICharacter GetCharacter(int targetIndex)
+    {
+        if (targetType == TargetType.Players)
+        {
+            var chars = SingletonProvider.MainPlayerRoster.GetAllPlayersChars();
+            if (targetIndex < chars.Length)
+            {
+                return chars[targetIndex];
+            }
+            else
+            {
+                return null;
+            }
+        }
+        else
+        {
+            var reader = CombatManager.Instance.GetReader();
+            if (reader != null)
+            {
+                var enemies = reader.GetEnemies();
+                if (targetIndex < enemies.Length)
+                {
+                    return enemies[targetIndex];
+                }
+                else
+                {
+                    return null;
+                }
+
+            }
+        }
+        return null;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (playerIndex != oldPlayerIndex) // Just to make it editable from the editor
+        if (targetIndex != oldTargetIndex) // Just to make it editable from the editor
         {
-            SetPlayerIndex(playerIndex);
+            UpdateIndex(targetIndex);
         }
     }
 }

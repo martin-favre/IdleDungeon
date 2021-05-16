@@ -71,7 +71,8 @@ public class CombatManager : ICombatManager, IEventRecipient<ICombatUpdateEvent>
 
     private void UpdateObservers(ICombatUpdateEvent evt)
     {
-        foreach (var observer in observers)
+        var oldObservers = observers.ToArray();
+        foreach (var observer in oldObservers)
         {
             observer.OnNext(evt);
         }

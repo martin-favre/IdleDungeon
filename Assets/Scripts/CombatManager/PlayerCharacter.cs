@@ -50,6 +50,7 @@ public class PlayerCharacter : ICharacter, IEventRecipient<ICharacterUpdateEvent
 
     public void RecieveEvent(ICharacterUpdateEvent ev)
     {
-        observers.ForEach(o => o.OnNext(ev));
+        var oldObservers = observers.ToArray();
+        foreach (var observer in oldObservers) { observer.OnNext(ev); }
     }
 }
