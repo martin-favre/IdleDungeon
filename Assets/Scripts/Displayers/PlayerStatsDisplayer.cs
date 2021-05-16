@@ -3,7 +3,7 @@ using UnityEngine;
 public class PlayerStatsDisplayer : MonoBehaviour
 {
     SimpleValueDisplayer.ValueHook displayer;
-    SimpleObserver<IPlayerRosterUpdateEvent> observer;
+    SimpleObserver<ICharacterUpdateEvent> observer;
 
     void Start()
     {
@@ -12,11 +12,11 @@ public class PlayerStatsDisplayer : MonoBehaviour
         if (chars.Length > 0)
         {
             UpdateText(chars[0].Attributes);
+            observer = new SimpleObserver<ICharacterUpdateEvent>(chars[0], e =>
+            {
+                if (e is AttributeChangedEvent) UpdateText((e as AttributeChangedEvent).PlayerAttributes);
+            });
         }
-        observer = new SimpleObserver<IPlayerRosterUpdateEvent>(PlayerRoster.Instance, (e) =>
-        {
-            if (e is PlayerCharacterAttributeUpdateEvent) UpdateText((e as PlayerCharacterAttributeUpdateEvent).Attributes);
-        });
     }
 
     private void UpdateText(ICombatAttributes attributes)

@@ -1,23 +1,10 @@
 using System;
 using System.Collections.Generic;
 
-public class PlayerCharacterAttributeUpdateEvent : IPlayerRosterUpdateEvent
-{
-    private readonly ICombatAttributes attributes;
-
-    public PlayerCharacterAttributeUpdateEvent(ICombatAttributes attributes)
-    {
-        this.attributes = attributes;
-    }
-
-    public ICombatAttributes Attributes => attributes;
-}
-
 // Represents a Character the player owns. i.e. not an enemy.
-public class PlayerCharacter : ICharacter
+public class PlayerCharacter : ICharacter, IEventRecipient<ICharacterUpdateEvent>
 {
     private readonly IRandomProvider random;
-    private readonly IEventRecipient<IPlayerRosterUpdateEvent> playerEvRecipient;
     private readonly PlayerAttributes attributes;
     private readonly TurnProgress turnProgress = new TurnProgress();
     private Guid guid = Guid.NewGuid();
@@ -30,12 +17,12 @@ public class PlayerCharacter : ICharacter
 
     public double ExperienceWorth => 0; // Players are not worth experience :D
 
-    public PlayerCharacter(IRandomProvider random,
-                            IEventRecipient<IPlayerRosterUpdateEvent> playerEvRecipient, IUpgradeManager upgradeManager, int playerIdentifier)
+    List<IObserver<ICharacterUpdateEvent>> observers = new List<IObserver<ICharacterUpdateEvent>>();
+
+    public PlayerCharacter(IRandomProvider random, IUpgradeManager upgradeManager, int playerIdentifier)
     {
         this.random = random;
-        this.playerEvRecipient = playerEvRecipient;
-        attributes = new PlayerAttributes(PlayerPrefsReader.Instance, playerEvRecipient, upgradeManager, playerIdentifier);
+        attributes = new PlayerAttributes(PlayerPrefsReader.Instance, this, upgradeManager, playerIdentifier);
     }
 
     public void PerformAction(List<ICharacter> enemies, ICombatReader combat, IEventRecipient<ICombatUpdateEvent> evRecipient)
@@ -54,5 +41,15 @@ public class PlayerCharacter : ICharacter
     public bool IsDead()
     {
         return attributes.IsDead();
+    }
+
+    public IDisposable Subscribe(IObserver<ICharacterUpdateEvent> observer)
+    {
+        return new SimpleUnsubscriber<ICharacterUpdateEvent>(observers, observer);
+    }
+
+    public void RecieveEvent(ICharacterUpdateEvent ev)
+    {
+        observers.ForEach(o => o.OnNext(ev));
     }
 }

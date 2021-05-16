@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-class LevelGeneratedCharacter : ICharacter
+class LevelGeneratedCharacter : ICharacter, IEventRecipient<ICharacterUpdateEvent>
 {
     private readonly LevelGeneratedCombatAttributes attributes;
     private readonly TurnProgress turnProgress = new TurnProgress();
@@ -17,9 +17,10 @@ class LevelGeneratedCharacter : ICharacter
 
     readonly double experienceWorth;
     public double ExperienceWorth => experienceWorth;
-        
+    List<IObserver<ICharacterUpdateEvent>> observers = new List<IObserver<ICharacterUpdateEvent>>();
 
-    public LevelGeneratedCharacter(int currentLevel) {
+    public LevelGeneratedCharacter(int currentLevel)
+    {
         attributes = new LevelGeneratedCombatAttributes(currentLevel);
         experienceWorth = 10 + Mathf.RoundToInt(10 * Mathf.Pow(1.07f, (float)currentLevel));
     }
@@ -42,5 +43,13 @@ class LevelGeneratedCharacter : ICharacter
         evRecipient.RecieveEvent(new CombatActionEvent(combat, target, this));
     }
 
+    public IDisposable Subscribe(IObserver<ICharacterUpdateEvent> observer)
+    {
+        return new SimpleUnsubscriber<ICharacterUpdateEvent>(observers, observer);
+    }
 
+    public void RecieveEvent(ICharacterUpdateEvent ev)
+    {
+        observers.ForEach(o => o.OnNext(ev));
+    }
 }

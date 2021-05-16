@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-public interface ICharacter
+public interface ICharacter : IObservable<ICharacterUpdateEvent>
 {
     void PerformAction(List<ICharacter> enemies, ICombatReader combat, IEventRecipient<ICombatUpdateEvent> evRecipient);
     void BeAttacked(double attackStat);

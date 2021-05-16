@@ -1,12 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-public interface IPlayerRosterUpdateEvent
-{
-
-}
-
-public interface IPlayerRoster : IObservable<IPlayerRosterUpdateEvent>
+public interface IPlayerRoster
 {
     PlayerCharacter[] GetAllPlayersChars();
 }
@@ -15,12 +10,11 @@ public interface IPlayerRoster : IObservable<IPlayerRosterUpdateEvent>
 /*
     Responsible for creating/loading/storing and distributing the PlayerCharacters
 */
-public class PlayerRoster : IPlayerRoster, IEventRecipient<IPlayerRosterUpdateEvent>
+public class PlayerRoster : IPlayerRoster
 {
     static PlayerRoster instance;
     public static IPlayerRoster Instance { get => instance; }
     List<PlayerCharacter> playerChars;
-    List<IObserver<IPlayerRosterUpdateEvent>> observers = new List<IObserver<IPlayerRosterUpdateEvent>>();
 
     static PlayerRoster()
     {
@@ -30,10 +24,10 @@ public class PlayerRoster : IPlayerRoster, IEventRecipient<IPlayerRosterUpdateEv
     public PlayerRoster(IRandomProvider randomProvider, IUpgradeManager upgradeManager)
     {
         playerChars = new List<PlayerCharacter>() {
-            new PlayerCharacter(randomProvider, this, upgradeManager, 0),
-            new PlayerCharacter(randomProvider, this, upgradeManager, 1),
-            new PlayerCharacter(randomProvider, this, upgradeManager, 2),
-            new PlayerCharacter(randomProvider, this, upgradeManager, 3)
+            new PlayerCharacter(randomProvider, upgradeManager, 0),
+            new PlayerCharacter(randomProvider, upgradeManager, 1),
+            new PlayerCharacter(randomProvider, upgradeManager, 2),
+            new PlayerCharacter(randomProvider, upgradeManager, 3)
         };
 
     }
@@ -41,18 +35,5 @@ public class PlayerRoster : IPlayerRoster, IEventRecipient<IPlayerRosterUpdateEv
     public PlayerCharacter[] GetAllPlayersChars()
     {
         return playerChars.ToArray();
-    }
-
-    public void RecieveEvent(IPlayerRosterUpdateEvent ev)
-    {
-        foreach (var observer in observers)
-        {
-            observer.OnNext(ev);
-        }
-    }
-
-    public IDisposable Subscribe(IObserver<IPlayerRosterUpdateEvent> observer)
-    {
-        return new SimpleUnsubscriber<IPlayerRosterUpdateEvent>(observers, observer);
     }
 }

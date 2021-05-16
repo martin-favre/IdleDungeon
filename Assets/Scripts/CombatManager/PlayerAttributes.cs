@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerAttributes : ICombatAttributes
 {
     private readonly IPersistentDataStorage storage;
-    private readonly IEventRecipient<IPlayerRosterUpdateEvent> recipient;
+    private readonly IEventRecipient<ICharacterUpdateEvent> recipient;
 
     public double MaxHp { get => maxHp; }
 
@@ -24,7 +24,7 @@ public class PlayerAttributes : ICombatAttributes
     List<MultiplierUpgrade> healthUpgrades;
     List<KeyObserver<string, Upgrade>> attackUpgradeObservers;
     List<KeyObserver<string, Upgrade>> healthUpgradeObservers;
-    public PlayerAttributes(IPersistentDataStorage storage, IEventRecipient<IPlayerRosterUpdateEvent> recipient, IUpgradeManager upgradeManager, int playerIdentifier)
+    public PlayerAttributes(IPersistentDataStorage storage, IEventRecipient<ICharacterUpdateEvent> recipient, IUpgradeManager upgradeManager, int playerIdentifier)
     {
         this.storage = storage;
         this.recipient = recipient;
@@ -64,7 +64,7 @@ public class PlayerAttributes : ICombatAttributes
     {
         attack = 0;
         attackUpgrades.ForEach(u => attack += ((MultiplierUpgrade)u).MultipliedValue);
-        recipient.RecieveEvent(new PlayerCharacterAttributeUpdateEvent(this));
+        recipient.RecieveEvent(new AttributeChangedEvent(this));
     }
 
     void SetMaxHp()
@@ -74,7 +74,7 @@ public class PlayerAttributes : ICombatAttributes
         maxHp = 0;
         healthUpgrades.ForEach(u => maxHp += ((MultiplierUpgrade)u).MultipliedValue);
         currentHp = oldCurrentHpPart * maxHp;
-        recipient.RecieveEvent(new PlayerCharacterAttributeUpdateEvent(this));
+        recipient.RecieveEvent(new AttributeChangedEvent(this));
     }
 
     void SetMaxHp(int level)
@@ -87,21 +87,21 @@ public class PlayerAttributes : ICombatAttributes
         {
             currentHp = oldCurrentHpPart * maxHp;
         }
-        recipient.RecieveEvent(new PlayerCharacterAttributeUpdateEvent(this));
+        recipient.RecieveEvent(new AttributeChangedEvent(this));
     }
 
     public void Damage(double damage)
     {
         currentHp -= damage;
         if (currentHp <= 0) currentHp = 0;
-        recipient.RecieveEvent(new PlayerCharacterAttributeUpdateEvent(this));
+        recipient.RecieveEvent(new AttributeChangedEvent(this));
     }
 
     public void Heal(double healing)
     {
         currentHp += healing;
         if (currentHp > maxHp) currentHp = maxHp;
-        recipient.RecieveEvent(new PlayerCharacterAttributeUpdateEvent(this));
+        recipient.RecieveEvent(new AttributeChangedEvent(this));
     }
 
 
