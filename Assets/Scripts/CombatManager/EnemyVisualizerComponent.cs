@@ -35,7 +35,7 @@ public class EnemyVisualizerComponent : MonoBehaviour
         });
     }
 
-    private void HideEnemy(ICombatant victim)
+    private void HideEnemy(ICharacter victim)
     {
         foreach (var item in enemyObjects)
         {
@@ -76,7 +76,7 @@ public class EnemyVisualizerComponent : MonoBehaviour
 
     }
 
-    private void InstantiateEnemies(ICombatant[] attr)
+    private void InstantiateEnemies(ICharacter[] attr)
     {
         if (enemyObjects.Count > 0) HideEnemies(); // Shouldn't happen, but just clear them out if so
         var prefab = PrefabLoader.Instance.GetPrefab<GameObject>(enemyGameObjectPrefab);

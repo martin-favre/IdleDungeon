@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-class LevelGeneratedCombatant : ICombatant
+class LevelGeneratedCharacter : ICharacter
 {
     private readonly LevelGeneratedCombatAttributes attributes;
     private readonly TurnProgress turnProgress = new TurnProgress();
@@ -19,7 +19,7 @@ class LevelGeneratedCombatant : ICombatant
     public double ExperienceWorth => experienceWorth;
         
 
-    public LevelGeneratedCombatant(int currentLevel) {
+    public LevelGeneratedCharacter(int currentLevel) {
         attributes = new LevelGeneratedCombatAttributes(currentLevel);
         experienceWorth = 10 + Mathf.RoundToInt(10 * Mathf.Pow(1.07f, (float)currentLevel));
     }
@@ -34,10 +34,10 @@ class LevelGeneratedCombatant : ICombatant
         return attributes.IsDead();
     }
 
-    public void PerformAction(List<ICombatant> enemies, ICombatReader combat, IEventRecipient<ICombatUpdateEvent> evRecipient)
+    public void PerformAction(List<ICharacter> enemies, ICombatReader combat, IEventRecipient<ICombatUpdateEvent> evRecipient)
     {
         if (enemies.Count == 0) return;
-        ICombatant target = enemies[SingletonProvider.MainRandomProvider.RandomInt(0, enemies.Count)];
+        ICharacter target = enemies[SingletonProvider.MainRandomProvider.RandomInt(0, enemies.Count)];
         target.BeAttacked(attributes.Attack);
         evRecipient.RecieveEvent(new CombatActionEvent(combat, target, this));
     }

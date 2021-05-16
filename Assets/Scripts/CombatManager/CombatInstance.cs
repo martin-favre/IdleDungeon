@@ -2,16 +2,11 @@
 using System;
 using System.Collections.Generic;
 
-public class CombatResults
-{
-
-}
-
 public class CombatInstance : ICombatInstance, ICombatReader
 {
 
-    List<ICombatant> goodGuys;
-    List<ICombatant> badGuys;
+    List<ICharacter> goodGuys;
+    List<ICharacter> badGuys;
     private readonly IEventRecipient<ICombatUpdateEvent> evRecipient;
 
     public ICombatReader CombatReader => this;
@@ -24,11 +19,11 @@ public class CombatInstance : ICombatInstance, ICombatReader
             return goodGuys.Count > 0 ? ICombatInstance.CombatResult.PlayerWon : ICombatInstance.CombatResult.PlayerLost;
         }
     }
-    public CombatInstance(ICombatant[] playerChars,
+    public CombatInstance(ICharacter[] playerChars,
     IEnemyFactory enemyFactory,
     IEventRecipient<ICombatUpdateEvent> evRecipient)
     {
-        this.goodGuys = new List<ICombatant>(playerChars);
+        this.goodGuys = new List<ICharacter>(playerChars);
         badGuys = enemyFactory.GenerateEnemies();
         this.evRecipient = evRecipient;
         goodGuys.ForEach(e => e.TurnProgress.ResetTurnProgress());
@@ -39,7 +34,7 @@ public class CombatInstance : ICombatInstance, ICombatReader
     {
         if (IsDone()) return;
         {
-            ICombatant[] goodGuysCopy = goodGuys.ToArray(); // to avoid modifying the original while iterating
+            ICharacter[] goodGuysCopy = goodGuys.ToArray(); // to avoid modifying the original while iterating
             foreach (var combatant in goodGuysCopy)
             {
                 if (ItsTheirTurn(combatant) && !combatant.IsDead())
@@ -55,7 +50,7 @@ public class CombatInstance : ICombatInstance, ICombatReader
 
         {
 
-            ICombatant[] badGuysCopy = badGuys.ToArray();
+            ICharacter[] badGuysCopy = badGuys.ToArray();
             foreach (var combatant in badGuysCopy)
             {
                 if (ItsTheirTurn(combatant) && !combatant.IsDead())
@@ -70,7 +65,7 @@ public class CombatInstance : ICombatInstance, ICombatReader
         }
     }
 
-    private void GenerateCurrencyFromDeads(List<ICombatant> badGuys)
+    private void GenerateCurrencyFromDeads(List<ICharacter> badGuys)
     {
         badGuys.ForEach((c) =>
         {
@@ -81,16 +76,16 @@ public class CombatInstance : ICombatInstance, ICombatReader
         });
     }
 
-    private bool ItsTheirTurn(ICombatant combatant)
+    private bool ItsTheirTurn(ICharacter combatant)
     {
         if (combatant.TurnProgress == null) return true;
         bool itsTheirTurn = combatant.TurnProgress.IncrementTurnProgress(combatant.Attributes.Speed * SingletonProvider.MainTimeProvider.DeltaTime);
         return itsTheirTurn;
     }
 
-    private void CleanOutDeadGuys(List<ICombatant> combatants)
+    private void CleanOutDeadGuys(List<ICharacter> combatants)
     {
-        List<ICombatant> deadCombatants = new List<ICombatant>();
+        List<ICharacter> deadCombatants = new List<ICharacter>();
         foreach (var item in combatants)
         {
             deadCombatants.Add(item);
@@ -116,13 +111,8 @@ public class CombatInstance : ICombatInstance, ICombatReader
         badGuys.Clear();
     }
 
-    public ICombatant[] GetEnemies()
+    public ICharacter[] GetEnemies()
     {
         return badGuys.ToArray();
-    }
-
-    public IDisposable Subscribe(IObserver<ICombatUpdateEvent> observer)
-    {
-        throw new NotImplementedException();
     }
 }

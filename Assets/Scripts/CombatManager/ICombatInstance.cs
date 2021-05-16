@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public interface ICombatInstanceFactory
 {
-    ICombatInstance CreateInstance(ICombatant[] playerChars,
+    ICombatInstance CreateInstance(ICharacter[] playerChars,
     IEventRecipient<ICombatUpdateEvent> evRecipient);
 }
 
@@ -13,7 +13,7 @@ public class CombatInstanceFactory : ICombatInstanceFactory
     {
     }
 
-    public ICombatInstance CreateInstance(ICombatant[] playerChars, IEventRecipient<ICombatUpdateEvent> evRecipient)
+    public ICombatInstance CreateInstance(ICharacter[] playerChars, IEventRecipient<ICombatUpdateEvent> evRecipient)
     {
         int currentLevel = SingletonProvider.MainDataStorage.GetInt(Constants.currentLevelKey, 1);
         return new CombatInstance(playerChars, new LevelGeneratedEnemyFactory(currentLevel), evRecipient);
@@ -22,7 +22,7 @@ public class CombatInstanceFactory : ICombatInstanceFactory
 
 public interface ICombatInstance : IDisposable
 {
-    public enum CombatResult
+    enum CombatResult
     {
         Unknown,
         PlayerWon,

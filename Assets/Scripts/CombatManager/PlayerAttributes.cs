@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerAttributes : ICombatAttributes
 {
     private readonly IPersistentDataStorage storage;
-    private readonly IEventRecipient<IPlayerCharacterUpdateEvent> recipient;
+    private readonly IEventRecipient<IPlayerRosterUpdateEvent> recipient;
 
     public double MaxHp { get => maxHp; }
 
@@ -24,7 +24,7 @@ public class PlayerAttributes : ICombatAttributes
     List<MultiplierUpgrade> healthUpgrades;
     List<KeyObserver<string, Upgrade>> attackUpgradeObservers;
     List<KeyObserver<string, Upgrade>> healthUpgradeObservers;
-    public PlayerAttributes(IPersistentDataStorage storage, IEventRecipient<IPlayerCharacterUpdateEvent> recipient, IUpgradeManager upgradeManager, int playerIdentifier)
+    public PlayerAttributes(IPersistentDataStorage storage, IEventRecipient<IPlayerRosterUpdateEvent> recipient, IUpgradeManager upgradeManager, int playerIdentifier)
     {
         this.storage = storage;
         this.recipient = recipient;

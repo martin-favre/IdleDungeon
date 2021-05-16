@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 
-public interface IPlayerCharacterUpdateEvent
+public interface IPlayerRosterUpdateEvent
 {
 
 }
 
-public interface IPlayerRoster : IObservable<IPlayerCharacterUpdateEvent>
+public interface IPlayerRoster : IObservable<IPlayerRosterUpdateEvent>
 {
     PlayerCharacter[] GetAllPlayersChars();
 }
@@ -15,12 +15,12 @@ public interface IPlayerRoster : IObservable<IPlayerCharacterUpdateEvent>
 /*
     Responsible for creating/loading/storing and distributing the PlayerCharacters
 */
-public class PlayerRoster : IPlayerRoster, IEventRecipient<IPlayerCharacterUpdateEvent>
+public class PlayerRoster : IPlayerRoster, IEventRecipient<IPlayerRosterUpdateEvent>
 {
     static PlayerRoster instance;
     public static IPlayerRoster Instance { get => instance; }
     List<PlayerCharacter> playerChars;
-    List<IObserver<IPlayerCharacterUpdateEvent>> observers = new List<IObserver<IPlayerCharacterUpdateEvent>>();
+    List<IObserver<IPlayerRosterUpdateEvent>> observers = new List<IObserver<IPlayerRosterUpdateEvent>>();
 
     static PlayerRoster()
     {
@@ -43,7 +43,7 @@ public class PlayerRoster : IPlayerRoster, IEventRecipient<IPlayerCharacterUpdat
         return playerChars.ToArray();
     }
 
-    public void RecieveEvent(IPlayerCharacterUpdateEvent ev)
+    public void RecieveEvent(IPlayerRosterUpdateEvent ev)
     {
         foreach (var observer in observers)
         {
@@ -51,8 +51,8 @@ public class PlayerRoster : IPlayerRoster, IEventRecipient<IPlayerCharacterUpdat
         }
     }
 
-    public IDisposable Subscribe(IObserver<IPlayerCharacterUpdateEvent> observer)
+    public IDisposable Subscribe(IObserver<IPlayerRosterUpdateEvent> observer)
     {
-        return new SimpleUnsubscriber<IPlayerCharacterUpdateEvent>(observers, observer);
+        return new SimpleUnsubscriber<IPlayerRosterUpdateEvent>(observers, observer);
     }
 }

@@ -17,7 +17,7 @@ public class PlayerHealthbarComponent : MonoBehaviour
     [SerializeField]
     private TMP_Text text;
 
-    private SimpleObserver<IPlayerCharacterUpdateEvent> observer;
+    private SimpleObserver<IPlayerRosterUpdateEvent> observer;
 
     public int PlayerIndex { get => playerIndex; set => UpdatePlayerIndex(value); }
 
@@ -31,7 +31,7 @@ public class PlayerHealthbarComponent : MonoBehaviour
         var characters = SingletonProvider.MainPlayerRoster.GetAllPlayersChars();
         if (newIndex >= characters.Length) return;
         if (observer != null) observer.Dispose();
-        observer = new SimpleObserver<IPlayerCharacterUpdateEvent>(SingletonProvider.MainPlayerRoster, e => UpdateBarFill(SingletonProvider.MainPlayerRoster.GetAllPlayersChars()[playerIndex].Attributes));
+        observer = new SimpleObserver<IPlayerRosterUpdateEvent>(SingletonProvider.MainPlayerRoster, e => UpdateBarFill(SingletonProvider.MainPlayerRoster.GetAllPlayersChars()[playerIndex].Attributes));
         playerIndex = newIndex;
         UpdateBarFill(SingletonProvider.MainPlayerRoster.GetAllPlayersChars()[playerIndex].Attributes);
     }

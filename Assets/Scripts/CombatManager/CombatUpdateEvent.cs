@@ -38,9 +38,9 @@ public class ExitedCombatEvent : ICombatUpdateEvent
 public class CombatantDied : ICombatUpdateEvent
 {
     private readonly ICombatReader combat;
-    private readonly ICombatant victim;
+    private readonly ICharacter victim;
 
-    public CombatantDied(ICombatReader combat, ICombatant victim)
+    public CombatantDied(ICombatReader combat, ICharacter victim)
     {
         this.combat = combat;
         this.victim = victim;
@@ -48,23 +48,23 @@ public class CombatantDied : ICombatUpdateEvent
 
     public ICombatReader Combat => combat;
 
-    public ICombatant Victim => victim;
+    public ICharacter Victim => victim;
 }
 
 public class CombatActionEvent : ICombatUpdateEvent
 {
     private readonly ICombatReader combat;
-    private readonly ICombatant target;
-    private readonly ICombatant actionDoer;
+    private readonly ICharacter target;
+    private readonly ICharacter actionDoer;
 
-    public CombatActionEvent(ICombatReader combat, ICombatant target, ICombatant actionDoer)
+    public CombatActionEvent(ICombatReader combat, ICharacter target, ICharacter actionDoer)
     {
         this.combat = combat;
         this.target = target;
         this.actionDoer = actionDoer;
     }
 
-    public ICombatant Target => target;
-    public ICombatant ActionDoer => actionDoer;
+    public ICharacter Target => target;
+    public ICharacter ActionDoer => actionDoer;
     public ICombatReader Combat => combat;
 }

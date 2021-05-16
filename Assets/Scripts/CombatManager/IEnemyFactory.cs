@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public interface IEnemyFactory
 {
-    List<ICombatant> GenerateEnemies();
+    List<ICharacter> GenerateEnemies();
 }
 
 public class LevelGeneratedEnemyFactory : IEnemyFactory
@@ -14,13 +14,13 @@ public class LevelGeneratedEnemyFactory : IEnemyFactory
     {
         this.currentLevel = currentLevel;
     }
-    public List<ICombatant> GenerateEnemies()
+    public List<ICharacter> GenerateEnemies()
     {
-        var ret = new List<ICombatant>();
-        ret.Add(new LevelGeneratedCombatant(currentLevel));
-        ret.Add(new LevelGeneratedCombatant(currentLevel));
-        ret.Add(new LevelGeneratedCombatant(currentLevel));
-        ret.Add(new LevelGeneratedCombatant(currentLevel));
+        var ret = new List<ICharacter>();
+        ret.Add(new LevelGeneratedCharacter(currentLevel));
+        ret.Add(new LevelGeneratedCharacter(currentLevel));
+        ret.Add(new LevelGeneratedCharacter(currentLevel));
+        ret.Add(new LevelGeneratedCharacter(currentLevel));
         return ret;
     }
 }

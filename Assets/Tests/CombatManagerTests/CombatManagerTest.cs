@@ -34,7 +34,7 @@ namespace Tests
             mapMock.Setup(f => f.Goal).Returns(goalPos);
             eventRecipientMock = new Mock<IEventRecipient<ICombatUpdateEvent>>();
             combatFactoryMock = new Mock<ICombatInstanceFactory>(MockBehavior.Strict);
-            combatFactoryMock.Setup(f => f.CreateInstance(It.IsAny<ICombatant[]>(),
+            combatFactoryMock.Setup(f => f.CreateInstance(It.IsAny<ICharacter[]>(),
                 It.IsAny<IEventRecipient<ICombatUpdateEvent>>())).Returns(combatMock.Object);
             CombatManager.ClearInstance();
             timeProviderMock = new Mock<ITimeProvider>();
@@ -47,7 +47,7 @@ namespace Tests
         {
             randomMock.Setup(f => f.ThingHappens(It.IsAny<float>())).Returns(true);
             manager.PlayerEntersTile(Vector2Int.zero);
-            combatFactoryMock.Verify(f => f.CreateInstance(It.IsAny<ICombatant[]>(),
+            combatFactoryMock.Verify(f => f.CreateInstance(It.IsAny<ICharacter[]>(),
             It.IsAny<IEventRecipient<ICombatUpdateEvent>>()), Times.AtLeastOnce);
         }
 
@@ -56,7 +56,7 @@ namespace Tests
         {
             randomMock.Setup(f => f.ThingHappens(It.IsAny<float>())).Returns(true);
             manager.PlayerEntersTile(goalPos);
-            combatFactoryMock.Verify(f => f.CreateInstance(It.IsAny<ICombatant[]>(),
+            combatFactoryMock.Verify(f => f.CreateInstance(It.IsAny<ICharacter[]>(),
                 It.IsAny<IEventRecipient<ICombatUpdateEvent>>()), Times.Never);
         }
         [Test]
@@ -72,7 +72,7 @@ namespace Tests
             foreach (var item in posToTest)
             {
                 manager.PlayerEntersTile(startPos + item);
-                combatFactoryMock.Verify(f => f.CreateInstance(It.IsAny<ICombatant[]>(),
+                combatFactoryMock.Verify(f => f.CreateInstance(It.IsAny<ICharacter[]>(),
                     It.IsAny<IEventRecipient<ICombatUpdateEvent>>()), Times.Never);
             }
         }
@@ -83,7 +83,7 @@ namespace Tests
         {
             randomMock.Setup(f => f.ThingHappens(It.IsAny<float>())).Returns(false);
             manager.PlayerEntersTile(Vector2Int.zero);
-            combatFactoryMock.Verify(f => f.CreateInstance(It.IsAny<ICombatant[]>(),
+            combatFactoryMock.Verify(f => f.CreateInstance(It.IsAny<ICharacter[]>(),
             It.IsAny<IEventRecipient<ICombatUpdateEvent>>()), Times.Never);
         }
 

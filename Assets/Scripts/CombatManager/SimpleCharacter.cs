@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-class SimpleCombatant : ICombatant
+class SimpleCombatant : ICharacter
 {
     private readonly SimpleCombatAttributes attributes = new SimpleCombatAttributes();
     private readonly TurnProgress turnProgress = new TurnProgress();
@@ -26,10 +26,10 @@ class SimpleCombatant : ICombatant
         return attributes.IsDead();
     }
 
-    public void PerformAction(List<ICombatant> enemies, ICombatReader combat, IEventRecipient<ICombatUpdateEvent> evRecipient)
+    public void PerformAction(List<ICharacter> enemies, ICombatReader combat, IEventRecipient<ICombatUpdateEvent> evRecipient)
     {
         if (enemies.Count == 0) return;
-        ICombatant target = enemies[0];
+        ICharacter target = enemies[0];
         target.BeAttacked(attributes.Attack);
         evRecipient.RecieveEvent(new CombatActionEvent(combat, target, this));
     }
