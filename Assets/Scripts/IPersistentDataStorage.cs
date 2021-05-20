@@ -29,6 +29,7 @@ public class IntPersistentStorageUpdateEvent : IPersistentStorageUpdateEvent
     public int Value => value;
 }
 
+public class DataClearedUpdateEvent : IPersistentStorageUpdateEvent { }
 
 public class StringPersistentStorageUpdateEvent : IPersistentStorageUpdateEvent
 {

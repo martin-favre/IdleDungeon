@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using Logging;
 
 public class PlayerPrefsReader : IPersistentDataStorage
 {
@@ -12,11 +14,12 @@ public class PlayerPrefsReader : IPersistentDataStorage
             if (instance == null)
             {
                 instance = new PlayerPrefsReader();
-                instance.ClearStorage(); // clear all during development
             }
             return instance;
         }
     }
+
+    static readonly LilLogger logger = new LilLogger(typeof(PlayerPrefsReader).ToString());
 
     Dictionary<string, List<IObserver<IPersistentStorageUpdateEvent>>> observers = new Dictionary<string, List<IObserver<IPersistentStorageUpdateEvent>>>();
 
@@ -33,6 +36,7 @@ public class PlayerPrefsReader : IPersistentDataStorage
     {
         PlayerPrefs.SetFloat(key, value);
         NotifyObservers(key, new FloatPersistentStorageUpdateEvent(value));
+        logger.Log("Setting " + key + " to " + value);
     }
 
     public int GetInt(string key)
@@ -49,7 +53,7 @@ public class PlayerPrefsReader : IPersistentDataStorage
     {
         PlayerPrefs.SetInt(key, value);
         NotifyObservers(key, new IntPersistentStorageUpdateEvent(value));
-
+        logger.Log("Setting " + key + " to " + value);
     }
 
     public string GetString(string key)
@@ -67,18 +71,36 @@ public class PlayerPrefsReader : IPersistentDataStorage
     {
         PlayerPrefs.SetString(key, value);
         NotifyObservers(key, new StringPersistentStorageUpdateEvent(value));
+        logger.Log("Setting " + key + " to " + value);
     }
 
     public void ClearStorage()
     {
         PlayerPrefs.DeleteAll();
+        NotifyClearedStorage();
+        logger.Log("Clearing storage");
+    }
+
+    private void NotifyClearedStorage()
+    {
+        var ev = new DataClearedUpdateEvent();
+        // Need to clone the old entries to allow things to unsub
+        var oldObserverDict = observers.ToDictionary(entry => entry.Key, entry => entry.Value);
+        foreach (var list in oldObserverDict)
+        {
+            var oldList = list.Value.ToArray();
+            foreach (var observer in oldList)
+            {
+                observer.OnNext(ev);
+            }
+        }
     }
 
     private void NotifyObservers(string key, IPersistentStorageUpdateEvent evt)
     {
         List<IObserver<IPersistentStorageUpdateEvent>> keyObservers;
         bool success = observers.TryGetValue(key, out keyObservers);
-        if(!success) return;
+        if (!success) return;
         foreach (var observer in keyObservers)
         {
             observer.OnNext(evt);

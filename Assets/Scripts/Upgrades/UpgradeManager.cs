@@ -12,7 +12,7 @@ public enum UpgradeType
     HealthinessLevel3
 }
 
-public interface IUpgradeManager : IKeyObservable<string, Upgrade>
+public interface IUpgradeManager : IKeyObservable<string, Upgrade>, IEventRecipient<string>
 {
     void LevelUpUpgrade(string identifier);
     Upgrade GetUpgrade(string identifier);
@@ -93,5 +93,10 @@ public class UpgradeManager : IUpgradeManager
             logger.Log("Unknown Upgradetype " + identifier, LogLevel.Warning);
             return null;
         }
+    }
+
+    public void RecieveEvent(string identifier)
+    {
+        NotifyUpdate(identifier);
     }
 }
