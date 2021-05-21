@@ -36,9 +36,13 @@ public class Upgrade
         upgradeManager.SetUpgrade(StorageKey, this);
         observer = new KeyObserver<string, IPersistentStorageUpdateEvent>(storage, storageKey, e =>
         {
+            int oldLevel = level;
             if (e is IntPersistentStorageUpdateEvent ev) level = ev.Value;
             if (e is DataClearedUpdateEvent) level = this.initialLevel;
-            upgradeManager.RecieveEvent(StorageKey);
+            if (level != oldLevel)
+            {
+                upgradeManager.RecieveEvent(StorageKey);
+            }
         });
     }
 

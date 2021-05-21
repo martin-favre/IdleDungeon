@@ -54,6 +54,9 @@ public class PlayerWallet : IPlayerWallet
 
     List<IObserver<IPlayerWalletUpdateEvent>> observers = new List<IObserver<IPlayerWalletUpdateEvent>>();
 
+    IObserver<IPersistentStorageUpdateEvent> dbObserver;
+
+    const int defaultValue = 0;
 
     static PlayerWallet()
     {
@@ -62,8 +65,18 @@ public class PlayerWallet : IPlayerWallet
 
     public PlayerWallet(IPersistentDataStorage storage)
     {
-        experience = storage.GetFloat(Constants.experienceKey, 0);
+        experience = storage.GetFloat(Constants.experienceKey, defaultValue);
         this.storage = storage;
+        dbObserver = new KeyObserver<string, IPersistentStorageUpdateEvent>(storage, Constants.experienceKey, OnDBUpdate);
+    }
+
+    private void OnDBUpdate(IPersistentStorageUpdateEvent e)
+    {
+        if (e is DataClearedUpdateEvent ce)
+        {
+            experience = defaultValue;
+            SendEvent(new ExperienceLostEvent(this));
+        }
     }
 
     public void AddExperience(double amount)
