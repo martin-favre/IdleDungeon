@@ -97,6 +97,13 @@ public class CharacterStatBoxComponent : MonoBehaviour
         return null;
     }
 
+    public void OpenUpgradeTab()
+    {
+        if(targetType == TargetType.Players) {
+            UpgradePanelComponent.Instance.OpenPanel(targetIndex);
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {

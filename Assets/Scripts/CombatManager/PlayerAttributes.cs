@@ -63,8 +63,8 @@ public class PlayerAttributes : ICombatAttributes
             new MultiplierUpgrade(500, 0, 1000, 1.09f, GetHealthinessUpgradeKey(1, playerIdentifier), storage, PlayerWallet.Instance, upgradeManager),
             new MultiplierUpgrade(5000, 0, 10000, 1.11f, GetHealthinessUpgradeKey(2, playerIdentifier), storage, PlayerWallet.Instance, upgradeManager),
         };
-        healthUpgradeObservers = new List<KeyObserver<string, Upgrade>>(attackUpgrades.Count);
-        healthUpgrades.ForEach(upgrade => attackUpgradeObservers.Add(new KeyObserver<string, Upgrade>(UpgradeManager.Instance, upgrade.StorageKey, e => SetMaxHp())));
+        healthUpgradeObservers = new List<KeyObserver<string, Upgrade>>(healthUpgrades.Count);
+        healthUpgrades.ForEach(upgrade => healthUpgradeObservers.Add(new KeyObserver<string, Upgrade>(UpgradeManager.Instance, upgrade.StorageKey, e => SetMaxHp())));
 
     }
 

@@ -6,7 +6,7 @@ public class IncreaseUpgradeButton : MonoBehaviour
 {
 
     [SerializeField]
-    private string upgradeType;
+    private string upgradeKey;
     [SerializeField]
     private TMP_Text levelText;
     [SerializeField]
@@ -21,16 +21,34 @@ public class IncreaseUpgradeButton : MonoBehaviour
     }
     void Start()
     {
-        observer = new KeyObserver<string, Upgrade>(UpgradeManager.Instance, upgradeType, UpdateText);
+        
+    }
+
+    public void SetButtonType(int playerIndex, int upgradeLevel, UpgradeTabContentComponent.UpgradeType type)
+    {
+        switch (type)
+        {
+            case UpgradeTabContentComponent.UpgradeType.Attackiness:
+                upgradeKey = PlayerAttributes.GetAttackinessUpgradeKey(upgradeLevel, playerIndex);
+                break;
+            case UpgradeTabContentComponent.UpgradeType.Healthiness:
+                upgradeKey = PlayerAttributes.GetHealthinessUpgradeKey(upgradeLevel, playerIndex);
+                break;
+            default:
+                throw new System.Exception("Unknown Upgradetype " + type);
+        }
+        observer = new KeyObserver<string, Upgrade>(UpgradeManager.Instance, upgradeKey, UpdateText);
+        UpdateText(UpgradeManager.Instance.GetUpgrade(upgradeKey));
     }
 
     public void LevelUp()
     {
-        UpgradeManager.Instance.LevelUpUpgrade(upgradeType);
+        UpgradeManager.Instance.LevelUpUpgrade(upgradeKey);
     }
 
     void UpdateText(Upgrade upgrade)
     {
+        if(upgrade == null) return;
         if (levelText)
         {
             levelText.text = "Level:" + upgrade.Level;
@@ -43,8 +61,9 @@ public class IncreaseUpgradeButton : MonoBehaviour
 
     private void OnEnable()
     {
-        var upgrade = UpgradeManager.Instance.GetUpgrade(upgradeType);
-        if(upgrade!= null) {
+        var upgrade = UpgradeManager.Instance.GetUpgrade(upgradeKey);
+        if (upgrade != null)
+        {
             UpdateText(upgrade);
         }
     }
