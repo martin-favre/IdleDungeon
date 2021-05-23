@@ -17,6 +17,9 @@ class LevelGeneratedCharacter : ICharacter, IEventRecipient<ICharacterUpdateEven
 
     readonly double experienceWorth;
     public double ExperienceWorth => experienceWorth;
+
+    public string Name => "Rat"; // Until I know from where to get the actual name
+
     List<IObserver<ICharacterUpdateEvent>> observers = new List<IObserver<ICharacterUpdateEvent>>();
 
     public LevelGeneratedCharacter(int currentLevel)

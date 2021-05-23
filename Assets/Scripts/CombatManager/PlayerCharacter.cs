@@ -4,7 +4,15 @@ using System.Collections.Generic;
 // Represents a Character the player owns. i.e. not an enemy.
 public class PlayerCharacter : ICharacter, IEventRecipient<ICharacterUpdateEvent>
 {
+    static readonly string[] names = new string[] {
+        "Steve",
+        "Bob",
+        "Joe",
+        "Eric"
+    };
+
     private readonly IRandomProvider random;
+    private readonly int playerIdentifier;
     private readonly PlayerAttributes attributes;
     private readonly TurnProgress turnProgress = new TurnProgress();
     private Guid guid = Guid.NewGuid();
@@ -17,11 +25,14 @@ public class PlayerCharacter : ICharacter, IEventRecipient<ICharacterUpdateEvent
 
     public double ExperienceWorth => 0; // Players are not worth experience :D
 
+    public string Name => names[playerIdentifier];
+
     List<IObserver<ICharacterUpdateEvent>> observers = new List<IObserver<ICharacterUpdateEvent>>();
 
     public PlayerCharacter(IRandomProvider random, IUpgradeManager upgradeManager, int playerIdentifier)
     {
         this.random = random;
+        this.playerIdentifier = playerIdentifier;
         attributes = new PlayerAttributes(PlayerPrefsReader.Instance, this, upgradeManager, playerIdentifier);
     }
 
