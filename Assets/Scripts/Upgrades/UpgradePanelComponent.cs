@@ -11,6 +11,7 @@ public class UpgradePanelComponent : MonoBehaviour
 
     void Awake() {
         instance = this;
+        gameObject.SetActive(false);
     }
 
     public void OpenPanel(int index)
