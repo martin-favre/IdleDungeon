@@ -19,10 +19,10 @@ class LevelGeneratedCharacter : ICharacter, IEventRecipient<ICharacterUpdateEven
     public double ExperienceWorth => experienceWorth;
     List<IObserver<ICharacterUpdateEvent>> observers = new List<IObserver<ICharacterUpdateEvent>>();
 
-    public LevelGeneratedCharacter(int currentLevel)
+    public LevelGeneratedCharacter(int currentLevel, float powerFactor)
     {
-        attributes = new LevelGeneratedCombatAttributes(currentLevel);
-        experienceWorth = 10 + Mathf.RoundToInt(10 * Mathf.Pow(1.07f, (float)currentLevel));
+        attributes = new LevelGeneratedCombatAttributes(currentLevel, powerFactor);
+        experienceWorth = powerFactor*(10 + Mathf.RoundToInt(10 * Mathf.Pow(1.07f, (float)currentLevel)));
     }
 
     public void BeAttacked(double attackStat)

@@ -13,12 +13,12 @@ public class LevelGeneratedCombatAttributes : ICombatAttributes
     readonly private double maxHp;
     private double currentHp;
 
-    public LevelGeneratedCombatAttributes(int currentLevel)
+    public LevelGeneratedCombatAttributes(int currentLevel, float powerFactor)
     {
         // maxHp and attack should go up slightly more steeply than the player's attack and hp
         // causing so the player have to slow down and grind
-        maxHp = Mathf.RoundToInt(10 * Mathf.Pow(1.15f, (float)currentLevel));
-        attack = Mathf.RoundToInt(1 * Mathf.Pow(1.15f, (float)currentLevel));
+        maxHp = powerFactor*Mathf.RoundToInt(20 * Mathf.Pow(1.15f, (float)currentLevel));
+        attack = powerFactor*Mathf.RoundToInt(1 * Mathf.Pow(1.15f, (float)currentLevel));
         speed = 100 + currentLevel; // Idk, slowly a bit faster I guess 
         currentHp = maxHp;
     }
