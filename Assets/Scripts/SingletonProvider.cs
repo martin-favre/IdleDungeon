@@ -18,5 +18,7 @@ public static class SingletonProvider
     public static IPlayerWallet MainPlayerWallet { get => playerWallet; set => playerWallet = value; }
     private static IGuidProvider guidProvider = GuidProvider.Instance;
     public static IGuidProvider MainGuidProvider { get => guidProvider; set => guidProvider = value; }
+    private static IGameObjectLoader prefabLoader = PrefabLoader.Instance;
+    public static IGameObjectLoader MainGameobjectLoader { get => prefabLoader; set => prefabLoader = value; }
 
 }

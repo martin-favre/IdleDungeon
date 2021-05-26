@@ -79,11 +79,11 @@ public class EnemyVisualizerComponent : MonoBehaviour
     private void InstantiateEnemies(ICharacter[] attr)
     {
         if (enemyObjects.Count > 0) HideEnemies(); // Shouldn't happen, but just clear them out if so
-        var prefab = PrefabLoader.Instance.GetPrefab<GameObject>(enemyGameObjectPrefab);
+        var prefab = SingletonProvider.MainGameobjectLoader.GetPrefab<GameObject>(enemyGameObjectPrefab);
 
         foreach (var enemy in attr)
         {
-            var enemyObj = PrefabLoader.Instance.Instantiate(prefab);
+            var enemyObj = SingletonProvider.MainGameobjectLoader.Instantiate(prefab);
             enemyObj.transform.SetParent(transform);
             enemyObjects.Add((enemy.UniqueId, enemyObj));
         }

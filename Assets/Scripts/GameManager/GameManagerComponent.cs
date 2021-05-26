@@ -36,8 +36,8 @@ namespace GameManager
                 GameObject.Destroy(map);
                 map = null;
             }
-            var mapPrefab = PrefabLoader.Instance.GetPrefab<GameObject>("Prefabs/Map");
-            map = PrefabLoader.Instance.Instantiate(mapPrefab);
+            var mapPrefab = SingletonProvider.MainGameobjectLoader.GetPrefab<GameObject>("Prefabs/Map");
+            map = SingletonProvider.MainGameobjectLoader.Instantiate(mapPrefab);
             map.transform.position = new Vector3(0, 0, 0);
             var comp = map.GetComponent<MapComponent>();
             comp.Setup(manager.GridMap);
@@ -51,8 +51,8 @@ namespace GameManager
                 player = null;
             }
 
-            var playerPrefab = PrefabLoader.Instance.GetPrefab<GameObject>("Prefabs/Player");
-            player = PrefabLoader.Instance.Instantiate(playerPrefab);
+            var playerPrefab = SingletonProvider.MainGameobjectLoader.GetPrefab<GameObject>("Prefabs/Player");
+            player = SingletonProvider.MainGameobjectLoader.Instantiate(playerPrefab);
             const float initialHeight = 2f;
             player.transform.position = Helpers.ToVec3(manager.GridMap.Start, Constants.tileSize.x / 2f + initialHeight);
             var comp = player.GetComponent<PlayerControllerComponent>();
