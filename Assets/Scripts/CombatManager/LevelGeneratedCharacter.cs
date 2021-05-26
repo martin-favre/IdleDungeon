@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-class LevelGeneratedCharacter : ICharacter, IEventRecipient<ICharacterUpdateEvent>
+class LevelGeneratedCharacter : ICharacter, IEventRecipient<ICharacterUpdateEvent>, IHasMaterial
 {
     private readonly LevelGeneratedCombatAttributes attributes;
     private readonly TurnProgress turnProgress = new TurnProgress();
@@ -16,16 +16,21 @@ class LevelGeneratedCharacter : ICharacter, IEventRecipient<ICharacterUpdateEven
     public Guid UniqueId => guid;
 
     readonly double experienceWorth;
+    private readonly EnemyTemplate template;
+
     public double ExperienceWorth => experienceWorth;
 
-    public string Name => "Rat"; // Until I know from where to get the actual name
+    public string Name => template.Name;
+
+    public Material Material => template.Material;
 
     List<IObserver<ICharacterUpdateEvent>> observers = new List<IObserver<ICharacterUpdateEvent>>();
 
-    public LevelGeneratedCharacter(int currentLevel, float powerFactor)
+    public LevelGeneratedCharacter(EnemyTemplate template, int currentLevel, float powerFactor)
     {
         attributes = new LevelGeneratedCombatAttributes(currentLevel, powerFactor);
         experienceWorth = powerFactor*(10 + Mathf.RoundToInt(10 * Mathf.Pow(1.07f, (float)currentLevel)));
+        this.template = template;
     }
 
     public void BeAttacked(double attackStat)

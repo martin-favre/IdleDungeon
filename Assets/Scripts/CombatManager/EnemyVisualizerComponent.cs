@@ -50,10 +50,10 @@ public class EnemyVisualizerComponent : MonoBehaviour
     {
         // I guess we want to read out how many enemies are here
         ICombatReader reader = CombatManager.Instance.GetReader();
-        var attr = reader.GetEnemies();
+        var characters = reader.GetEnemies();
 
-        InstantiateEnemies(attr);
-        switch (attr.Length)
+        InstantiateEnemies(characters);
+        switch (characters.Length)
         {
             case 0:
                 break;
@@ -76,16 +76,19 @@ public class EnemyVisualizerComponent : MonoBehaviour
 
     }
 
-    private void InstantiateEnemies(ICharacter[] attr)
+    private void InstantiateEnemies(ICharacter[] characters)
     {
         if (enemyObjects.Count > 0) HideEnemies(); // Shouldn't happen, but just clear them out if so
         var prefab = SingletonProvider.MainGameobjectLoader.GetPrefab<GameObject>(enemyGameObjectPrefab);
 
-        foreach (var enemy in attr)
+        foreach (var enemy in characters)
         {
             var enemyObj = SingletonProvider.MainGameobjectLoader.Instantiate(prefab);
             enemyObj.transform.SetParent(transform);
             enemyObjects.Add((enemy.UniqueId, enemyObj));
+            var renderer = enemyObj.GetComponent<MeshRenderer>();
+            if (renderer && enemy is IHasMaterial sp) renderer.material = sp.Material;
+
         }
     }
 

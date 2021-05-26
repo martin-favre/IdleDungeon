@@ -23,7 +23,7 @@ public class LevelGeneratedEnemyFactory : IEnemyFactory
         float powerFactor = 1 / (nofEnemies * 0.8f);
         for (int i = 0; i < nofEnemies; i++)
         {
-            ret.Add(new LevelGeneratedCharacter(currentLevel, powerFactor));
+            ret.Add(new LevelGeneratedCharacter(EnemyTemplates.GetRandom(), currentLevel, powerFactor));
         }
         return ret;
     }
