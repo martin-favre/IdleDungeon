@@ -4,13 +4,6 @@ using UnityEngine;
 using TMPro;
 public class CharacterStatBoxComponent : MonoBehaviour
 {
-    static readonly string[] names = new string[] {
-        "Steve",
-        "Bob",
-        "Joe",
-        "Eric"
-    };
-
     public enum TargetType
     {
         Players,
@@ -44,7 +37,7 @@ public class CharacterStatBoxComponent : MonoBehaviour
             if (characterName)
             {
                 characterName.enabled = true;
-                characterName.text = targetType == TargetType.Players ? names[targetIndex] : "Rat";
+                characterName.text = character.Name;
             }
             if (healthbarComponent)
             {
@@ -95,6 +88,13 @@ public class CharacterStatBoxComponent : MonoBehaviour
             }
         }
         return null;
+    }
+
+    public void OpenUpgradeTab()
+    {
+        if(targetType == TargetType.Players) {
+            UpgradePanelComponent.Instance.OpenPanel(targetIndex);
+        }
     }
 
     // Update is called once per frame
