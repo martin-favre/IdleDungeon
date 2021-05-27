@@ -1,5 +1,6 @@
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using StateMachineCollection;
 using UnityEngine;
@@ -19,10 +20,6 @@ namespace GameManager
             new GoalAndStartAdder()
         };
         private IMap map;
-        private readonly Action spawnMap;
-        private readonly Action spawnPlayer;
-        private readonly Action fadeOut;
-        private readonly Action fadeIn;
         private readonly IGameManagerComponent component;
         private StateMachine machine;
         public IMap GridMap { get => map; set => map = value; }
