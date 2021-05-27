@@ -71,6 +71,7 @@ public class PlayerController : IPlayerController, IDisposable
         });
         if (instance != null) logger.Log("Replacing singleton instance");
         instance = this;
+        SingletonProvider.MainPlayerController = instance; // Nasty. PlayerController should be reworked to be a proper singleton that always lives or not a singleton
     }
     public void Update()
     {
