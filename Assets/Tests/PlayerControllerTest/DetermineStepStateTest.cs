@@ -72,7 +72,7 @@ namespace Tests
         {
             playerMock.Setup(f => f.HasNextStep()).Returns(true);
             playerMock.Setup(f => f.GetNextStep()).Returns(new Vector2Int(15, 13));
-            playerMock.Setup(f => f.Position).Returns(new Vector2Int(15, 13));
+            playerMock.Setup(f => f.GridPosition).Returns(new Vector2Int(15, 13));
             combatManagerMock.Setup(f => f.PlayerEntersTile(It.Is<Vector2Int>(v2 => v2 == new Vector2Int(15, 13)))).Returns(true);
             DetermineStepState state = new DetermineStepState(playerMock.Object);
             state.OnEntry();
@@ -84,7 +84,7 @@ namespace Tests
         {
             playerMock.Setup(f => f.HasNextStep()).Returns(true);
             playerMock.Setup(f => f.GetNextStep()).Returns(new Vector2Int(15, 13));
-            playerMock.Setup(f => f.Position).Returns(new Vector2Int(15, 13));
+            playerMock.Setup(f => f.GridPosition).Returns(new Vector2Int(15, 13));
             combatManagerMock.Setup(f => f.PlayerEntersTile(It.Is<Vector2Int>(v2 => v2 == new Vector2Int(15, 13)))).Returns(false);
             DetermineStepState state = new DetermineStepState(playerMock.Object);
             state.OnEntry();
@@ -97,7 +97,7 @@ namespace Tests
         {
             playerMock.Setup(f => f.HasNextStep()).Returns(true);
             playerMock.Setup(f => f.GetNextStep()).Returns(new Vector2Int(15, 13));
-            playerMock.Setup(f => f.Position).Returns(new Vector2Int(15, 13));
+            playerMock.Setup(f => f.GridPosition).Returns(new Vector2Int(15, 13));
             combatManagerMock.Setup(f => f.PlayerEntersTile(It.Is<Vector2Int>(v2 => v2 == new Vector2Int(15, 13)))).Returns(false);
             DetermineStepState state = new DetermineStepState(playerMock.Object);
             playerMock.Setup(f => f.RequestLookAt(It.IsAny<Vector2Int>())).Callback<Vector2Int>(v2 => state.HandleEvent(new DetermineStepState.TurningFinishedEvent()));

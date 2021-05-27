@@ -16,7 +16,7 @@ public class PlayerController : IPlayerController, IDisposable
     private readonly IPlayerMover playerMover;
     private readonly Stack<Vector2Int> path;
     private Vector2Int position;
-    public Vector2Int Position { get => position; set => position = value; }
+    public Vector2Int GridPosition { get => position; set => position = value; }
     LilLogger logger;
     static PlayerController instance;
     public static PlayerController Instance { get => instance; }

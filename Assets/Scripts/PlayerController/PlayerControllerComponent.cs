@@ -24,7 +24,7 @@ public class PlayerControllerComponent : MonoBehaviour
                                           callbacks,
                                           CombatManager.Instance,
                                           movementComponent);
-        previousPosition = controller.Position;
+        previousPosition = controller.GridPosition;
 
         movementComponent.SetPosition(previousPosition);
     }

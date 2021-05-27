@@ -21,7 +21,7 @@ public class DetermineStepState : State
         {
             var nextStep = controller.GetNextStep();
             controller.RequestLookAt(nextStep);
-            controller.Position = nextStep;
+            controller.GridPosition = nextStep;
         }
         else
         {
@@ -44,7 +44,7 @@ public class DetermineStepState : State
     {
         if (turningFinished)
         {
-            bool combat = controller.CombatManager.PlayerEntersTile(controller.Position);
+            bool combat = controller.CombatManager.PlayerEntersTile(controller.GridPosition);
             if (combat)
             {
                 return new AwaitCombatState(controller);

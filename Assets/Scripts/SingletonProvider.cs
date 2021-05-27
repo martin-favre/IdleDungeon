@@ -20,5 +20,7 @@ public static class SingletonProvider
     public static IGuidProvider MainGuidProvider { get => guidProvider; set => guidProvider = value; }
     private static IGameObjectLoader prefabLoader = PrefabLoader.Instance;
     public static IGameObjectLoader MainGameobjectLoader { get => prefabLoader; set => prefabLoader = value; }
+    private static IPlayerController playerController = PlayerController.Instance;
+    public static IPlayerController MainPlayerController { get => playerController; set => playerController = value; }
 
 }

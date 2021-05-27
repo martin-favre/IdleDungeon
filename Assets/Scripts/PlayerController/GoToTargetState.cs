@@ -10,7 +10,7 @@ public class GoToTargetState : State
     public GoToTargetState(IPlayerController controller)
     {
         this.controller = controller;
-        controller.RequestMoveTo(controller.Position);
+        controller.RequestMoveTo(controller.GridPosition);
     }
 
     public override EventResult HandleEvent(IStateEvent happening)

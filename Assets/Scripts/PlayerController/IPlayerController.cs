@@ -11,5 +11,6 @@ public interface IPlayerController
 
     ICombatManager CombatManager { get; }
 
-    Vector2Int Position { get; set; }
+    Vector2Int GridPosition { get; set; }
+    Vector3 WorldPosition { get; }
 }
