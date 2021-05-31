@@ -36,12 +36,12 @@ public class PlayerCharacter : ICharacter, IEventRecipient<ICharacterUpdateEvent
         attributes = new PlayerAttributes(PlayerPrefsReader.Instance, this, upgradeManager, playerIdentifier);
     }
 
-    public void PerformAction(List<ICharacter> enemies, ICombatReader combat, IEventRecipient<ICombatUpdateEvent> evRecipient)
+    public void PerformAction(List<ICharacter> enemies, ICombatReader combat)
     {
         if (enemies.Count == 0) return;
         ICharacter enemy = Helpers.GetRandom<ICharacter>(enemies, random);
         enemy.BeAttacked(attributes.Attack);
-        evRecipient.RecieveEvent(new CombatActionEvent(combat, enemy, this));
+        CombatEventPublisher.Instance.Publish(new CombatActionEvent(combat, enemy, this));
     }
 
     public void BeAttacked(double attackStat)

@@ -50,7 +50,7 @@ namespace Tests
                                                     It.IsAny<Vector2Int>(),
                                                     It.IsAny<IMap>())).Returns(path);
             combatManagerMock = new Mock<ICombatManager>();
-            combatManagerMock.Setup(f => f.Subscribe(It.IsAny<IObserver<ICombatUpdateEvent>>())).Callback<IObserver<ICombatUpdateEvent>>(e => playersObserver = e);
+            // combatManagerMock.Setup(f => f.Subscribe(It.IsAny<IObserver<ICombatUpdateEvent>>())).Callback<IObserver<ICombatUpdateEvent>>(e => playersObserver = e);
             playerMoverMock = new Mock<IPlayerMover>();
             callbacksMock = new Mock<GameManager.PlayerCallbacks>();
             controller = new PlayerController(mapMock.Object,

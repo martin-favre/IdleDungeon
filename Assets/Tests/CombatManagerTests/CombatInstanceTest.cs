@@ -46,7 +46,7 @@ namespace Tests
             mockPlayerAttributes = new Mock<ICombatAttributes>();
             playerMock.Setup(f => f.Attributes).Returns(mockPlayerAttributes.Object);
             walletMock = new Mock<IPlayerWallet>();
-            combatInstance = new CombatInstance(players.ToArray(), enemyFactoryMock.Object, eventRecipientMock.Object);
+            combatInstance = new CombatInstance(players.ToArray(), enemyFactoryMock.Object);
         }
 
         [Test]
@@ -103,10 +103,8 @@ namespace Tests
             var enemyMock = new Mock<ICharacter>();
             enemies.Add(enemyMock.Object);
             combatInstance.Update();
-            playerMock.Verify(foo => foo.PerformAction(It.IsAny<List<ICharacter>>(), It.IsAny<ICombatReader>(),
-                It.Is<IEventRecipient<ICombatUpdateEvent>>(e => e == eventRecipientMock.Object)), Times.Once); // Should only have happened once
-            playerMock.Verify(foo => foo.PerformAction(It.Is<List<ICharacter>>(l => l.Equals(enemies)), It.IsAny<ICombatReader>(),
-                It.Is<IEventRecipient<ICombatUpdateEvent>>(e => e == eventRecipientMock.Object)), Times.Once); // And only on the enemies
+            playerMock.Verify(foo => foo.PerformAction(It.IsAny<List<ICharacter>>(), It.IsAny<ICombatReader>()), Times.Once); // Should only have happened once
+            playerMock.Verify(foo => foo.PerformAction(It.Is<List<ICharacter>>(l => l.Equals(enemies)), It.IsAny<ICombatReader>()), Times.Once); // And only on the enemies
         }
 
         [Test]
@@ -115,10 +113,8 @@ namespace Tests
             var enemyMock = new Mock<ICharacter>();
             enemies.Add(enemyMock.Object);
             combatInstance.Update();
-            enemyMock.Verify(foo => foo.PerformAction(It.IsAny<List<ICharacter>>(), It.IsAny<ICombatReader>(),
-                It.Is<IEventRecipient<ICombatUpdateEvent>>(e => e == eventRecipientMock.Object)), Times.Once); // Should only have happened once
-            enemyMock.Verify(foo => foo.PerformAction(It.Is<List<ICharacter>>(l => l.Contains(players[0])), It.IsAny<ICombatReader>(),
-                It.Is<IEventRecipient<ICombatUpdateEvent>>(e => e == eventRecipientMock.Object)), Times.Once); // And only on the enemies
+            enemyMock.Verify(foo => foo.PerformAction(It.IsAny<List<ICharacter>>(), It.IsAny<ICombatReader>()), Times.Once); // Should only have happened once
+            enemyMock.Verify(foo => foo.PerformAction(It.Is<List<ICharacter>>(l => l.Contains(players[0])), It.IsAny<ICombatReader>()), Times.Once); // And only on the enemies
         }
 
         [Test]
@@ -129,8 +125,7 @@ namespace Tests
 
             turnProgressMock.Setup(f => f.IncrementTurnProgress(It.IsAny<double>())).Returns(true);
             combatInstance.Update();
-            playerMock.Verify(foo => foo.PerformAction(It.IsAny<List<ICharacter>>(), It.IsAny<ICombatReader>(),
-                It.Is<IEventRecipient<ICombatUpdateEvent>>(e => e == eventRecipientMock.Object)), Times.Once); // Should only have happened once
+            playerMock.Verify(foo => foo.PerformAction(It.IsAny<List<ICharacter>>(), It.IsAny<ICombatReader>()), Times.Once); // Should only have happened once
         }
 
         [Test]
@@ -141,8 +136,7 @@ namespace Tests
 
             turnProgressMock.Setup(f => f.IncrementTurnProgress(It.IsAny<double>())).Returns(false);
             combatInstance.Update();
-            playerMock.Verify(foo => foo.PerformAction(It.IsAny<List<ICharacter>>(), It.IsAny<ICombatReader>(),
-                It.Is<IEventRecipient<ICombatUpdateEvent>>(e => e == eventRecipientMock.Object)), Times.Never); // Should only have happened once
+            playerMock.Verify(foo => foo.PerformAction(It.IsAny<List<ICharacter>>(), It.IsAny<ICombatReader>()), Times.Never); // Should only have happened once
         }
 
         [Test]
@@ -158,7 +152,7 @@ namespace Tests
             enemyMock.Setup(f => f.TurnProgress).Returns(turnProgressMock.Object);
             enemies.Add(enemyMock.Object);
             players.Clear();
-            combatInstance = new CombatInstance(players.ToArray(), enemyFactoryMock.Object, eventRecipientMock.Object);
+            combatInstance = new CombatInstance(players.ToArray(), enemyFactoryMock.Object);
             Assert.AreEqual(ICombatInstance.CombatResult.PlayerLost, combatInstance.Result);
         }
         [Test]

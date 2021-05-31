@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using GameManager;
 using Logging;
+using PubSubSystem;
 using StateMachineCollection;
 using UnityEngine;
 
@@ -20,7 +21,7 @@ public class PlayerController : IPlayerController, IDisposable
     LilLogger logger;
     static PlayerController instance;
     public static PlayerController Instance { get => instance; }
-    SimpleObserver<ICombatUpdateEvent> combatObserver;
+    Subscription<int> combatSubscriber;
     StateMachine machine;
 
     public Vector3 WorldPosition { get => playerMover.WorldPosition; }
@@ -46,7 +47,7 @@ public class PlayerController : IPlayerController, IDisposable
 
         machine = new StateMachine(new DetermineStepState(this));
 
-        combatObserver = new SimpleObserver<ICombatUpdateEvent>(combatManager, (e) =>
+        combatSubscriber = CombatEventPublisher.Instance.Subscribe((e) =>
         {
             if (e is EnteredCombatEvent)
             {
@@ -80,7 +81,7 @@ public class PlayerController : IPlayerController, IDisposable
 
     public void Dispose()
     {
-        combatObserver.Dispose();
+        combatSubscriber.Dispose();
     }
 
     public bool HasNextStep()

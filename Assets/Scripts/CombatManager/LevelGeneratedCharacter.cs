@@ -43,12 +43,12 @@ class LevelGeneratedCharacter : ICharacter, IEventRecipient<ICharacterUpdateEven
         return attributes.IsDead();
     }
 
-    public void PerformAction(List<ICharacter> enemies, ICombatReader combat, IEventRecipient<ICombatUpdateEvent> evRecipient)
+    public void PerformAction(List<ICharacter> enemies, ICombatReader combat)
     {
         if (enemies.Count == 0) return;
         ICharacter target = enemies[SingletonProvider.MainRandomProvider.RandomInt(0, enemies.Count)];
         target.BeAttacked(attributes.Attack);
-        evRecipient.RecieveEvent(new CombatActionEvent(combat, target, this));
+        CombatEventPublisher.Instance.Publish(new CombatActionEvent(combat, target, this));
     }
 
     public IDisposable Subscribe(IObserver<ICharacterUpdateEvent> observer)

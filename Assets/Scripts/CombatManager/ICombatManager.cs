@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public interface ICombatManager : IObservable<ICombatUpdateEvent>
+public interface ICombatManager
 {
     bool PlayerEntersTile(Vector2Int tile);
     bool InCombat();

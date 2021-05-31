@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using PubSubSystem;
+
 public class CharacterStatBoxComponent : MonoBehaviour
 {
     public enum TargetType
@@ -22,11 +24,11 @@ public class CharacterStatBoxComponent : MonoBehaviour
     private int targetIndex;
     private int oldTargetIndex;
     SimpleObserver<ICharacterUpdateEvent> characterObserver;
-    SimpleObserver<ICombatUpdateEvent> combatObserver;
+    Subscription<int> combatSubscription;
     void Start()
     {
         UpdateIndex(targetIndex);
-        combatObserver = new SimpleObserver<ICombatUpdateEvent>(CombatManager.Instance, e => UpdateIndex(targetIndex));
+        combatSubscription = CombatEventPublisher.Instance.Subscribe(e => UpdateIndex(targetIndex));
     }
 
     void UpdateIndex(int index)

@@ -1,4 +1,4 @@
-namespace EventSystem
+namespace PubSubSystem
 {
     public interface IEvent { }
 

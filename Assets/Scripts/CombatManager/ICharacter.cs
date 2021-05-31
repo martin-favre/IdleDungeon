@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public interface ICharacter : IObservable<ICharacterUpdateEvent>
 {
-    void PerformAction(List<ICharacter> enemies, ICombatReader combat, IEventRecipient<ICombatUpdateEvent> evRecipient);
+    void PerformAction(List<ICharacter> enemies, ICombatReader combat);
     void BeAttacked(double attackStat);
     bool IsDead();
     string Name { get; }

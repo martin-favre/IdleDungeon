@@ -7,7 +7,6 @@ public class CombatInstance : ICombatInstance, ICombatReader
 
     List<ICharacter> goodGuys;
     List<ICharacter> badGuys;
-    private readonly IEventRecipient<ICombatUpdateEvent> evRecipient;
 
     public ICombatReader CombatReader => this;
 
@@ -20,12 +19,10 @@ public class CombatInstance : ICombatInstance, ICombatReader
         }
     }
     public CombatInstance(ICharacter[] playerChars,
-    IEnemyFactory enemyFactory,
-    IEventRecipient<ICombatUpdateEvent> evRecipient)
+    IEnemyFactory enemyFactory)
     {
         this.goodGuys = new List<ICharacter>(playerChars);
         badGuys = enemyFactory.GenerateEnemies();
-        this.evRecipient = evRecipient;
         goodGuys.ForEach(e => e.TurnProgress.ResetTurnProgress());
         badGuys.ForEach(e => e.TurnProgress.ResetTurnProgress());
     }
@@ -39,7 +36,7 @@ public class CombatInstance : ICombatInstance, ICombatReader
             {
                 if (ItsTheirTurn(combatant) && !combatant.IsDead())
                 {
-                    combatant.PerformAction(badGuys, this, evRecipient);
+                    combatant.PerformAction(badGuys, this);
                     GenerateCurrencyFromDeads(badGuys);
                     CleanOutDeadGuys(badGuys);
                     CleanOutDeadGuys(goodGuys);
@@ -55,7 +52,7 @@ public class CombatInstance : ICombatInstance, ICombatReader
             {
                 if (ItsTheirTurn(combatant) && !combatant.IsDead())
                 {
-                    combatant.PerformAction(goodGuys, this, evRecipient);
+                    combatant.PerformAction(goodGuys, this);
                     GenerateCurrencyFromDeads(badGuys);
                     CleanOutDeadGuys(badGuys);
                     CleanOutDeadGuys(goodGuys);
@@ -95,7 +92,11 @@ public class CombatInstance : ICombatInstance, ICombatReader
         // When we throw event the we want the combatants list to be correct
         foreach (var item in deadCombatants)
         {
-            if (item.IsDead()) evRecipient.RecieveEvent(new CombatantDied(this, item));
+            if (item.IsDead())
+            {
+                CombatEventPublisher.Instance.Publish(new CombatantDied(this, item));
+            }
+
         }
 
     }

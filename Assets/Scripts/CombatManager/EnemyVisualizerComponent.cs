@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
 using Logging;
+using PubSubSystem;
 using UnityEngine;
 
 public class EnemyVisualizerComponent : MonoBehaviour
 {
     const string enemyGameObjectPrefab = "Prefabs/EnemyObj3D";
-    SimpleObserver<ICombatUpdateEvent> observer;
+    Subscription<int> subscription;
     List<(Guid, GameObject)> enemyObjects = new List<(Guid, GameObject)>();
 
     [SerializeField]
@@ -16,7 +17,7 @@ public class EnemyVisualizerComponent : MonoBehaviour
 
     private void Start()
     {
-        observer = new SimpleObserver<ICombatUpdateEvent>(CombatManager.Instance, (e) =>
+        subscription = CombatEventPublisher.Instance.Subscribe((e) =>
         {
             if (e is EnteredCombatEvent)
             {
@@ -188,6 +189,6 @@ public class EnemyVisualizerComponent : MonoBehaviour
 
     private void OnDestroy()
     {
-        observer.Dispose();
+        subscription.Dispose();
     }
 }

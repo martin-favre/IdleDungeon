@@ -1,19 +1,20 @@
 using System;
 using System.Collections.Generic;
+using PubSubSystem;
 using UnityEngine;
 
 public class EnemyStatsDisplayer : MonoBehaviour
 {
     Dictionary<Guid, SimpleValueDisplayer.ValueHook> displayers = new Dictionary<Guid, SimpleValueDisplayer.ValueHook>();
-    SimpleObserver<ICombatUpdateEvent> observer;
+    Subscription<int> subscription;
 
     void Start()
     {
-        observer = new SimpleObserver<ICombatUpdateEvent>(CombatManager.Instance, (e) =>
+        subscription = CombatEventPublisher.Instance.Subscribe((e) =>
         {
-            if (e is EnteredCombatEvent)
+            if (e is EnteredCombatEvent ent)
             {
-                foreach (var enemy in e.Combat.GetEnemies())
+                foreach (var enemy in ent.Combat.GetEnemies())
                 {
                     displayers[enemy.UniqueId] = SimpleValueDisplayer.Instance.RegisterValue();
                 }
@@ -27,9 +28,9 @@ public class EnemyStatsDisplayer : MonoBehaviour
                 }
                 displayers.Clear();
             }
-            else
+            else if(e is ICombatUpdateEvent cue)
             {
-                UpdateText(e.Combat);
+                UpdateText(cue.Combat);
             }
         });
     }
