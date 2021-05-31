@@ -74,7 +74,7 @@ public class CharacterStatBoxComponent : MonoBehaviour
         }
         else
         {
-            var reader = CombatManager.Instance.GetReader();
+            var reader = SingletonProvider.MainCombatManager.CombatReader;
             if (reader != null)
             {
                 var enemies = reader.GetEnemies();

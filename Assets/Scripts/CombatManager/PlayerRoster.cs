@@ -18,7 +18,7 @@ public class PlayerRoster : IPlayerRoster
 
     static PlayerRoster()
     {
-        instance = new PlayerRoster(SystemRandom.Instance, UpgradeManager.Instance);
+        instance = new PlayerRoster(SingletonProvider.MainRandomProvider, SingletonProvider.MainUpgradeManager);
     }
 
     public PlayerRoster(IRandomProvider randomProvider, IUpgradeManager upgradeManager)

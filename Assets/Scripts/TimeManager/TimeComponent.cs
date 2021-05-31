@@ -10,6 +10,6 @@ public class TimeComponent : MonoBehaviour
 
     void Update() {
         
-        UnityTime.Instance.TimeScaling = timeScaling;
+        SingletonProvider.MainTimeProvider.TimeScaling = timeScaling;
     }
 }

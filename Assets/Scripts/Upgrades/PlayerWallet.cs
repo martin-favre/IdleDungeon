@@ -60,7 +60,7 @@ public class PlayerWallet : IPlayerWallet
 
     static PlayerWallet()
     {
-        instance = new PlayerWallet(PlayerPrefsReader.Instance);
+        instance = new PlayerWallet(SingletonProvider.MainDataStorage);
     }
 
     public PlayerWallet(IPersistentDataStorage storage)

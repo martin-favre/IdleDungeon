@@ -33,7 +33,7 @@ public class PlayerCharacter : ICharacter, IEventRecipient<ICharacterUpdateEvent
     {
         this.random = random;
         this.playerIdentifier = playerIdentifier;
-        attributes = new PlayerAttributes(PlayerPrefsReader.Instance, this, upgradeManager, playerIdentifier);
+        attributes = new PlayerAttributes(SingletonProvider.MainDataStorage, this, upgradeManager, playerIdentifier);
     }
 
     public void PerformAction(List<ICharacter> enemies, ICombatReader combat)

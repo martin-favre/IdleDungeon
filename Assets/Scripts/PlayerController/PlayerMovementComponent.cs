@@ -77,7 +77,7 @@ public class PlayerMovementComponent : MonoBehaviour, IPlayerMover
         var direction = (positionToLookAt - transform.position).normalized;
         if (direction == Vector3.zero) return (transform.rotation, true); // Basically if we're on the position we want to look at, then things go bananas 
         var lookRotation = Quaternion.LookRotation(direction);
-        var newRot = Quaternion.Lerp(transform.rotation, lookRotation, rotationSpeed * UnityTime.Instance.DeltaTime);
+        var newRot = Quaternion.Lerp(transform.rotation, lookRotation, rotationSpeed * SingletonProvider.MainTimeProvider.DeltaTime);
         var ridiculousMargin = 0.00000001f; // if it's too big, the jump to the correct rotation looks odd, if it's too small the rotation takes forever
         if (Helpers.Approximately(newRot, transform.rotation, ridiculousMargin)) return (lookRotation, true);
         return (newRot, false);
@@ -85,7 +85,7 @@ public class PlayerMovementComponent : MonoBehaviour, IPlayerMover
 
     private (Vector3, bool) CalculateNextPosition()
     {
-        float distCovered = (UnityTime.Instance.Time - startTime) * movementSpeed;
+        float distCovered = (SingletonProvider.MainTimeProvider.Time - startTime) * movementSpeed;
         float fractionOfJourney = distCovered / journeyLength;
         var ridiculousMargin = 0.00000001f; // if it's too big, there'll be a small jerk between steps, if it's too small the movement takes forever
         if ((transform.position - targetPosition).magnitude < ridiculousMargin)
@@ -120,7 +120,7 @@ public class PlayerMovementComponent : MonoBehaviour, IPlayerMover
         targetPosition = GridPosToRealPos(posToGoTo);
         journeyLength = Vector3.Distance(originalPos, targetPosition);
         onMoveDone = notifyDone;
-        startTime = UnityTime.Instance.Time;
+        startTime = SingletonProvider.MainTimeProvider.Time;
         moving = true;
     }
 }

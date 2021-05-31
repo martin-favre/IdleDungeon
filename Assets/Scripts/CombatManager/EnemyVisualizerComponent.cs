@@ -50,7 +50,7 @@ public class EnemyVisualizerComponent : MonoBehaviour
     private void ShowEnemies()
     {
         // I guess we want to read out how many enemies are here
-        ICombatReader reader = CombatManager.Instance.GetReader();
+        ICombatReader reader = SingletonProvider.MainCombatManager.CombatReader;
         var characters = reader.GetEnemies();
 
         InstantiateEnemies(characters);

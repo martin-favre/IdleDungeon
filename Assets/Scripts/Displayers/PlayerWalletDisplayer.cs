@@ -8,8 +8,8 @@ public class PlayerWalletDisplayer : MonoBehaviour
     void Start()
     {
         displayer = SimpleValueDisplayer.Instance.RegisterValue();
-        UpdateText(PlayerWallet.Instance);
-        observer = new SimpleObserver<IPlayerWalletUpdateEvent>(PlayerWallet.Instance, (e) => UpdateText(e.Wallet));
+        UpdateText(SingletonProvider.MainPlayerWallet);
+        observer = new SimpleObserver<IPlayerWalletUpdateEvent>(SingletonProvider.MainPlayerWallet, (e) => UpdateText(e.Wallet));
     }
 
     private void UpdateText(IPlayerWallet wallet)

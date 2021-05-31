@@ -46,7 +46,7 @@ public class FadeScreenComponent : MonoBehaviour
                 {
 
                     var color = image.color;
-                    float newA = color.a - (fadeStep * UnityTime.Instance.DeltaTime);
+                    float newA = color.a - (fadeStep * SingletonProvider.MainTimeProvider.DeltaTime);
                     if (newA < 0) newA = 0;
                     image.color = new Color(color.r, color.g, color.b, newA);
                     if (newA == 0)
@@ -58,7 +58,7 @@ public class FadeScreenComponent : MonoBehaviour
             case State.FadingOut:
                 {
                     var color = image.color;
-                    float newA = color.a + (fadeStep * UnityTime.Instance.DeltaTime);
+                    float newA = color.a + (fadeStep * SingletonProvider.MainTimeProvider.DeltaTime);
                     if (newA > 1) newA = 1;
                     image.color = new Color(color.r, color.g, color.b, newA);
                     if (newA == 1)

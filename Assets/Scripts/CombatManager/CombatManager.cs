@@ -10,6 +10,8 @@ public class CombatManager : ICombatManager
     private static CombatManager instance;
     public static CombatManager Instance { get => instance; set => instance = value; }
 
+    public ICombatReader CombatReader { get => combatInstance != null ? combatInstance.CombatReader : null; }
+
     static readonly LilLogger logger = new LilLogger("CombatManager");
     private readonly ICombatInstanceFactory combatInstanceFactory;
     private readonly IMap map;
@@ -39,7 +41,7 @@ public class CombatManager : ICombatManager
         if (map.Goal == tile || (map.Start - tile).magnitude <= 1) return false;
         if (SingletonProvider.MainRandomProvider.ThingHappens(0.25f))
         {
-            combatInstance = combatInstanceFactory.CreateInstance(PlayerRoster.Instance.GetAllPlayersChars());
+            combatInstance = combatInstanceFactory.CreateInstance(SingletonProvider.MainPlayerRoster.GetAllPlayersChars());
             CombatEventPublisher.Instance.Publish(new EnteredCombatEvent(combatInstance.CombatReader));
             return true;
         }
@@ -73,10 +75,5 @@ public class CombatManager : ICombatManager
     public bool InCombat()
     {
         return combatInstance != null;
-    }
-
-    public ICombatReader GetReader()
-    {
-        return combatInstance != null ? combatInstance.CombatReader : null;
     }
 }

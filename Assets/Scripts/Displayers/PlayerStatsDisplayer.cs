@@ -8,7 +8,7 @@ public class PlayerStatsDisplayer : MonoBehaviour
     void Start()
     {
         displayer = SimpleValueDisplayer.Instance.RegisterValue();
-        var chars = PlayerRoster.Instance.GetAllPlayersChars();
+        var chars = SingletonProvider.MainPlayerRoster.GetAllPlayersChars();
         if (chars.Length > 0)
         {
             UpdateText(chars[0].Attributes);

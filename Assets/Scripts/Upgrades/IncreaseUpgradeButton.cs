@@ -37,13 +37,13 @@ public class IncreaseUpgradeButton : MonoBehaviour
             default:
                 throw new System.Exception("Unknown Upgradetype " + type);
         }
-        observer = new KeyObserver<string, Upgrade>(UpgradeManager.Instance, upgradeKey, UpdateText);
-        UpdateText(UpgradeManager.Instance.GetUpgrade(upgradeKey));
+        observer = new KeyObserver<string, Upgrade>(SingletonProvider.MainUpgradeManager, upgradeKey, UpdateText);
+        UpdateText(SingletonProvider.MainUpgradeManager.GetUpgrade(upgradeKey));
     }
 
     public void LevelUp()
     {
-        UpgradeManager.Instance.LevelUpUpgrade(upgradeKey);
+        SingletonProvider.MainUpgradeManager.LevelUpUpgrade(upgradeKey);
     }
 
     void UpdateText(Upgrade upgrade)
@@ -61,7 +61,7 @@ public class IncreaseUpgradeButton : MonoBehaviour
 
     private void OnEnable()
     {
-        var upgrade = UpgradeManager.Instance.GetUpgrade(upgradeKey);
+        var upgrade = SingletonProvider.MainUpgradeManager.GetUpgrade(upgradeKey);
         if (upgrade != null)
         {
             UpdateText(upgrade);

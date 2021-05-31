@@ -22,7 +22,7 @@ public class PlayerControllerComponent : MonoBehaviour
         controller = new PlayerController(map,
                                           new DepthFirst(),
                                           callbacks,
-                                          CombatManager.Instance,
+                                          SingletonProvider.MainCombatManager,
                                           movementComponent);
         previousPosition = controller.GridPosition;
 

@@ -47,24 +47,24 @@ public class PlayerAttributes : ICombatAttributes
     {
         attackUpgrades = new List<MultiplierUpgrade>()
         {
-            new MultiplierUpgrade(5, 1, 50, 1.07f, GetAttackinessUpgradeKey(0, playerIdentifier), storage, PlayerWallet.Instance, upgradeManager),
-            new MultiplierUpgrade(50, 0, 1000, 1.09f, GetAttackinessUpgradeKey(1, playerIdentifier), storage, PlayerWallet.Instance, upgradeManager),
-            new MultiplierUpgrade(500, 0, 10000, 1.11f, GetAttackinessUpgradeKey(2, playerIdentifier), storage, PlayerWallet.Instance, upgradeManager),
+            new MultiplierUpgrade(5, 1, 50, 1.07f, GetAttackinessUpgradeKey(0, playerIdentifier), storage, SingletonProvider.MainPlayerWallet, upgradeManager),
+            new MultiplierUpgrade(50, 0, 1000, 1.09f, GetAttackinessUpgradeKey(1, playerIdentifier), storage, SingletonProvider.MainPlayerWallet, upgradeManager),
+            new MultiplierUpgrade(500, 0, 10000, 1.11f, GetAttackinessUpgradeKey(2, playerIdentifier), storage, SingletonProvider.MainPlayerWallet, upgradeManager),
         };
 
         attackUpgradeObservers = new List<KeyObserver<string, Upgrade>>(attackUpgrades.Count);
-        attackUpgrades.ForEach(upgrade => attackUpgradeObservers.Add(new KeyObserver<string, Upgrade>(UpgradeManager.Instance, upgrade.StorageKey, e => SetAttackiness())));
+        attackUpgrades.ForEach(upgrade => attackUpgradeObservers.Add(new KeyObserver<string, Upgrade>(SingletonProvider.MainUpgradeManager, upgrade.StorageKey, e => SetAttackiness())));
     }
 
     private void InitializeHealthinessUpgrades(IUpgradeManager upgradeManager)
     {
         healthUpgrades = new List<MultiplierUpgrade>() {
-            new MultiplierUpgrade(50, 1, 50, 1.07f, GetHealthinessUpgradeKey(0, playerIdentifier), storage, PlayerWallet.Instance, upgradeManager),
-            new MultiplierUpgrade(500, 0, 1000, 1.09f, GetHealthinessUpgradeKey(1, playerIdentifier), storage, PlayerWallet.Instance, upgradeManager),
-            new MultiplierUpgrade(5000, 0, 10000, 1.11f, GetHealthinessUpgradeKey(2, playerIdentifier), storage, PlayerWallet.Instance, upgradeManager),
+            new MultiplierUpgrade(50, 1, 50, 1.07f, GetHealthinessUpgradeKey(0, playerIdentifier), storage, SingletonProvider.MainPlayerWallet, upgradeManager),
+            new MultiplierUpgrade(500, 0, 1000, 1.09f, GetHealthinessUpgradeKey(1, playerIdentifier), storage, SingletonProvider.MainPlayerWallet, upgradeManager),
+            new MultiplierUpgrade(5000, 0, 10000, 1.11f, GetHealthinessUpgradeKey(2, playerIdentifier), storage, SingletonProvider.MainPlayerWallet, upgradeManager),
         };
         healthUpgradeObservers = new List<KeyObserver<string, Upgrade>>(healthUpgrades.Count);
-        healthUpgrades.ForEach(upgrade => healthUpgradeObservers.Add(new KeyObserver<string, Upgrade>(UpgradeManager.Instance, upgrade.StorageKey, e => SetMaxHp())));
+        healthUpgrades.ForEach(upgrade => healthUpgradeObservers.Add(new KeyObserver<string, Upgrade>(SingletonProvider.MainUpgradeManager, upgrade.StorageKey, e => SetMaxHp())));
 
     }
 
