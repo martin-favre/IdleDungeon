@@ -20,19 +20,26 @@ namespace GameManager
             new GoalAndStartAdder()
         };
         private IMap map;
-        private readonly IGameManagerComponent component;
+        private IGameManagerComponent component;
         private StateMachine machine;
         public IMap GridMap { get => map; set => map = value; }
         public IMapFactory MapFactory { get => mapGenerator; }
         public IMapModifier[] MapModifiers { get => mapModifiers; }
         static IGameManager instance;
         public static IGameManager Instance { get => instance; }
-        public GameManager(IGameManagerComponent component)
+
+        static GameManager()
+        {
+            instance = new GameManager();
+        }
+
+        public void Init(IGameManagerComponent component)
         {
             machine = new StateMachine(new GenerateMapState(this));
-            instance = this;
             this.component = component;
         }
+
+        public GameManager() {}
 
         public void OnPlayerReachedGoal()
         {

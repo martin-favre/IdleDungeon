@@ -14,21 +14,17 @@ public class CombatManager : ICombatManager
 
     static readonly LilLogger logger = new LilLogger("CombatManager");
     private readonly ICombatInstanceFactory combatInstanceFactory;
-    private readonly IMap map;
+    private IMap map;
     private ICombatInstance combatInstance;
 
-    public CombatManager(ICombatInstanceFactory combatInstanceFactory, IMap map)
+    static CombatManager()
     {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else
-        {
-            logger.Log("Duplicate CombatManager instances", LogLevel.Error);
-        }
+        instance = new CombatManager(new CombatInstanceFactory());
+    }
+
+    public CombatManager(ICombatInstanceFactory combatInstanceFactory)
+    {
         this.combatInstanceFactory = combatInstanceFactory;
-        this.map = map;
     }
 
     public static void ClearInstance()
@@ -38,6 +34,10 @@ public class CombatManager : ICombatManager
 
     public bool PlayerEntersTile(Vector2Int tile)
     {
+        if (map == null)
+        {
+            map = SingletonProvider.MainGameManager.GridMap;
+        }
         if (map.Goal == tile || (map.Start - tile).magnitude <= 1) return false;
         if (SingletonProvider.MainRandomProvider.ThingHappens(0.25f))
         {

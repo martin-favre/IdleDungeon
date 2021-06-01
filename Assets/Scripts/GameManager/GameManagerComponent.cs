@@ -22,7 +22,13 @@ namespace GameManager
 
         private void Awake()
         {
-            manager = new GameManager(this);
+
+        }
+
+        private void Start()
+        {
+            manager = (GameManager)SingletonProvider.MainGameManager;
+            manager.Init(this);
         }
         private void Update()
         {

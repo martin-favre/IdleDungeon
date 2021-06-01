@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PlayerAttributes : ICombatAttributes
 {
-    private readonly IPersistentDataStorage storage;
     private readonly IEventRecipient<ICharacterUpdateEvent> recipient;
     private readonly int playerIdentifier;
 
@@ -26,16 +25,15 @@ public class PlayerAttributes : ICombatAttributes
     List<KeyObserver<string, Upgrade>> attackUpgradeObservers;
     List<KeyObserver<string, Upgrade>> healthUpgradeObservers;
     IObserver<IPersistentStorageUpdateEvent> storageObserver;
-    public PlayerAttributes(IPersistentDataStorage storage, IEventRecipient<ICharacterUpdateEvent> recipient, IUpgradeManager upgradeManager, int playerIdentifier)
+    public PlayerAttributes( IEventRecipient<ICharacterUpdateEvent> recipient, int playerIdentifier)
     {
-        this.storage = storage;
         this.recipient = recipient;
         this.playerIdentifier = playerIdentifier;
-        InitializeAttackinessUpgrades(upgradeManager);
+        InitializeAttackinessUpgrades(SingletonProvider.MainUpgradeManager);
         SetAttackiness();
-        InitializeHealthinessUpgrades(upgradeManager);
-        currentHp = storage.GetFloat(GetCurrentHpKey(playerIdentifier), (float)maxHp);
-        storageObserver = new KeyObserver<string, IPersistentStorageUpdateEvent>(storage, GetCurrentHpKey(playerIdentifier), e =>
+        InitializeHealthinessUpgrades(SingletonProvider.MainUpgradeManager);
+        currentHp = SingletonProvider.MainDataStorage.GetFloat(GetCurrentHpKey(playerIdentifier), (float)maxHp);
+        storageObserver = new KeyObserver<string, IPersistentStorageUpdateEvent>(SingletonProvider.MainDataStorage, GetCurrentHpKey(playerIdentifier), e =>
         {
             if (e is DataClearedUpdateEvent clr) currentHp = maxHp;
             recipient.RecieveEvent(new AttributeChangedEvent(this));
@@ -47,9 +45,9 @@ public class PlayerAttributes : ICombatAttributes
     {
         attackUpgrades = new List<MultiplierUpgrade>()
         {
-            new MultiplierUpgrade(5, 1, 50, 1.07f, GetAttackinessUpgradeKey(0, playerIdentifier), storage, SingletonProvider.MainPlayerWallet, upgradeManager),
-            new MultiplierUpgrade(50, 0, 1000, 1.09f, GetAttackinessUpgradeKey(1, playerIdentifier), storage, SingletonProvider.MainPlayerWallet, upgradeManager),
-            new MultiplierUpgrade(500, 0, 10000, 1.11f, GetAttackinessUpgradeKey(2, playerIdentifier), storage, SingletonProvider.MainPlayerWallet, upgradeManager),
+            new MultiplierUpgrade(5, 1, 50, 1.07f, GetAttackinessUpgradeKey(0, playerIdentifier), SingletonProvider.MainDataStorage, SingletonProvider.MainPlayerWallet, upgradeManager),
+            new MultiplierUpgrade(50, 0, 1000, 1.09f, GetAttackinessUpgradeKey(1, playerIdentifier), SingletonProvider.MainDataStorage, SingletonProvider.MainPlayerWallet, upgradeManager),
+            new MultiplierUpgrade(500, 0, 10000, 1.11f, GetAttackinessUpgradeKey(2, playerIdentifier), SingletonProvider.MainDataStorage, SingletonProvider.MainPlayerWallet, upgradeManager),
         };
 
         attackUpgradeObservers = new List<KeyObserver<string, Upgrade>>(attackUpgrades.Count);
@@ -59,9 +57,9 @@ public class PlayerAttributes : ICombatAttributes
     private void InitializeHealthinessUpgrades(IUpgradeManager upgradeManager)
     {
         healthUpgrades = new List<MultiplierUpgrade>() {
-            new MultiplierUpgrade(50, 1, 50, 1.07f, GetHealthinessUpgradeKey(0, playerIdentifier), storage, SingletonProvider.MainPlayerWallet, upgradeManager),
-            new MultiplierUpgrade(500, 0, 1000, 1.09f, GetHealthinessUpgradeKey(1, playerIdentifier), storage, SingletonProvider.MainPlayerWallet, upgradeManager),
-            new MultiplierUpgrade(5000, 0, 10000, 1.11f, GetHealthinessUpgradeKey(2, playerIdentifier), storage, SingletonProvider.MainPlayerWallet, upgradeManager),
+            new MultiplierUpgrade(50, 1, 50, 1.07f, GetHealthinessUpgradeKey(0, playerIdentifier), SingletonProvider.MainDataStorage, SingletonProvider.MainPlayerWallet, upgradeManager),
+            new MultiplierUpgrade(500, 0, 1000, 1.09f, GetHealthinessUpgradeKey(1, playerIdentifier), SingletonProvider.MainDataStorage, SingletonProvider.MainPlayerWallet, upgradeManager),
+            new MultiplierUpgrade(5000, 0, 10000, 1.11f, GetHealthinessUpgradeKey(2, playerIdentifier), SingletonProvider.MainDataStorage, SingletonProvider.MainPlayerWallet, upgradeManager),
         };
         healthUpgradeObservers = new List<KeyObserver<string, Upgrade>>(healthUpgrades.Count);
         healthUpgrades.ForEach(upgrade => healthUpgradeObservers.Add(new KeyObserver<string, Upgrade>(SingletonProvider.MainUpgradeManager, upgrade.StorageKey, e => SetMaxHp())));
@@ -120,8 +118,8 @@ public class PlayerAttributes : ICombatAttributes
         if (currentHp <= 0) currentHp = 0;
         if (currentHp != oldCurrentHp)
         {
-            storage.SetFloat(GetCurrentHpKey(playerIdentifier), (float)currentHp);
-            recipient.RecieveEvent(new AttributeChangedEvent(this));
+            SingletonProvider.MainDataStorage.SetFloat(GetCurrentHpKey(playerIdentifier), (float)currentHp);
+            recipient.RecieveEvent(new HealthLostEvent(damage, this));
         }
     }
 
@@ -132,7 +130,7 @@ public class PlayerAttributes : ICombatAttributes
         if (currentHp > maxHp) currentHp = maxHp;
         if (currentHp != oldCurrentHp)
         {
-            storage.SetFloat(GetCurrentHpKey(playerIdentifier), (float)currentHp);
+            SingletonProvider.MainDataStorage.SetFloat(GetCurrentHpKey(playerIdentifier), (float)currentHp);
             recipient.RecieveEvent(new AttributeChangedEvent(this));
         }
     }

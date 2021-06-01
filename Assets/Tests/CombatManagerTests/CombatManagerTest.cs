@@ -38,7 +38,7 @@ namespace Tests
             CombatManager.ClearInstance();
             timeProviderMock = new Mock<ITimeProvider>();
             SingletonProvider.MainRandomProvider = randomMock.Object;
-            manager = new CombatManager(combatFactoryMock.Object, mapMock.Object);
+            manager = new CombatManager(combatFactoryMock.Object);
         }
 
         [Test]

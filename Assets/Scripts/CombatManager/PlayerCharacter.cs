@@ -29,17 +29,17 @@ public class PlayerCharacter : ICharacter, IEventRecipient<ICharacterUpdateEvent
 
     List<IObserver<ICharacterUpdateEvent>> observers = new List<IObserver<ICharacterUpdateEvent>>();
 
-    public PlayerCharacter(IRandomProvider random, IUpgradeManager upgradeManager, int playerIdentifier)
+    public PlayerCharacter(int playerIdentifier)
     {
-        this.random = random;
+        
         this.playerIdentifier = playerIdentifier;
-        attributes = new PlayerAttributes(SingletonProvider.MainDataStorage, this, upgradeManager, playerIdentifier);
+        attributes = new PlayerAttributes(this, playerIdentifier);
     }
 
     public void PerformAction(List<ICharacter> enemies, ICombatReader combat)
     {
         if (enemies.Count == 0) return;
-        ICharacter enemy = Helpers.GetRandom<ICharacter>(enemies, random);
+        ICharacter enemy = Helpers.GetRandom<ICharacter>(enemies, SingletonProvider.MainRandomProvider);
         enemy.BeAttacked(attributes.Attack);
         CombatEventPublisher.Instance.Publish(new CombatActionEvent(combat, enemy, this));
     }

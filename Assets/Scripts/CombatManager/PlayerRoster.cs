@@ -18,16 +18,16 @@ public class PlayerRoster : IPlayerRoster
 
     static PlayerRoster()
     {
-        instance = new PlayerRoster(SingletonProvider.MainRandomProvider, SingletonProvider.MainUpgradeManager);
+        instance = new PlayerRoster();
     }
 
-    public PlayerRoster(IRandomProvider randomProvider, IUpgradeManager upgradeManager)
+    public PlayerRoster()
     {
         playerChars = new List<PlayerCharacter>() {
-            new PlayerCharacter(randomProvider, upgradeManager, 0),
-            new PlayerCharacter(randomProvider, upgradeManager, 1),
-            new PlayerCharacter(randomProvider, upgradeManager, 2),
-            new PlayerCharacter(randomProvider, upgradeManager, 3)
+            new PlayerCharacter(0),
+            new PlayerCharacter(1),
+            new PlayerCharacter(2),
+            new PlayerCharacter(3)
         };
 
     }
