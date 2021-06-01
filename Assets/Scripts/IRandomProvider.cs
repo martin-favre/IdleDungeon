@@ -4,6 +4,8 @@ public interface IRandomProvider
     // min <= x < max
     int RandomInt(int min, int max);
 
+    float RandomFloat(float min, float max);
+
     // Get if the thing happens or not, given the chance
     // chance is a value 0-1
     bool ThingHappens(float chance); 

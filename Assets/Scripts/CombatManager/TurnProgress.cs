@@ -8,9 +8,15 @@ public class TurnProgress : ITurnProgress
     public const double MaxTurnProgress = 100;
     private double turnProgress;
 
+    public void RandomizeProgress()
+    {
+        turnProgress = SingletonProvider.MainRandomProvider.RandomFloat(0, (float)MaxTurnProgress);
+    }
+
     public void ResetTurnProgress()
     {
         turnProgress = 0;
+        RandomizeProgress();
     }
 
     // Return true if it's their turn

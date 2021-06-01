@@ -9,4 +9,9 @@ public class SystemGuid : IGuid
         if (o == null) return false;
         return o.guid.Equals(guid);
     }
+
+    public override string ToString()
+    {
+        return guid.ToString();
+    }
 }

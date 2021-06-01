@@ -85,7 +85,7 @@ public class CombatInstance : ICombatInstance, ICombatReader
         List<ICharacter> deadCombatants = new List<ICharacter>();
         foreach (var item in combatants)
         {
-            deadCombatants.Add(item);
+            if(item.IsDead()) deadCombatants.Add(item);
         }
 
         combatants.RemoveAll((c) => c.IsDead());
@@ -96,8 +96,9 @@ public class CombatInstance : ICombatInstance, ICombatReader
             {
                 CombatEventPublisher.Instance.Publish(new CombatantDied(this, item));
             }
-
         }
+
+        if(combatants == badGuys) deadCombatants.ForEach(e => e.Dispose());
 
     }
 

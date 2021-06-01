@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-public interface ICharacter : IObservable<ICharacterUpdateEvent>
+public interface ICharacter: IDisposable
 {
     void PerformAction(List<ICharacter> enemies, ICombatReader combat);
     void BeAttacked(double attackStat);
@@ -10,5 +10,5 @@ public interface ICharacter : IObservable<ICharacterUpdateEvent>
     ICombatAttributes Attributes { get; }
     double ExperienceWorth { get; }
     ITurnProgress TurnProgress { get; }
-    Guid UniqueId { get; }
+    IGuid UniqueId { get; }
 }

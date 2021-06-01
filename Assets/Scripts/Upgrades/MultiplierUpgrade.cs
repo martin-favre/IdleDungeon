@@ -8,11 +8,8 @@ public class MultiplierUpgrade : Upgrade
         int initialLevel,
         float baseCost,
         float costMultiplier,
-        string storageKey,
-        IPersistentDataStorage storage,
-        IPlayerWallet wallet,
-        IUpgradeManager upgradeManager)
-        : base(initialLevel, baseCost, costMultiplier, storageKey, storage, wallet, upgradeManager)
+        string storageKey)
+        : base(initialLevel, baseCost, costMultiplier, storageKey)
     {
         this.valueMultiplier = valueMultiplier;
     }

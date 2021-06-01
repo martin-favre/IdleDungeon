@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 // Represents a Character the player owns. i.e. not an enemy.
-public class PlayerCharacter : ICharacter, IEventRecipient<ICharacterUpdateEvent>
+public class PlayerCharacter : ICharacter
 {
     static readonly string[] names = new string[] {
         "Steve",
@@ -15,25 +15,24 @@ public class PlayerCharacter : ICharacter, IEventRecipient<ICharacterUpdateEvent
     private readonly int playerIdentifier;
     private readonly PlayerAttributes attributes;
     private readonly TurnProgress turnProgress = new TurnProgress();
-    private Guid guid = Guid.NewGuid();
+    private IGuid guid = GuidProvider.Instance.GetNewGuid();
 
     public ICombatAttributes Attributes => attributes;
 
     public ITurnProgress TurnProgress => turnProgress;
 
-    public Guid UniqueId => guid;
+    public IGuid UniqueId => guid;
 
     public double ExperienceWorth => 0; // Players are not worth experience :D
 
     public string Name => names[playerIdentifier];
 
-    List<IObserver<ICharacterUpdateEvent>> observers = new List<IObserver<ICharacterUpdateEvent>>();
-
     public PlayerCharacter(int playerIdentifier)
     {
         
         this.playerIdentifier = playerIdentifier;
-        attributes = new PlayerAttributes(this, playerIdentifier);
+        attributes = new PlayerAttributes(playerIdentifier, this);
+        turnProgress.RandomizeProgress();
     }
 
     public void PerformAction(List<ICharacter> enemies, ICombatReader combat)
@@ -54,14 +53,8 @@ public class PlayerCharacter : ICharacter, IEventRecipient<ICharacterUpdateEvent
         return attributes.IsDead();
     }
 
-    public IDisposable Subscribe(IObserver<ICharacterUpdateEvent> observer)
+    public void Dispose()
     {
-        return new SimpleUnsubscriber<ICharacterUpdateEvent>(observers, observer);
-    }
-
-    public void RecieveEvent(ICharacterUpdateEvent ev)
-    {
-        var oldObservers = observers.ToArray();
-        foreach (var observer in oldObservers) { observer.OnNext(ev); }
+        attributes.Dispose();
     }
 }

@@ -17,7 +17,15 @@ public static class SingletonProvider
         set => gameManager = value;
     }
     private static IRandomProvider randomProvider = SystemRandom.Instance;
-    public static IRandomProvider MainRandomProvider { get => randomProvider; set => randomProvider = value; }
+    public static IRandomProvider MainRandomProvider
+    {
+        get
+        {
+            if (randomProvider == null) randomProvider = SystemRandom.Instance;
+            return randomProvider;
+        }
+        set => randomProvider = value;
+    }
     private static IPersistentDataStorage dataStorage = PlayerPrefsReader.Instance;
     public static IPersistentDataStorage MainDataStorage
     {

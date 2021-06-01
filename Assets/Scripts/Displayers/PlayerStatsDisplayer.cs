@@ -1,9 +1,10 @@
+using PubSubSystem;
 using UnityEngine;
 
 public class PlayerStatsDisplayer : MonoBehaviour
 {
     SimpleValueDisplayer.ValueHook displayer;
-    SimpleObserver<ICharacterUpdateEvent> observer;
+    Subscription<CharacterUpdateEventType> subscription;
 
     void Start()
     {
@@ -12,9 +13,9 @@ public class PlayerStatsDisplayer : MonoBehaviour
         if (chars.Length > 0)
         {
             UpdateText(chars[0].Attributes);
-            observer = new SimpleObserver<ICharacterUpdateEvent>(chars[0], e =>
+            subscription = CharacterEventPublisher.Instance.Subscribe(CharacterUpdateEventType.AttributeChanged, e =>
             {
-                if (e is AttributeChangedEvent) UpdateText((e as AttributeChangedEvent).PlayerAttributes);
+                if (e is AttributeChangedEvent attr) UpdateText(attr.Character.Attributes);
             });
         }
     }

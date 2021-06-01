@@ -25,4 +25,9 @@ public class SystemRandom : IRandomProvider
     {
         return random.NextDouble() <= chance;
     }
+
+    public float RandomFloat(float min, float max)
+    {
+        return (float)(random.NextDouble() * (max - min) + min);
+    }
 }

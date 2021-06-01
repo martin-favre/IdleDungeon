@@ -8,7 +8,7 @@ public class EnemyVisualizerComponent : MonoBehaviour
 {
     const string enemyGameObjectPrefab = "Prefabs/EnemyObj3D";
     Subscription<int> subscription;
-    List<(Guid, GameObject)> enemyObjects = new List<(Guid, GameObject)>();
+    List<(IGuid, GameObject)> enemyObjects = new List<(IGuid, GameObject)>();
 
     [SerializeField]
     private Transform canvas;

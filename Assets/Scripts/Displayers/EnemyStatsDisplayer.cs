@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class EnemyStatsDisplayer : MonoBehaviour
 {
-    Dictionary<Guid, SimpleValueDisplayer.ValueHook> displayers = new Dictionary<Guid, SimpleValueDisplayer.ValueHook>();
+    Dictionary<IGuid, SimpleValueDisplayer.ValueHook> displayers = new Dictionary<IGuid, SimpleValueDisplayer.ValueHook>();
     Subscription<int> subscription;
 
     void Start()

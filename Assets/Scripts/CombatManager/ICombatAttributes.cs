@@ -1,4 +1,6 @@
-public interface ICombatAttributes
+using System;
+
+public interface ICombatAttributes: IDisposable
 {
     double MaxHp { get; }
     double CurrentHp { get; }

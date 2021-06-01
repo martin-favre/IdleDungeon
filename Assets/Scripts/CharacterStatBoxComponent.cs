@@ -23,12 +23,21 @@ public class CharacterStatBoxComponent : MonoBehaviour
     [SerializeField]
     private int targetIndex;
     private int oldTargetIndex;
-    SimpleObserver<ICharacterUpdateEvent> characterObserver;
+
     Subscription<int> combatSubscription;
     void Start()
     {
         UpdateIndex(targetIndex);
-        combatSubscription = CombatEventPublisher.Instance.Subscribe(e => UpdateIndex(targetIndex));
+        if (targetType == TargetType.Enemies)
+        {
+            combatSubscription = CombatEventPublisher.Instance.Subscribe(e =>
+            {
+                if (e is EnteredCombatEvent || e is ExitedCombatEvent)
+                {
+                    UpdateIndex(targetIndex);
+                }
+            });
+        }
     }
 
     void UpdateIndex(int index)
@@ -46,8 +55,6 @@ public class CharacterStatBoxComponent : MonoBehaviour
                 healthbarComponent.gameObject.SetActive(true);
                 healthbarComponent.SetAttributes(character);
             }
-            if (characterObserver != null) characterObserver.Dispose();
-            characterObserver = new SimpleObserver<ICharacterUpdateEvent>(character, e => UpdateIndex(targetIndex));
         }
         else
         {
@@ -94,7 +101,8 @@ public class CharacterStatBoxComponent : MonoBehaviour
 
     public void OpenUpgradeTab()
     {
-        if(targetType == TargetType.Players) {
+        if (targetType == TargetType.Players)
+        {
             UpgradePanelComponent.Instance.OpenPanel(targetIndex);
         }
     }

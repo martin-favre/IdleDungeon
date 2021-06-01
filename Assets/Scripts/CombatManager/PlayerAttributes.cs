@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerAttributes : ICombatAttributes
+public class PlayerAttributes : ICombatAttributes, IDisposable
 {
-    private readonly IEventRecipient<ICharacterUpdateEvent> recipient;
     private readonly int playerIdentifier;
+    private ICharacter owner;
 
     public double MaxHp { get => maxHp; }
 
@@ -25,41 +25,45 @@ public class PlayerAttributes : ICombatAttributes
     List<KeyObserver<string, Upgrade>> attackUpgradeObservers;
     List<KeyObserver<string, Upgrade>> healthUpgradeObservers;
     IObserver<IPersistentStorageUpdateEvent> storageObserver;
-    public PlayerAttributes( IEventRecipient<ICharacterUpdateEvent> recipient, int playerIdentifier)
+    public PlayerAttributes(int playerIdentifier, ICharacter owner)
     {
-        this.recipient = recipient;
         this.playerIdentifier = playerIdentifier;
-        InitializeAttackinessUpgrades(SingletonProvider.MainUpgradeManager);
+        this.owner = owner;
+        InitializeAttackinessUpgrades();
         SetAttackiness();
-        InitializeHealthinessUpgrades(SingletonProvider.MainUpgradeManager);
+        InitializeHealthinessUpgrades();
         currentHp = SingletonProvider.MainDataStorage.GetFloat(GetCurrentHpKey(playerIdentifier), (float)maxHp);
         storageObserver = new KeyObserver<string, IPersistentStorageUpdateEvent>(SingletonProvider.MainDataStorage, GetCurrentHpKey(playerIdentifier), e =>
         {
-            if (e is DataClearedUpdateEvent clr) currentHp = maxHp;
-            recipient.RecieveEvent(new AttributeChangedEvent(this));
+            if (e is DataClearedUpdateEvent clr)
+            {
+                var oldHp = currentHp;
+                currentHp = maxHp;
+                if (currentHp != oldHp) CharacterEventPublisher.Instance.Publish(CharacterUpdateEventType.CurrentHpChanged, new CurrentHpChanged(currentHp - oldHp, owner));
+            }
         });
         SetMaxHp();
     }
 
-    private void InitializeAttackinessUpgrades(IUpgradeManager upgradeManager)
+    private void InitializeAttackinessUpgrades()
     {
         attackUpgrades = new List<MultiplierUpgrade>()
         {
-            new MultiplierUpgrade(5, 1, 50, 1.07f, GetAttackinessUpgradeKey(0, playerIdentifier), SingletonProvider.MainDataStorage, SingletonProvider.MainPlayerWallet, upgradeManager),
-            new MultiplierUpgrade(50, 0, 1000, 1.09f, GetAttackinessUpgradeKey(1, playerIdentifier), SingletonProvider.MainDataStorage, SingletonProvider.MainPlayerWallet, upgradeManager),
-            new MultiplierUpgrade(500, 0, 10000, 1.11f, GetAttackinessUpgradeKey(2, playerIdentifier), SingletonProvider.MainDataStorage, SingletonProvider.MainPlayerWallet, upgradeManager),
+            new MultiplierUpgrade(5, 1, 50, 1.07f, GetAttackinessUpgradeKey(0, playerIdentifier)),
+            new MultiplierUpgrade(50, 0, 1000, 1.09f, GetAttackinessUpgradeKey(1, playerIdentifier)),
+            new MultiplierUpgrade(500, 0, 10000, 1.11f, GetAttackinessUpgradeKey(2, playerIdentifier)),
         };
 
         attackUpgradeObservers = new List<KeyObserver<string, Upgrade>>(attackUpgrades.Count);
         attackUpgrades.ForEach(upgrade => attackUpgradeObservers.Add(new KeyObserver<string, Upgrade>(SingletonProvider.MainUpgradeManager, upgrade.StorageKey, e => SetAttackiness())));
     }
 
-    private void InitializeHealthinessUpgrades(IUpgradeManager upgradeManager)
+    private void InitializeHealthinessUpgrades()
     {
         healthUpgrades = new List<MultiplierUpgrade>() {
-            new MultiplierUpgrade(50, 1, 50, 1.07f, GetHealthinessUpgradeKey(0, playerIdentifier), SingletonProvider.MainDataStorage, SingletonProvider.MainPlayerWallet, upgradeManager),
-            new MultiplierUpgrade(500, 0, 1000, 1.09f, GetHealthinessUpgradeKey(1, playerIdentifier), SingletonProvider.MainDataStorage, SingletonProvider.MainPlayerWallet, upgradeManager),
-            new MultiplierUpgrade(5000, 0, 10000, 1.11f, GetHealthinessUpgradeKey(2, playerIdentifier), SingletonProvider.MainDataStorage, SingletonProvider.MainPlayerWallet, upgradeManager),
+            new MultiplierUpgrade(50, 1, 50, 1.07f, GetHealthinessUpgradeKey(0, playerIdentifier)),
+            new MultiplierUpgrade(500, 0, 1000, 1.09f, GetHealthinessUpgradeKey(1, playerIdentifier)),
+            new MultiplierUpgrade(5000, 0, 10000, 1.11f, GetHealthinessUpgradeKey(2, playerIdentifier)),
         };
         healthUpgradeObservers = new List<KeyObserver<string, Upgrade>>(healthUpgrades.Count);
         healthUpgrades.ForEach(upgrade => healthUpgradeObservers.Add(new KeyObserver<string, Upgrade>(SingletonProvider.MainUpgradeManager, upgrade.StorageKey, e => SetMaxHp())));
@@ -85,7 +89,7 @@ public class PlayerAttributes : ICombatAttributes
     {
         attack = 0;
         attackUpgrades.ForEach(u => attack += ((MultiplierUpgrade)u).MultipliedValue);
-        recipient.RecieveEvent(new AttributeChangedEvent(this));
+        CharacterEventPublisher.Instance.Publish(CharacterUpdateEventType.AttributeChanged, new AttributeChangedEvent(owner));
     }
 
     void SetMaxHp()
@@ -95,7 +99,7 @@ public class PlayerAttributes : ICombatAttributes
         maxHp = 0;
         healthUpgrades.ForEach(u => maxHp += ((MultiplierUpgrade)u).MultipliedValue);
         currentHp = oldCurrentHpPart * maxHp;
-        recipient.RecieveEvent(new AttributeChangedEvent(this));
+        CharacterEventPublisher.Instance.Publish(CharacterUpdateEventType.AttributeChanged, new AttributeChangedEvent(owner));
     }
 
     void SetMaxHp(int level)
@@ -108,7 +112,7 @@ public class PlayerAttributes : ICombatAttributes
         {
             currentHp = oldCurrentHpPart * maxHp;
         }
-        recipient.RecieveEvent(new AttributeChangedEvent(this));
+        CharacterEventPublisher.Instance.Publish(CharacterUpdateEventType.AttributeChanged, new AttributeChangedEvent(owner));
     }
 
     public void Damage(double damage)
@@ -119,7 +123,7 @@ public class PlayerAttributes : ICombatAttributes
         if (currentHp != oldCurrentHp)
         {
             SingletonProvider.MainDataStorage.SetFloat(GetCurrentHpKey(playerIdentifier), (float)currentHp);
-            recipient.RecieveEvent(new HealthLostEvent(damage, this));
+            CharacterEventPublisher.Instance.Publish(CharacterUpdateEventType.CurrentHpChanged, new CurrentHpChanged(currentHp-oldCurrentHp, owner));
         }
     }
 
@@ -131,7 +135,7 @@ public class PlayerAttributes : ICombatAttributes
         if (currentHp != oldCurrentHp)
         {
             SingletonProvider.MainDataStorage.SetFloat(GetCurrentHpKey(playerIdentifier), (float)currentHp);
-            recipient.RecieveEvent(new AttributeChangedEvent(this));
+            CharacterEventPublisher.Instance.Publish(CharacterUpdateEventType.CurrentHpChanged, new CurrentHpChanged(currentHp-oldCurrentHp, owner));
         }
     }
 
@@ -139,5 +143,10 @@ public class PlayerAttributes : ICombatAttributes
     public bool IsDead()
     {
         return currentHp <= 0;
+    }
+
+    public void Dispose()
+    {
+        owner = null;
     }
 }

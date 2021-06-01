@@ -9,8 +9,6 @@ public class Upgrade
     private readonly float costMultiplier;
     private readonly string storageKey;
     private readonly UpgradeType upgradeType;
-    private readonly IPersistentDataStorage storage;
-    private readonly IPlayerWallet wallet;
     public float Cost { get => baseCost * Mathf.Pow(costMultiplier, level); }
     public int Level { get => level; }
     public string StorageKey { get => storageKey; }
@@ -21,38 +19,33 @@ public class Upgrade
         int initialLevel,
         float baseCost,
         float costMultiplier,
-        string storageKey,
-        IPersistentDataStorage storage,
-        IPlayerWallet wallet,
-        IUpgradeManager upgradeManager)
+        string storageKey)
     {
-        level = storage.GetInt(StorageKey, initialLevel);
+        level = SingletonProvider.MainDataStorage.GetInt(StorageKey, initialLevel);
         this.initialLevel = initialLevel;
         this.baseCost = baseCost;
         this.costMultiplier = costMultiplier;
         this.storageKey = storageKey;
-        this.storage = storage;
-        this.wallet = wallet;
-        upgradeManager.SetUpgrade(StorageKey, this);
-        observer = new KeyObserver<string, IPersistentStorageUpdateEvent>(storage, storageKey, e =>
+        SingletonProvider.MainUpgradeManager.SetUpgrade(StorageKey, this);
+        observer = new KeyObserver<string, IPersistentStorageUpdateEvent>(SingletonProvider.MainDataStorage, storageKey, e =>
         {
             int oldLevel = level;
             if (e is IntPersistentStorageUpdateEvent ev) level = ev.Value;
             if (e is DataClearedUpdateEvent) level = this.initialLevel;
             if (level != oldLevel)
             {
-                upgradeManager.RecieveEvent(StorageKey);
+                SingletonProvider.MainUpgradeManager.RecieveEvent(StorageKey);
             }
         });
     }
 
     public void LevelUp()
     {
-        if (Cost <= wallet.Experience)
+        if (Cost <= SingletonProvider.MainPlayerWallet.Experience)
         {
-            wallet.RemoveExperience(Cost);
+            SingletonProvider.MainPlayerWallet.RemoveExperience(Cost);
             level++;
-            storage.SetInt(StorageKey, level);
+            SingletonProvider.MainDataStorage.SetInt(StorageKey, level);
         }
     }
 
