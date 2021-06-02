@@ -22,6 +22,7 @@ public class DamageTextSpawnerComponent : MonoBehaviour
     {
         this.character = character;
         targetGuid = character.UniqueId;
+        if(subscription != null) subscription.Dispose();
         subscription = CharacterEventPublisher.Instance.Subscribe(CharacterUpdateEventType.CurrentHpChanged, OnEvent);
         logger.Log("Setting character " + character.Name + " guid: " + character.UniqueId);
     }

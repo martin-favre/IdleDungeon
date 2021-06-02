@@ -22,6 +22,9 @@ public class PlayerStatsDisplayer : MonoBehaviour
 
     private void UpdateText(ICombatAttributes attributes)
     {
-        displayer.UpdateValue("Player HP: " + Mathf.RoundToInt((float)attributes.CurrentHp) + "/" + Mathf.RoundToInt((float)attributes.MaxHp));
+        if (attributes is IHealthPoints hp)
+        {
+            displayer.UpdateValue("Player HP: " + Mathf.RoundToInt((float)hp.CurrentHp) + "/" + Mathf.RoundToInt((float)hp.MaxHp));
+        }
     }
 }

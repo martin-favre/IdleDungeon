@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class LevelGeneratedCombatAttributes : ICombatAttributes, IDisposable
+public class LevelGeneratedCombatAttributes : ICombatAttributes, IDisposable, IHealthPoints
 {
     public double MaxHp { get => maxHp; }
     public double CurrentHp { get => currentHp; }
@@ -19,7 +19,7 @@ public class LevelGeneratedCombatAttributes : ICombatAttributes, IDisposable
     {
         // maxHp and attack should go up slightly more steeply than the player's attack and hp
         // causing so the player have to slow down and grind
-        maxHp = powerFactor * Mathf.RoundToInt(2000 * Mathf.Pow(1.15f, (float)currentLevel));
+        maxHp = powerFactor * Mathf.RoundToInt(200 * Mathf.Pow(1.15f, (float)currentLevel));
         attack = powerFactor * Mathf.RoundToInt(1 * Mathf.Pow(1.15f, (float)currentLevel));
         speed = 100 + currentLevel; // Idk, slowly a bit faster I guess 
         currentHp = maxHp;

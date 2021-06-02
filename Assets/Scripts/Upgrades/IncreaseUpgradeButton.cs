@@ -32,7 +32,7 @@ public class IncreaseUpgradeButton : MonoBehaviour
                 upgradeKey = PlayerAttributes.GetAttackinessUpgradeKey(upgradeLevel, playerIndex);
                 break;
             case UpgradeTabContentComponent.UpgradeType.Healthiness:
-                upgradeKey = PlayerAttributes.GetHealthinessUpgradeKey(upgradeLevel, playerIndex);
+                upgradeKey = "";
                 break;
             default:
                 throw new System.Exception("Unknown Upgradetype " + type);

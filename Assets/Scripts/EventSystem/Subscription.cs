@@ -4,9 +4,9 @@ namespace PubSubSystem
 {
     public class Subscription<KeyType> : System.IDisposable
     {
-        private readonly KeyType[] keys;
-        private readonly Action<IEvent> handler;
-        private readonly IEventPublisher<KeyType> eventManager;
+        private KeyType[] keys;
+        private Action<IEvent> handler;
+        private IEventPublisher<KeyType> eventManager;
 
         public Subscription(KeyType[] keys, Action<IEvent> handler, IEventPublisher<KeyType> eventManager)
         {
@@ -22,6 +22,9 @@ namespace PubSubSystem
         public void Dispose()
         {
             eventManager.Unsubscribe(this);
+            handler = null;
+            eventManager = null;
+            keys = null;
         }
     }
 

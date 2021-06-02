@@ -59,13 +59,6 @@ public class CombatManager : ICombatManager
         if (combatInstance.IsDone())
         {
             var result = combatInstance.Result == ICombatInstance.CombatResult.PlayerLost ? ExitedCombatEvent.CombatResult.PlayerLost : ExitedCombatEvent.CombatResult.PlayerWon;
-            if (result == ExitedCombatEvent.CombatResult.PlayerWon)
-            {
-                foreach (var character in SingletonProvider.MainPlayerRoster.GetAllPlayersChars())
-                {
-                    character.Attributes.Heal(character.Attributes.MaxHp * 0.01);
-                }
-            }
             combatInstance.Dispose();
             combatInstance = null;
             CombatEventPublisher.Instance.Publish(new ExitedCombatEvent(null, result));

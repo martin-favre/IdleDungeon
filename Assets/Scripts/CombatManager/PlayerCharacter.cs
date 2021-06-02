@@ -45,12 +45,12 @@ public class PlayerCharacter : ICharacter
 
     public void BeAttacked(double attackStat)
     {
-        attributes.Damage(attackStat);
+        
     }
 
     public bool IsDead()
     {
-        return attributes.IsDead();
+        return false;
     }
 
     public void Dispose()

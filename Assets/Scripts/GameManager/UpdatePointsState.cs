@@ -23,14 +23,6 @@ namespace GameManager
                 nextLevel = 0;
             }
             SingletonProvider.MainDataStorage.SetInt(Constants.currentLevelKey, nextLevel);
-
-            if (playerDied)
-            {
-                foreach (var character in SingletonProvider.MainPlayerRoster.GetAllPlayersChars())
-                {
-                    character.Attributes.Heal(character.Attributes.MaxHp);
-                }
-            }
         }
 
         public override State OnDuring()

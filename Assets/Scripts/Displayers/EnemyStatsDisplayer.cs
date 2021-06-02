@@ -28,7 +28,7 @@ public class EnemyStatsDisplayer : MonoBehaviour
                 }
                 displayers.Clear();
             }
-            else if(e is ICombatUpdateEvent cue)
+            else if (e is ICombatUpdateEvent cue)
             {
                 UpdateText(cue.Combat);
             }
@@ -41,7 +41,10 @@ public class EnemyStatsDisplayer : MonoBehaviour
         {
             foreach (var item in combat.GetEnemies())
             {
-                displayers[item.UniqueId].UpdateValue("Enemy HP: " + Mathf.RoundToInt((float)item.Attributes.CurrentHp) + "/" + Mathf.RoundToInt((float)item.Attributes.MaxHp));
+                if (item.Attributes is IHealthPoints hp)
+                {
+                    displayers[item.UniqueId].UpdateValue("Enemy HP: " + Mathf.RoundToInt((float)hp.CurrentHp) + "/" + Mathf.RoundToInt((float)hp.MaxHp));
+                }
             }
         }
     }
