@@ -1,6 +1,6 @@
 using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
-public class DamageText : MonoBehaviour
+public class PoppingText : MonoBehaviour
 {
 
     [SerializeField]

@@ -15,7 +15,7 @@ public class HealthbarComponent : MonoBehaviour
     private TMP_Text text;
 
     [SerializeField]
-    private DamageTextSpawnerComponent textSpawner;
+    private PoppingTextSpawnerComponent textSpawner;
 
     Subscription<CharacterUpdateEventType> subscription;
 
@@ -29,7 +29,6 @@ public class HealthbarComponent : MonoBehaviour
         {
             UpdateBarFill(character.Attributes);
             UpdateText(character.Attributes);
-            UpdateTextSpawner(character);
         } else {
             gameObject.SetActive(false);
         }
@@ -41,13 +40,18 @@ public class HealthbarComponent : MonoBehaviour
         {
             UpdateBarFill(chr.Character.Attributes);
             UpdateText(chr.Character.Attributes);
-            // textSpawner handles its own events
+            if(ev is CurrentHpChanged hpChanged) {
+                if(chr.Character.Attributes is IHealthPoints hp) UpdateTextSpawner(hpChanged);
+            }
         }
     }
 
-    private void UpdateTextSpawner(ICharacter character)
+    private void UpdateTextSpawner(CurrentHpChanged hpChanged)
     {
-        textSpawner.SetCharacter(character);
+        int val = Mathf.RoundToInt((float)hpChanged.HealthChange);
+        if(val != 0) {
+            textSpawner.SpawnText(val.ToString());
+        }
     }
 
     void UpdateBarFill(ICombatAttributes attributes)
