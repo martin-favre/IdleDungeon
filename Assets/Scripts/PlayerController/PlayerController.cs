@@ -21,7 +21,7 @@ public class PlayerController : IPlayerController, IDisposable
     LilLogger logger;
     static PlayerController instance;
     public static PlayerController Instance { get => instance; }
-    Subscription<int> combatSubscriber;
+    Subscription<EventType> combatSubscriber;
     StateMachine machine;
 
     public Vector3 WorldPosition { get => playerMover.WorldPosition; }
@@ -47,29 +47,29 @@ public class PlayerController : IPlayerController, IDisposable
 
         machine = new StateMachine(new DetermineStepState(this));
 
-        combatSubscriber = CombatEventPublisher.Instance.Subscribe((e) =>
-        {
-            if (e is EnteredCombatEvent)
-            {
-                Debug.Log("Player enters combat");
-            }
-            else if (e is ExitedCombatEvent)
-            {
-                var ev = e as ExitedCombatEvent;
-                if (ev.Result == ExitedCombatEvent.CombatResult.PlayerWon)
-                {
-                    machine.RaiseEvent(new AwaitCombatState.CombatFinishedEvent());
-                }
-                else if (ev.Result == ExitedCombatEvent.CombatResult.PlayerLost)
-                {
-                    callbacks.OnPlayerDied();
-                }
-                else
-                {
-                    logger.Log("Unknown event ", LogLevel.Error);
-                }
-            }
-        });
+        combatSubscriber = MainEventHandler.Instance.Subscribe(new[] { EventType.CombatStarted, EventType.CombatEnded }, (e) =>
+          {
+              if (e is EnteredCombatEvent)
+              {
+                  Debug.Log("Player enters combat");
+              }
+              else if (e is ExitedCombatEvent)
+              {
+                  var ev = e as ExitedCombatEvent;
+                  if (ev.Result == ExitedCombatEvent.CombatResult.PlayerWon)
+                  {
+                      machine.RaiseEvent(new AwaitCombatState.CombatFinishedEvent());
+                  }
+                  else if (ev.Result == ExitedCombatEvent.CombatResult.PlayerLost)
+                  {
+                      callbacks.OnPlayerDied();
+                  }
+                  else
+                  {
+                      logger.Log("Unknown event ", LogLevel.Error);
+                  }
+              }
+          });
         if (instance != null) logger.Log("Replacing singleton instance");
         instance = this;
         SingletonProvider.MainPlayerController = instance; // Nasty. PlayerController should be reworked to be a proper singleton that always lives or not a singleton

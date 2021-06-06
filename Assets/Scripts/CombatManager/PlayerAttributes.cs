@@ -45,7 +45,7 @@ public class PlayerAttributes : ICombatAttributes, IDisposable
     {
         attack = 0;
         attackUpgrades.ForEach(u => attack += ((MultiplierUpgrade)u).MultipliedValue);
-        CharacterEventPublisher.Instance.Publish(CharacterUpdateEventType.AttributeChanged, new AttributeChangedEvent(owner));
+        MainEventHandler.Instance.Publish(EventType.CharacterAttributeChanged, new AttributeChangedEvent(owner));
     }
 
     public void Dispose()

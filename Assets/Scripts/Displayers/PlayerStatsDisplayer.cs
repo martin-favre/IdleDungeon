@@ -4,7 +4,7 @@ using UnityEngine;
 public class PlayerStatsDisplayer : MonoBehaviour
 {
     SimpleValueDisplayer.ValueHook displayer;
-    Subscription<CharacterUpdateEventType> subscription;
+    Subscription<EventType> subscription;
 
     void Start()
     {
@@ -13,7 +13,7 @@ public class PlayerStatsDisplayer : MonoBehaviour
         if (chars.Length > 0)
         {
             UpdateText(chars[0].Attributes);
-            subscription = CharacterEventPublisher.Instance.Subscribe(CharacterUpdateEventType.AttributeChanged, e =>
+            subscription = MainEventHandler.Instance.Subscribe(EventType.CharacterAttributeChanged, e =>
             {
                 if (e is AttributeChangedEvent attr) UpdateText(attr.Character.Attributes);
             });

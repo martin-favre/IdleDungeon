@@ -94,7 +94,7 @@ public class CombatInstance : ICombatInstance, ICombatReader
         {
             if (item.IsDead())
             {
-                CombatEventPublisher.Instance.Publish(new CombatantDied(this, item));
+                MainEventHandler.Instance.Publish(EventType.CombatantDied, new CombatantDied(this, item));
             }
         }
 

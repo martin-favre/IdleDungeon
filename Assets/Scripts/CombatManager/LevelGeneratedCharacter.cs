@@ -47,7 +47,7 @@ class LevelGeneratedCharacter : ICharacter, IHasMaterial
         if (enemies.Count == 0) return;
         ICharacter target = enemies[SingletonProvider.MainRandomProvider.RandomInt(0, enemies.Count)];
         target.BeAttacked(attributes.Attack);
-        CombatEventPublisher.Instance.Publish(new CombatActionEvent(combat, target, this));
+        MainEventHandler.Instance.Publish(EventType.CombatAction, new CombatActionEvent(combat, target, this));
     }
 
     public void Dispose()

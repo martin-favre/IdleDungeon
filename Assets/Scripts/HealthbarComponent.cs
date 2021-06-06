@@ -17,14 +17,14 @@ public class HealthbarComponent : MonoBehaviour
     [SerializeField]
     private PoppingTextSpawnerComponent textSpawner;
 
-    Subscription<CharacterUpdateEventType> subscription;
+    Subscription<EventType> subscription;
 
     IGuid targetGuid;
 
     public void SetAttributes(ICharacter character)
     {
         targetGuid = character.UniqueId;
-        subscription = CharacterEventPublisher.Instance.Subscribe(new[] { CharacterUpdateEventType.AttributeChanged, CharacterUpdateEventType.CurrentHpChanged }, HandleEvent);
+        subscription = MainEventHandler.Instance.Subscribe(new[] { EventType.CharacterAttributeChanged, EventType.CharacterCurrentHpChanged }, HandleEvent);
         if (character.Attributes is IHealthPoints hp)
         {
             UpdateBarFill(character.Attributes);

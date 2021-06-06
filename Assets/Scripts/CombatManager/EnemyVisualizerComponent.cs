@@ -7,7 +7,7 @@ using UnityEngine;
 public class EnemyVisualizerComponent : MonoBehaviour
 {
     const string enemyGameObjectPrefab = "Prefabs/EnemyObj3D";
-    Subscription<int> subscription;
+    Subscription<EventType> subscription;
     List<(IGuid, GameObject)> enemyObjects = new List<(IGuid, GameObject)>();
 
     [SerializeField]
@@ -17,23 +17,23 @@ public class EnemyVisualizerComponent : MonoBehaviour
 
     private void Start()
     {
-        subscription = CombatEventPublisher.Instance.Subscribe((e) =>
-        {
-            if (e is EnteredCombatEvent)
-            {
-                logger.Log("EnemyVisualizerComponent shows enemies");
-                ShowEnemies();
-            }
-            else if (e is ExitedCombatEvent)
-            {
-                logger.Log("EnemyVisualizerComponent hides enemies");
-                HideEnemies();
-            }
-            else if (e is CombatantDied cd)
-            {
-                HideEnemy(cd.Victim);
-            }
-        });
+        subscription = MainEventHandler.Instance.Subscribe(new[] { EventType.CombatStarted, EventType.CombatEnded, EventType.CombatantDied }, (e) =>
+         {
+             if (e is EnteredCombatEvent)
+             {
+                 logger.Log("EnemyVisualizerComponent shows enemies");
+                 ShowEnemies();
+             }
+             else if (e is ExitedCombatEvent)
+             {
+                 logger.Log("EnemyVisualizerComponent hides enemies");
+                 HideEnemies();
+             }
+             else if (e is CombatantDied cd)
+             {
+                 HideEnemy(cd.Victim);
+             }
+         });
     }
 
     private void HideEnemy(ICharacter victim)

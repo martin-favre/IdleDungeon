@@ -33,7 +33,7 @@ public class LevelGeneratedCombatAttributes : ICombatAttributes, IDisposable, IH
         if (currentHp <= 0) currentHp = 0;
         if (currentHp != oldCurrentHp)
         {
-            CharacterEventPublisher.Instance.Publish(CharacterUpdateEventType.CurrentHpChanged, new CurrentHpChanged(currentHp - oldCurrentHp, owner));
+            MainEventHandler.Instance.Publish(EventType.CharacterCurrentHpChanged, new CurrentHpChanged(currentHp - oldCurrentHp, owner));
         }
 
     }
@@ -50,7 +50,7 @@ public class LevelGeneratedCombatAttributes : ICombatAttributes, IDisposable, IH
         if (currentHp > maxHp) currentHp = maxHp;
         if (currentHp != oldCurrentHp)
         {
-            CharacterEventPublisher.Instance.Publish(CharacterUpdateEventType.CurrentHpChanged, new CurrentHpChanged(currentHp - oldCurrentHp, owner));
+            MainEventHandler.Instance.Publish(EventType.CharacterCurrentHpChanged, new CurrentHpChanged(currentHp - oldCurrentHp, owner));
         }
 
     }

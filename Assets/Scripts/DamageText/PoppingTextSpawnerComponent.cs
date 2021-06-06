@@ -8,7 +8,7 @@ public class PoppingTextSpawnerComponent : MonoBehaviour
     const string textPrefab = "Prefabs/PoppingText";
     GameObject textPrefabObj;
     ICharacter character;
-    Subscription<CharacterUpdateEventType> subscription;
+    Subscription<EventType> subscription;
 
     IGuid targetGuid;
 

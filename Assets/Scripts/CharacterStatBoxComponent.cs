@@ -24,19 +24,16 @@ public class CharacterStatBoxComponent : MonoBehaviour
     private int targetIndex;
     private int oldTargetIndex;
 
-    Subscription<int> combatSubscription;
+    Subscription<EventType> combatSubscription;
     void Start()
     {
         UpdateIndex(targetIndex);
         if (targetType == TargetType.Enemies)
         {
-            combatSubscription = CombatEventPublisher.Instance.Subscribe(e =>
-            {
-                if (e is EnteredCombatEvent || e is ExitedCombatEvent)
-                {
-                    UpdateIndex(targetIndex);
-                }
-            });
+            combatSubscription = MainEventHandler.Instance.Subscribe(new[] { EventType.CombatStarted, EventType.CombatEnded }, e =>
+             {
+                 UpdateIndex(targetIndex);
+             });
         }
     }
 
