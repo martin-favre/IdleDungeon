@@ -27,7 +27,7 @@ class LevelGeneratedCharacter : ICharacter, IHasMaterial
     public LevelGeneratedCharacter(EnemyTemplate template, int currentLevel, float powerFactor)
     {
         attributes = new LevelGeneratedCombatAttributes(currentLevel, powerFactor, this);
-        experienceWorth = powerFactor*(10 + Mathf.RoundToInt(10 * Mathf.Pow(1.07f, (float)currentLevel)));
+        experienceWorth = powerFactor*(100 + Mathf.RoundToInt(100 * Mathf.Pow(1.07f, (float)currentLevel)));
         this.template = template;
         this.turnProgress.RandomizeProgress();
     }
