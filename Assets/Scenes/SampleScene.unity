@@ -1958,6 +1958,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1136562049}
     m_Modifications:
+    - target: {fileID: 56298234, guid: 9c02cf42136efe447b74db0a39178844, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 76.7398
+      objectReference: {fileID: 0}
+    - target: {fileID: 56298234, guid: 9c02cf42136efe447b74db0a39178844, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -26.630102
+      objectReference: {fileID: 0}
+    - target: {fileID: 56298235, guid: 9c02cf42136efe447b74db0a39178844, type: 3}
+      propertyPath: m_text
+      value: Rusty Bucket
+      objectReference: {fileID: 0}
     - target: {fileID: 689432355606843196, guid: 9c02cf42136efe447b74db0a39178844, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -2125,6 +2137,34 @@ PrefabInstance:
     - target: {fileID: 6108059003484756469, guid: 9c02cf42136efe447b74db0a39178844, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6725409565920523703, guid: 9c02cf42136efe447b74db0a39178844, type: 3}
+      propertyPath: m_text
+      value: Arseripper
+      objectReference: {fileID: 0}
+    - target: {fileID: 6725409565920523703, guid: 9c02cf42136efe447b74db0a39178844, type: 3}
+      propertyPath: m_margin.z
+      value: -42.14832
+      objectReference: {fileID: 0}
+    - target: {fileID: 6725409565920523703, guid: 9c02cf42136efe447b74db0a39178844, type: 3}
+      propertyPath: m_HorizontalAlignment
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6725409567201926194, guid: 9c02cf42136efe447b74db0a39178844, type: 3}
+      propertyPath: m_text
+      value: Iron Sword
+      objectReference: {fileID: 0}
+    - target: {fileID: 6725409567201926195, guid: 9c02cf42136efe447b74db0a39178844, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 63.1472
+      objectReference: {fileID: 0}
+    - target: {fileID: 6725409567201926195, guid: 9c02cf42136efe447b74db0a39178844, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -33.42636
+      objectReference: {fileID: 0}
+    - target: {fileID: 7271366112791839129, guid: 9c02cf42136efe447b74db0a39178844, type: 3}
+      propertyPath: m_text
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 7295260828129804095, guid: 9c02cf42136efe447b74db0a39178844, type: 3}
       propertyPath: m_AnchorMax.y
