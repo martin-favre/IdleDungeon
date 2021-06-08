@@ -25,9 +25,9 @@ public class PlayerRoster : IPlayerRoster
     {
         playerChars = new List<PlayerCharacter>() {
             new PlayerCharacter(0),
-            new PlayerCharacter(1),
-            new PlayerCharacter(2),
-            new PlayerCharacter(3)
+            // new PlayerCharacter(1),
+            // new PlayerCharacter(2),
+            // new PlayerCharacter(3)
         };
 
     }
