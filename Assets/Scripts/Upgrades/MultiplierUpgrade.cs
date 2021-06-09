@@ -1,6 +1,7 @@
 public class MultiplierUpgrade : Upgrade
 {
     public double MultipliedValue { get => valueMultiplier * Level; }
+
     private readonly double valueMultiplier;
 
     public MultiplierUpgrade(
@@ -12,5 +13,10 @@ public class MultiplierUpgrade : Upgrade
         : base(initialLevel, baseCost, costMultiplier, storageKey)
     {
         this.valueMultiplier = valueMultiplier;
+    }
+
+    public double GetMultipliedValueAtLevel(int level)
+    {
+        return level * valueMultiplier;
     }
 }

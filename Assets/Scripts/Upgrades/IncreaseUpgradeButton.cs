@@ -11,17 +11,19 @@ public class IncreaseUpgradeButton : MonoBehaviour
     private TMP_Text levelText;
     [SerializeField]
     private TMP_Text costText;
-
+    [SerializeField]
+    private TMP_Text effectText;
     private static readonly LilLogger logger = new LilLogger(typeof(IncreaseUpgradeButton).ToString());
     KeyObserver<string, Upgrade> observer;
     void Awake()
     {
         if (levelText == null) logger.Log("Missing field " + nameof(levelText), LogLevel.Warning);
         if (costText == null) logger.Log("Missing field " + nameof(costText), LogLevel.Warning);
+        if (effectText == null) logger.Log("Missing field " + nameof(effectText), LogLevel.Warning);
     }
     void Start()
     {
-        
+
     }
 
     public void SetButtonType(int playerIndex, int upgradeLevel, UpgradeTabContentComponent.UpgradeType type)
@@ -48,7 +50,7 @@ public class IncreaseUpgradeButton : MonoBehaviour
 
     void UpdateText(Upgrade upgrade)
     {
-        if(upgrade == null) return;
+        if (upgrade == null) return;
         if (levelText)
         {
             levelText.text = "Level:" + upgrade.Level;
@@ -56,6 +58,10 @@ public class IncreaseUpgradeButton : MonoBehaviour
         if (costText)
         {
             costText.text = "Cost:" + Mathf.CeilToInt(upgrade.Cost);
+        }
+        if (effectText && upgrade is MultiplierUpgrade mup)
+        {
+            effectText.text = "+" + mup.GetMultipliedValueAtLevel(mup.Level+1) + " Attack";
         }
     }
 
