@@ -34,7 +34,7 @@ public static class Helpers
     public static T GetRandom<T>(IList<T> items, IRandomProvider random)
     {
         if (items.Count == 0) throw new Exception("Can't get a random item from an empty list");
-        var index = random.RandomInt(0, items.Count - 1);
+        var index = random.RandomInt(0, items.Count);
         return items[index];
     }
 
