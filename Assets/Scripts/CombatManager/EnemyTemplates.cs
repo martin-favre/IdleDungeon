@@ -5,7 +5,8 @@ public static class EnemyTemplates
     static readonly EnemyTemplate[] templates =
     {
         new EnemyTemplate(SingletonProvider.MainGameobjectLoader.GetPrefab<Material>("Materials/RatMat"), "Rat"),
-        new EnemyTemplate(SingletonProvider.MainGameobjectLoader.GetPrefab<Material>("Materials/SlimeMat"), "Slime")
+        new EnemyTemplate(SingletonProvider.MainGameobjectLoader.GetPrefab<Material>("Materials/SlimeMat"), "Slime"),
+        new EnemyTemplate(SingletonProvider.MainGameobjectLoader.GetPrefab<Material>("Materials/MudGolemMat"), "Mud Golem")
     };
 
     public static EnemyTemplate GetRandom()
