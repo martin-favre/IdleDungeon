@@ -16,7 +16,7 @@ public class LevelGeneratedEnemyFactory : IEnemyFactory
     }
     public List<ICharacter> GenerateEnemies()
     {
-        int nofEnemies = 1;//SingletonProvider.MainRandomProvider.RandomInt(1, 5);
+        int nofEnemies = SingletonProvider.MainRandomProvider.RandomInt(1, 5);
         var ret = new List<ICharacter>();
         // Make enemies less powerful if more are out
         // But should still be slightly more powerful than one to make it more spicy
