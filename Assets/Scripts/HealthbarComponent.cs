@@ -24,6 +24,7 @@ public class HealthbarComponent : MonoBehaviour
     public void SetAttributes(ICharacter character)
     {
         targetGuid = character.UniqueId;
+        if(subscription != null) subscription.Dispose();
         subscription = MainEventHandler.Instance.Subscribe(new[] { EventType.CharacterAttributeChanged, EventType.CharacterCurrentHpChanged }, HandleEvent);
         if (character.Attributes is IHealthPoints hp)
         {
