@@ -1555,6 +1555,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvas: {fileID: 1136562049}
+--- !u!1 &1655408043 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6565045684441605375, guid: 0e6b1c2dcc05e6542939221e46968992, type: 3}
+  m_PrefabInstance: {fileID: 6565045683835960630}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1655408044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1655408043}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a436fee4ec62e1e40acf64b159a1c584, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1664936122
 GameObject:
   m_ObjectHideFlags: 0
