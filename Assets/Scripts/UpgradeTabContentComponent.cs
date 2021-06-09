@@ -26,11 +26,15 @@ public class UpgradeTabContentComponent : MonoBehaviour
 
     public void SetPlayerIndex(int index)
     {
-        var character = SingletonProvider.MainPlayerRoster.GetAllPlayersChars()[index];
-        if(nameText) nameText.text = character.Name;
-        foreach (var button in buttons)
+        var characters = SingletonProvider.MainPlayerRoster.GetAllPlayersChars();
+        if (index < characters.Length)
         {
-            button.button.SetButtonType(index, button.level, upgradeTypes);
+            var character = characters[index];
+            if (nameText) nameText.text = character.Name;
+            foreach (var button in buttons)
+            {
+                button.button.SetButtonType(index, button.level, upgradeTypes);
+            }
         }
     }
 }

@@ -9,18 +9,23 @@ public class UpgradePanelComponent : MonoBehaviour
 
     public static UpgradePanelComponent Instance { get => instance; }
 
-    void Awake() {
+    void Awake()
+    {
         instance = this;
         gameObject.SetActive(false);
     }
 
     public void OpenPanel(int index)
     {
-        foreach (var tab in tabComponents)
+        var characters = SingletonProvider.MainPlayerRoster.GetAllPlayersChars();
+        if (index < characters.Length)
         {
-            tab.SetPlayerIndex(index);
+            foreach (var tab in tabComponents)
+            {
+                tab.SetPlayerIndex(index);
+            }
+            gameObject.SetActive(true);
         }
-        gameObject.SetActive(true);
     }
 
     public void ClosePanel()
