@@ -88,7 +88,9 @@ public class EnemyVisualizerComponent : MonoBehaviour
             enemyObj.transform.SetParent(transform);
             enemyObjects.Add((enemy.UniqueId, enemyObj));
             var renderer = enemyObj.GetComponent<MeshRenderer>();
+
             if (renderer && enemy is IHasMaterial sp) renderer.material = sp.Material;
+            if (enemy is IHasEnemyTemplate template) enemyObj.transform.localScale = new Vector3(template.EnemyTemplate.SpriteScale.x, 1, template.EnemyTemplate.SpriteScale.y);
 
         }
     }

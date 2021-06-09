@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-class LevelGeneratedCharacter : ICharacter, IHasMaterial
+class LevelGeneratedCharacter : ICharacter, IHasMaterial, IHasEnemyTemplate
 {
     private readonly LevelGeneratedCombatAttributes attributes;
     private readonly TurnProgress turnProgress = new TurnProgress();
@@ -23,6 +23,8 @@ class LevelGeneratedCharacter : ICharacter, IHasMaterial
     public string Name => template.Name;
 
     public Material Material => template.Material;
+
+    public EnemyTemplate EnemyTemplate => template;
 
     public LevelGeneratedCharacter(EnemyTemplate template, int currentLevel, float powerFactor)
     {
