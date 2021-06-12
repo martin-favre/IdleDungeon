@@ -19,6 +19,9 @@ public class CharacterStatBoxComponent : MonoBehaviour
     [SerializeField]
     private TargetType targetType;
 
+    [SerializeField]
+    private UITurnProgressIndicator turnProgress;
+
 
     [SerializeField]
     private int targetIndex;
@@ -27,19 +30,16 @@ public class CharacterStatBoxComponent : MonoBehaviour
     Subscription<EventType> combatSubscription;
     void Start()
     {
-        UpdateIndex(targetIndex);
-        if (targetType == TargetType.Enemies)
-        {
-            combatSubscription = MainEventHandler.Instance.Subscribe(new[] { EventType.CombatStarted, EventType.CombatEnded }, e =>
-             {
-                 UpdateIndex(targetIndex);
-             });
-        }
+        UpdateIndex(targetIndex, null);
+        combatSubscription = MainEventHandler.Instance.Subscribe(new[] { EventType.CombatStarted, EventType.CombatEnded }, e =>
+         {
+             UpdateIndex(targetIndex, e);
+         });
     }
 
-    void UpdateIndex(int index)
+    void UpdateIndex(int index, IEvent e)
     {
-        var character = GetCharacter(targetIndex);
+        var character = GetCharacter(index);
         if (character != null)
         {
             if (characterName)
@@ -51,6 +51,19 @@ public class CharacterStatBoxComponent : MonoBehaviour
             {
                 healthbarComponent.gameObject.SetActive(true);
                 healthbarComponent.SetAttributes(character);
+            }
+            if (turnProgress)
+            {
+                if (e is EnteredCombatEvent)
+                {
+                    turnProgress.gameObject.SetActive(true);
+                    turnProgress.SetCharacter(character);
+                }
+                else
+                {
+                    turnProgress.gameObject.SetActive(false);
+                    turnProgress.SetCharacter(null);
+                }
             }
         }
         else
@@ -109,7 +122,7 @@ public class CharacterStatBoxComponent : MonoBehaviour
     {
         if (targetIndex != oldTargetIndex) // Just to make it editable from the editor
         {
-            UpdateIndex(targetIndex);
+            UpdateIndex(targetIndex, null);
         }
     }
 }

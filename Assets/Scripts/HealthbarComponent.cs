@@ -9,7 +9,7 @@ public class HealthbarComponent : MonoBehaviour
 {
 
     [SerializeField]
-    private Image hpBar;
+    private UIBarComponent hpBar;
 
     [SerializeField]
     private TMP_Text text;
@@ -57,12 +57,12 @@ public class HealthbarComponent : MonoBehaviour
 
     void UpdateBarFill(ICombatAttributes attributes)
     {
-        if (attributes is IHealthPoints hp)
+        if (attributes is IHealthPoints hp && hpBar)
         {
             var amount = hp.CurrentHp / hp.MaxHp;
             if (amount < 0) amount = 0;
             if (amount > 1) amount = 1;
-            hpBar.fillAmount = (float)amount;
+            hpBar.SetFill((float)amount);
         }
 
     }

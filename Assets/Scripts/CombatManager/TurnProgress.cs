@@ -2,6 +2,11 @@ public interface ITurnProgress
 {
     void ResetTurnProgress();
     bool IncrementTurnProgress(double speed);
+
+    // return float 0-1
+    // 0, it's a long time left
+    // 1, it's their turn asap
+    float GetRelativeProgress();
 }
 public class TurnProgress : ITurnProgress
 {
@@ -29,5 +34,12 @@ public class TurnProgress : ITurnProgress
             return true;
         }
         return false;
+    }
+
+    public float GetRelativeProgress()
+    {
+        var progress = turnProgress / MaxTurnProgress;
+        if (progress > 1) progress = 1;
+        return (float)progress;
     }
 }

@@ -8,7 +8,7 @@ public class PlayerAttributes : ICombatAttributes, IDisposable
     private ICharacter owner;
     public double Attack { get => attack; }
 
-    public double Speed => 500;
+    public double Speed => 10;
 
     private double attack;
 
