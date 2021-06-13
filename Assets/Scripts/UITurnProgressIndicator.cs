@@ -28,7 +28,6 @@ public class UITurnProgressIndicator : MonoBehaviour
         {
             if (startTime + updateFrequencyS < SingletonProvider.MainTimeProvider.Time)
             {
-                Debug.Log(character.TurnProgress.GetRelativeProgress());
                 bar.SetFill(character.TurnProgress.GetRelativeProgress());
             }
         }
