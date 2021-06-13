@@ -41,10 +41,13 @@ public class PlayerCharacter : ICharacter
 
     public void PerformAction(List<ICharacter> enemies, ICombatReader combat)
     {
-        if (enemies.Count == 0) return;
-        ICharacter enemy = Helpers.GetRandom<ICharacter>(enemies, SingletonProvider.MainRandomProvider);
-        enemy.BeAttacked(attributes.Attack);
-        MainEventHandler.Instance.Publish(EventType.CombatAction, new CombatActionEvent(combat, enemy, this));
+        if (TurnProgress.IncrementTurnProgress(attributes.Speed))
+        {
+            if (enemies.Count == 0) return;
+            ICharacter enemy = Helpers.GetRandom<ICharacter>(enemies, SingletonProvider.MainRandomProvider);
+            enemy.BeAttacked(attributes.Attack);
+            MainEventHandler.Instance.Publish(EventType.CombatAction, new CombatActionEvent(combat, enemy, this));
+        }
     }
 
     public void BeAttacked(double attackStat)

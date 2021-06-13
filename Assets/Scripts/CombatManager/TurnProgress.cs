@@ -27,7 +27,7 @@ public class TurnProgress : ITurnProgress
     // Return true if it's their turn
     public bool IncrementTurnProgress(double speed)
     {
-        turnProgress += speed;
+        turnProgress += speed*SingletonProvider.MainTimeProvider.DeltaTime;
         if (turnProgress >= MaxTurnProgress)
         {
             turnProgress -= MaxTurnProgress;

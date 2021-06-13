@@ -49,9 +49,12 @@ class LevelGeneratedCharacter : ICharacter, IHasMaterial, IHasEnemyTemplate
 
     public void PerformAction(List<ICharacter> enemies, ICombatReader combat)
     {
-        if (enemies.Count == 0) return;
-        ICharacter target = enemies[SingletonProvider.MainRandomProvider.RandomInt(0, enemies.Count)];
-        target.BeAttacked(attributes.Attack);
-        MainEventHandler.Instance.Publish(EventType.CombatAction, new CombatActionEvent(combat, target, this));
+        if (TurnProgress.IncrementTurnProgress(Attributes.Speed))
+        {
+            if (enemies.Count == 0) return;
+            ICharacter target = enemies[SingletonProvider.MainRandomProvider.RandomInt(0, enemies.Count)];
+            target.BeAttacked(attributes.Attack);
+            MainEventHandler.Instance.Publish(EventType.CombatAction, new CombatActionEvent(combat, target, this));
+        }
     }
 }

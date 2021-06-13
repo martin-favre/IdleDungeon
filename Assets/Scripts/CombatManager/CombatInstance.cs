@@ -34,7 +34,7 @@ public class CombatInstance : ICombatInstance, ICombatReader
             ICharacter[] goodGuysCopy = goodGuys.ToArray(); // to avoid modifying the original while iterating
             foreach (var combatant in goodGuysCopy)
             {
-                if (ItsTheirTurn(combatant) && !combatant.IsDead())
+                if (!combatant.IsDead())
                 {
                     combatant.PerformAction(badGuys, this);
                     GenerateCurrencyFromDeads(badGuys);
@@ -50,7 +50,7 @@ public class CombatInstance : ICombatInstance, ICombatReader
             ICharacter[] badGuysCopy = badGuys.ToArray();
             foreach (var combatant in badGuysCopy)
             {
-                if (ItsTheirTurn(combatant) && !combatant.IsDead())
+                if (!combatant.IsDead())
                 {
                     combatant.PerformAction(goodGuys, this);
                     GenerateCurrencyFromDeads(badGuys);
@@ -73,19 +73,12 @@ public class CombatInstance : ICombatInstance, ICombatReader
         });
     }
 
-    private bool ItsTheirTurn(ICharacter combatant)
-    {
-        if (combatant.TurnProgress == null) return true;
-        bool itsTheirTurn = combatant.TurnProgress.IncrementTurnProgress(combatant.Attributes.Speed * SingletonProvider.MainTimeProvider.DeltaTime);
-        return itsTheirTurn;
-    }
-
     private void CleanOutDeadGuys(List<ICharacter> combatants)
     {
         List<ICharacter> deadCombatants = new List<ICharacter>();
         foreach (var item in combatants)
         {
-            if(item.IsDead()) deadCombatants.Add(item);
+            if (item.IsDead()) deadCombatants.Add(item);
         }
 
         combatants.RemoveAll((c) => c.IsDead());
