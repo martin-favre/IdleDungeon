@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-public interface ICharacter: IDisposable
+public interface ICharacter
 {
     void PerformAction(List<ICharacter> enemies, ICombatReader combat);
     void BeAttacked(double attackStat);
@@ -11,4 +11,6 @@ public interface ICharacter: IDisposable
     double ExperienceWorth { get; }
     ITurnProgress TurnProgress { get; }
     IGuid UniqueId { get; }
+
+    IHealthPoints HealthPoints { get; }
 }

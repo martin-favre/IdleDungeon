@@ -37,7 +37,20 @@ public class CurrentHpChanged : CharacterUpdateEvent
         this.healthChange = healthChange;
 
     }
-    
-    public double HealthChange => healthChange;
 
+    public double HealthChange => healthChange;
+}
+
+public class MaxHpChanged : CharacterUpdateEvent
+{
+    private readonly double healthChange;
+
+
+    public MaxHpChanged(double healthChange, ICharacter character) : base(character)
+    {
+        this.healthChange = healthChange;
+
+    }
+
+    public double HealthChange => healthChange;
 }

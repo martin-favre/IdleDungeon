@@ -97,9 +97,6 @@ public class CombatInstance : ICombatInstance, ICombatReader
                 MainEventHandler.Instance.Publish(EventType.CombatantDied, new CombatantDied(this, item));
             }
         }
-
-        if(combatants == badGuys) deadCombatants.ForEach(e => e.Dispose());
-
     }
 
     public bool IsDone()

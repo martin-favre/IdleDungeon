@@ -24,13 +24,15 @@ public class HealthbarComponent : MonoBehaviour
     public void SetAttributes(ICharacter character)
     {
         targetGuid = character.UniqueId;
-        if(subscription != null) subscription.Dispose();
+        if (subscription != null) subscription.Dispose();
         subscription = MainEventHandler.Instance.Subscribe(new[] { EventType.CharacterAttributeChanged, EventType.CharacterCurrentHpChanged }, HandleEvent);
-        if (character.Attributes is IHealthPoints hp)
+        if (character.HealthPoints != null)
         {
-            UpdateBarFill(character.Attributes);
-            UpdateText(character.Attributes);
-        } else {
+            UpdateBarFill(character);
+            UpdateText(character);
+        }
+        else
+        {
             gameObject.SetActive(false);
         }
     }
@@ -39,27 +41,29 @@ public class HealthbarComponent : MonoBehaviour
     {
         if (ev is CharacterUpdateEvent chr && chr.Character.UniqueId.Equals(targetGuid))
         {
-            UpdateBarFill(chr.Character.Attributes);
-            UpdateText(chr.Character.Attributes);
-            if(ev is CurrentHpChanged hpChanged) {
-                if(chr.Character.Attributes is IHealthPoints hp) UpdateTextSpawner(hpChanged);
-            }
+            UpdateBarFill(chr.Character);
+            UpdateText(chr.Character);
+            if (ev is CurrentHpChanged hpChanged)
+            {
+                if (chr.Character.HealthPoints != null) UpdateTextSpawner(hpChanged);
+            } 
         }
     }
 
     private void UpdateTextSpawner(CurrentHpChanged hpChanged)
     {
         int val = Mathf.RoundToInt((float)hpChanged.HealthChange);
-        if(val != 0) {
+        if (val != 0)
+        {
             textSpawner.SpawnText(val.ToString());
         }
     }
 
-    void UpdateBarFill(ICombatAttributes attributes)
+    void UpdateBarFill(ICharacter character)
     {
-        if (attributes is IHealthPoints hp && hpBar)
+        if (character.HealthPoints != null && hpBar)
         {
-            var amount = hp.CurrentHp / hp.MaxHp;
+            var amount = character.HealthPoints.CurrentHp / character.HealthPoints.MaxHp;
             if (amount < 0) amount = 0;
             if (amount > 1) amount = 1;
             hpBar.SetFill((float)amount);
@@ -67,12 +71,12 @@ public class HealthbarComponent : MonoBehaviour
 
     }
 
-    void UpdateText(ICombatAttributes attributes)
+    void UpdateText(ICharacter character)
     {
         if (!text) return;
-        if (attributes is IHealthPoints hp)
+        if (character.HealthPoints != null)
         {
-            text.text = Mathf.RoundToInt((float)hp.CurrentHp) + "/" + Mathf.RoundToInt((float)hp.MaxHp);
+            text.text = Mathf.RoundToInt((float)character.HealthPoints.CurrentHp) + "/" + Mathf.RoundToInt((float)character.HealthPoints.MaxHp);
         }
     }
 }

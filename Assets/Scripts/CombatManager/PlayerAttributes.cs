@@ -14,7 +14,6 @@ public class PlayerAttributes : ICombatAttributes, IDisposable
 
     List<MultiplierUpgrade> attackUpgrades;
     List<KeyObserver<string, Upgrade>> attackUpgradeObservers;
-    IObserver<IPersistentStorageUpdateEvent> storageObserver;
     public PlayerAttributes(int playerIdentifier, ICharacter owner)
     {
         this.playerIdentifier = playerIdentifier;
@@ -51,5 +50,6 @@ public class PlayerAttributes : ICombatAttributes, IDisposable
     public void Dispose()
     {
         owner = null;
+        attackUpgradeObservers.Clear();
     }
 }

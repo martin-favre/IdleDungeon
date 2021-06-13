@@ -1,6 +1,6 @@
 using System;
 
-public interface ICombatAttributes: IDisposable
+public interface ICombatAttributes
 {
     double Attack { get; }
     double Speed { get; }

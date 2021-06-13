@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-class LevelGeneratedCharacter : ICharacter, IHasMaterial, IHasEnemyTemplate
+class LevelGeneratedCharacter : ICharacter, IHasMaterial, IHasEnemyTemplate, IHpEventReceiver
 {
     private readonly LevelGeneratedCombatAttributes attributes;
     private readonly TurnProgress turnProgress = new TurnProgress();
@@ -25,23 +25,26 @@ class LevelGeneratedCharacter : ICharacter, IHasMaterial, IHasEnemyTemplate
     public Material Material => template.Material;
 
     public EnemyTemplate EnemyTemplate => template;
+    private readonly IHealthPoints healthPoints;
+    public IHealthPoints HealthPoints => healthPoints;
 
     public LevelGeneratedCharacter(EnemyTemplate template, int currentLevel, float powerFactor)
     {
-        attributes = new LevelGeneratedCombatAttributes(currentLevel, powerFactor, this);
-        experienceWorth = powerFactor*(100 + Mathf.RoundToInt(100 * Mathf.Pow(1.07f, (float)currentLevel)));
+        attributes = new LevelGeneratedCombatAttributes(currentLevel, powerFactor);
+        healthPoints = new HealthPoints(this, 200);
+        experienceWorth = powerFactor * (100 + Mathf.RoundToInt(100 * Mathf.Pow(1.07f, (float)currentLevel)));
         this.template = template;
         this.turnProgress.RandomizeProgress();
     }
 
     public void BeAttacked(double attackStat)
     {
-        attributes.Damage(attackStat);
+        healthPoints.Damage(attackStat);
     }
 
     public bool IsDead()
     {
-        return attributes.IsDead();
+        return healthPoints.IsDead();
     }
 
     public void PerformAction(List<ICharacter> enemies, ICombatReader combat)
@@ -52,8 +55,13 @@ class LevelGeneratedCharacter : ICharacter, IHasMaterial, IHasEnemyTemplate
         MainEventHandler.Instance.Publish(EventType.CombatAction, new CombatActionEvent(combat, target, this));
     }
 
-    public void Dispose()
+    public void NotifyCurrentHpChanged(double hpDelta)
     {
-        attributes.Dispose();
+        MainEventHandler.Instance.Publish(EventType.CharacterCurrentHpChanged, new CurrentHpChanged(hpDelta, this));
+    }
+
+    public void NotifyMaxHpChanged(double hpDelta)
+    {
+        MainEventHandler.Instance.Publish(EventType.CharacterMaxHpChanged, new MaxHpChanged(hpDelta, this));
     }
 }

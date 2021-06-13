@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 // Represents a Character the player owns. i.e. not an enemy.
-public class PlayerCharacter : ICharacter
+public class PlayerCharacter : ICharacter, IHpEventReceiver
 {
     static readonly string[] names = new string[] {
         "Steve",
@@ -27,11 +27,15 @@ public class PlayerCharacter : ICharacter
 
     public string Name => names[playerIdentifier];
 
+    IHealthPoints healthPoints;
+    public IHealthPoints HealthPoints => healthPoints;
+
     public PlayerCharacter(int playerIdentifier)
     {
-        
+
         this.playerIdentifier = playerIdentifier;
         attributes = new PlayerAttributes(playerIdentifier, this);
+        healthPoints = new HealthPoints(this, 100);
         turnProgress.RandomizeProgress();
     }
 
@@ -45,16 +49,26 @@ public class PlayerCharacter : ICharacter
 
     public void BeAttacked(double attackStat)
     {
-        
+        healthPoints.Damage(attackStat);
     }
 
     public bool IsDead()
     {
-        return false;
+        return healthPoints.IsDead();
     }
 
     public void Dispose()
     {
         attributes.Dispose();
+    }
+
+    public void NotifyCurrentHpChanged(double hpDelta)
+    {
+        MainEventHandler.Instance.Publish(EventType.CharacterCurrentHpChanged, new CurrentHpChanged(hpDelta, this));
+    }
+
+    public void NotifyMaxHpChanged(double hpDelta)
+    {
+        MainEventHandler.Instance.Publish(EventType.CharacterMaxHpChanged, new MaxHpChanged(hpDelta, this));
     }
 }
