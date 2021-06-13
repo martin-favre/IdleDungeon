@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-class LevelGeneratedCharacter : ICharacter, IHasMaterial, IHasEnemyTemplate, IHpEventReceiver
+class LevelGeneratedCharacter : ICharacter, IHasMaterial, IHasEnemyTemplate
 {
     private readonly LevelGeneratedCombatAttributes attributes;
     private readonly TurnProgress turnProgress = new TurnProgress();
@@ -31,7 +31,7 @@ class LevelGeneratedCharacter : ICharacter, IHasMaterial, IHasEnemyTemplate, IHp
     public LevelGeneratedCharacter(EnemyTemplate template, int currentLevel, float powerFactor)
     {
         attributes = new LevelGeneratedCombatAttributes(currentLevel, powerFactor);
-        healthPoints = new HealthPoints(this, 200);
+        healthPoints = new HealthPoints(new WeakReference<ICharacter>(this), 200);
         experienceWorth = powerFactor * (100 + Mathf.RoundToInt(100 * Mathf.Pow(1.07f, (float)currentLevel)));
         this.template = template;
         this.turnProgress.RandomizeProgress();
@@ -53,15 +53,5 @@ class LevelGeneratedCharacter : ICharacter, IHasMaterial, IHasEnemyTemplate, IHp
         ICharacter target = enemies[SingletonProvider.MainRandomProvider.RandomInt(0, enemies.Count)];
         target.BeAttacked(attributes.Attack);
         MainEventHandler.Instance.Publish(EventType.CombatAction, new CombatActionEvent(combat, target, this));
-    }
-
-    public void NotifyCurrentHpChanged(double hpDelta)
-    {
-        MainEventHandler.Instance.Publish(EventType.CharacterCurrentHpChanged, new CurrentHpChanged(hpDelta, this));
-    }
-
-    public void NotifyMaxHpChanged(double hpDelta)
-    {
-        MainEventHandler.Instance.Publish(EventType.CharacterMaxHpChanged, new MaxHpChanged(hpDelta, this));
     }
 }

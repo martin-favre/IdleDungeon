@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 // Represents a Character the player owns. i.e. not an enemy.
-public class PlayerCharacter : ICharacter, IHpEventReceiver
+public class PlayerCharacter : ICharacter
 {
     static readonly string[] names = new string[] {
         "Steve",
@@ -34,8 +34,8 @@ public class PlayerCharacter : ICharacter, IHpEventReceiver
     {
 
         this.playerIdentifier = playerIdentifier;
-        attributes = new PlayerAttributes(playerIdentifier, this);
-        healthPoints = new HealthPoints(this, 100);
+        attributes = new PlayerAttributes(playerIdentifier, new WeakReference<ICharacter>(this));
+        healthPoints = new HealthPoints(new WeakReference<ICharacter>(this), 100);
         turnProgress.RandomizeProgress();
     }
 
@@ -55,11 +55,6 @@ public class PlayerCharacter : ICharacter, IHpEventReceiver
     public bool IsDead()
     {
         return healthPoints.IsDead();
-    }
-
-    public void Dispose()
-    {
-        attributes.Dispose();
     }
 
     public void NotifyCurrentHpChanged(double hpDelta)

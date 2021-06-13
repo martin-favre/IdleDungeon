@@ -1,3 +1,5 @@
+using System;
+
 public interface IHealthPoints
 {
     double MaxHp { get; }
@@ -7,18 +9,12 @@ public interface IHealthPoints
     bool IsDead();
 }
 
-public interface IHpEventReceiver
-{
-    void NotifyCurrentHpChanged(double hpDelta);
-    void NotifyMaxHpChanged(double hpDelta);
-}
 
 public class HealthPoints : IHealthPoints
 {
     private double currentHp;
+    private readonly WeakReference<ICharacter> character;
     private double maxHp;
-    private readonly IHpEventReceiver hpEventReceiver;
-
     public double MaxHp
     {
         get => maxHp;
@@ -30,17 +26,22 @@ public class HealthPoints : IHealthPoints
             var hpDelta = value - maxHp;
             maxHp = value;
             currentHp = maxHp * prevHpFactor;
-            hpEventReceiver.NotifyMaxHpChanged(hpDelta);
+            ICharacter chr;
+            if (character.TryGetTarget(out chr))
+            {
+                MainEventHandler.Instance.Publish(EventType.CharacterMaxHpChanged, new MaxHpChanged(hpDelta, chr));
+            }
+
         }
     }
 
     public double CurrentHp => currentHp;
 
-    public HealthPoints(IHpEventReceiver hpEventReceiver, double maxHp)
+    public HealthPoints(WeakReference<ICharacter> character, double maxHp)
     {
+        this.character = character;
         this.maxHp = maxHp;
         this.currentHp = maxHp;
-        this.hpEventReceiver = hpEventReceiver;
     }
 
     public void Damage(double damage)
@@ -50,7 +51,11 @@ public class HealthPoints : IHealthPoints
         if (currentHp <= 0) currentHp = 0;
         if (currentHp != oldCurrentHp)
         {
-            hpEventReceiver.NotifyCurrentHpChanged(currentHp - oldCurrentHp);
+            ICharacter chr;
+            if (character.TryGetTarget(out chr))
+            {
+                MainEventHandler.Instance.Publish(EventType.CharacterCurrentHpChanged, new CurrentHpChanged(currentHp - oldCurrentHp, chr));
+            }
         }
     }
 
@@ -61,7 +66,11 @@ public class HealthPoints : IHealthPoints
         if (currentHp > maxHp) currentHp = maxHp;
         if (currentHp != oldCurrentHp)
         {
-            hpEventReceiver.NotifyCurrentHpChanged(currentHp - oldCurrentHp);
+            ICharacter chr;
+            if (character.TryGetTarget(out chr))
+            {
+                MainEventHandler.Instance.Publish(EventType.CharacterCurrentHpChanged, new CurrentHpChanged(currentHp - oldCurrentHp, chr));
+            }
         }
 
     }

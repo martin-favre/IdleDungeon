@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerAttributes : ICombatAttributes, IDisposable
+public class PlayerAttributes : ICombatAttributes
 {
     private readonly int playerIdentifier;
-    private ICharacter owner;
+    private readonly WeakReference<ICharacter> owner;
+
     public double Attack { get => attack; }
 
     public double Speed => 10;
@@ -14,7 +15,7 @@ public class PlayerAttributes : ICombatAttributes, IDisposable
 
     List<MultiplierUpgrade> attackUpgrades;
     List<KeyObserver<string, Upgrade>> attackUpgradeObservers;
-    public PlayerAttributes(int playerIdentifier, ICharacter owner)
+    public PlayerAttributes(int playerIdentifier, WeakReference<ICharacter> owner)
     {
         this.playerIdentifier = playerIdentifier;
         this.owner = owner;
@@ -44,12 +45,11 @@ public class PlayerAttributes : ICombatAttributes, IDisposable
     {
         attack = 0;
         attackUpgrades.ForEach(u => attack += ((MultiplierUpgrade)u).MultipliedValue);
-        MainEventHandler.Instance.Publish(EventType.CharacterAttributeChanged, new AttributeChangedEvent(owner));
-    }
+        ICharacter chr;
+        if (owner.TryGetTarget(out chr))
+        {
+            MainEventHandler.Instance.Publish(EventType.CharacterAttributeChanged, new AttributeChangedEvent(chr));
+        }
 
-    public void Dispose()
-    {
-        owner = null;
-        attackUpgradeObservers.Clear();
     }
 }
