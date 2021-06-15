@@ -8,7 +8,7 @@ public class UITurnProgressIndicator : MonoBehaviour
     float updateFrequencyS = 0.5f;
     [SerializeField]
     UIBarComponent bar;
-    private ICharacter character;
+    private IHasTurnProgress character;
 
     float startTime;
 
@@ -17,7 +17,7 @@ public class UITurnProgressIndicator : MonoBehaviour
         startTime = SingletonProvider.MainTimeProvider.Time;
     }
 
-    public void SetCharacter(ICharacter character)
+    public void SetTurnProgress(IHasTurnProgress character)
     {
         this.character = character;
     }

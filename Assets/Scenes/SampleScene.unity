@@ -1912,8 +1912,7 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player0Statbox
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 3878643978768646319, guid: eac59c1ec9929d444a6839cb71de9ecf, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eac59c1ec9929d444a6839cb71de9ecf, type: 3}
 --- !u!1001 &6565045683835960630
 PrefabInstance:
@@ -1932,7 +1931,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6565045684441605372, guid: 0e6b1c2dcc05e6542939221e46968992, type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6565045684441605372, guid: 0e6b1c2dcc05e6542939221e46968992, type: 3}
       propertyPath: m_AnchorMax.x

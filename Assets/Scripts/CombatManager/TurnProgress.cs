@@ -1,6 +1,5 @@
 public interface ITurnProgress
 {
-    void ResetTurnProgress();
     bool IncrementTurnProgress(double speed);
 
     // return float 0-1
@@ -16,12 +15,6 @@ public class TurnProgress : ITurnProgress
     public void RandomizeProgress()
     {
         turnProgress = SingletonProvider.MainRandomProvider.RandomFloat(0, (float)MaxTurnProgress);
-    }
-
-    public void ResetTurnProgress()
-    {
-        turnProgress = 0;
-        RandomizeProgress();
     }
 
     // Return true if it's their turn

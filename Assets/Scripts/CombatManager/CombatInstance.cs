@@ -23,8 +23,6 @@ public class CombatInstance : ICombatInstance, ICombatReader
     {
         this.goodGuys = new List<ICharacter>(playerChars);
         badGuys = enemyFactory.GenerateEnemies();
-        goodGuys.ForEach(e => e.TurnProgress.ResetTurnProgress());
-        badGuys.ForEach(e => e.TurnProgress.ResetTurnProgress());
     }
 
     public void Update()
@@ -37,7 +35,6 @@ public class CombatInstance : ICombatInstance, ICombatReader
                 if (!combatant.IsDead())
                 {
                     combatant.PerformAction(badGuys, this);
-                    GenerateCurrencyFromDeads(badGuys);
                     CleanOutDeadGuys(badGuys);
                     CleanOutDeadGuys(goodGuys);
                     if (IsDone()) return;
@@ -53,24 +50,12 @@ public class CombatInstance : ICombatInstance, ICombatReader
                 if (!combatant.IsDead())
                 {
                     combatant.PerformAction(goodGuys, this);
-                    GenerateCurrencyFromDeads(badGuys);
                     CleanOutDeadGuys(badGuys);
                     CleanOutDeadGuys(goodGuys);
                     if (IsDone()) return;
                 }
             }
         }
-    }
-
-    private void GenerateCurrencyFromDeads(List<ICharacter> badGuys)
-    {
-        badGuys.ForEach((c) =>
-        {
-            if (c.IsDead())
-            {
-                SingletonProvider.MainPlayerWallet.AddExperience(c.ExperienceWorth);
-            }
-        });
     }
 
     private void CleanOutDeadGuys(List<ICharacter> combatants)
@@ -106,5 +91,10 @@ public class CombatInstance : ICombatInstance, ICombatReader
     public ICharacter[] GetEnemies()
     {
         return badGuys.ToArray();
+    }
+
+    public ICharacter[] GetPlayers()
+    {
+        return goodGuys.ToArray();
     }
 }

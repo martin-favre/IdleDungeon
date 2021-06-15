@@ -15,16 +15,12 @@ public class CharacterStatBoxComponent : MonoBehaviour
     private TMP_Text characterName;
     [SerializeField]
     private HealthbarComponent healthbarComponent;
-
     [SerializeField]
     private TargetType targetType;
-
-    [SerializeField]
-    private UITurnProgressIndicator turnProgress;
-
-
     [SerializeField]
     private int targetIndex;
+    [SerializeField]
+    private ActionButtonComponent[] actionButtonComponents;
     private int oldTargetIndex;
 
     Subscription<EventType> combatSubscription;
@@ -52,18 +48,9 @@ public class CharacterStatBoxComponent : MonoBehaviour
                 healthbarComponent.gameObject.SetActive(true);
                 healthbarComponent.SetAttributes(character);
             }
-            if (turnProgress)
+            foreach (var actionButton in actionButtonComponents)
             {
-                if (e is EnteredCombatEvent)
-                {
-                    turnProgress.gameObject.SetActive(true);
-                    turnProgress.SetCharacter(character);
-                }
-                else
-                {
-                    turnProgress.gameObject.SetActive(false);
-                    turnProgress.SetCharacter(null);
-                }
+                actionButton.SetCharacter(character);
             }
         }
         else

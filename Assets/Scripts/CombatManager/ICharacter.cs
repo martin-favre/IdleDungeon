@@ -9,8 +9,9 @@ public interface ICharacter
     string Name { get; }
     ICombatAttributes Attributes { get; }
     double ExperienceWorth { get; }
-    ITurnProgress TurnProgress { get; }
     IGuid UniqueId { get; }
 
     IHealthPoints HealthPoints { get; }
+
+    ICharacterAction[] CharacterActions { get; }
 }

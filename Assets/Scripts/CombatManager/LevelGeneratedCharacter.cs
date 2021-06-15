@@ -2,59 +2,30 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-class LevelGeneratedCharacter : ICharacter, IHasMaterial, IHasEnemyTemplate
+class LevelGeneratedCharacter : Character, IHasMaterial, IHasEnemyTemplate
 {
     private readonly LevelGeneratedCombatAttributes attributes;
     private readonly TurnProgress turnProgress = new TurnProgress();
 
-    private readonly IGuid guid = GuidProvider.Instance.GetNewGuid();
-
-    public ICombatAttributes Attributes => attributes;
-
-    public ITurnProgress TurnProgress => turnProgress;
-
-    public IGuid UniqueId => guid;
-
-    readonly double experienceWorth;
     private readonly EnemyTemplate template;
-
-    public double ExperienceWorth => experienceWorth;
-
-    public string Name => template.Name;
 
     public Material Material => template.Material;
 
     public EnemyTemplate EnemyTemplate => template;
-    private readonly IHealthPoints healthPoints;
-    public IHealthPoints HealthPoints => healthPoints;
 
-    public LevelGeneratedCharacter(EnemyTemplate template, int currentLevel, float powerFactor)
+    public LevelGeneratedCharacter(EnemyTemplate template, int currentLevel, float powerFactor) : base(template.Name, null, new LevelGeneratedCombatAttributes(currentLevel, powerFactor), 200)
     {
-        attributes = new LevelGeneratedCombatAttributes(currentLevel, powerFactor);
         healthPoints = new HealthPoints(new WeakReference<ICharacter>(this), 200);
-        experienceWorth = powerFactor * (100 + Mathf.RoundToInt(100 * Mathf.Pow(1.07f, (float)currentLevel)));
         this.template = template;
-        this.turnProgress.RandomizeProgress();
+        base.characterActions.Add(new AttackRandomAction("Sprites/Slime", "Attack"));
     }
 
-    public void BeAttacked(double attackStat)
+    public override void PerformAction(List<ICharacter> enemies, ICombatReader combat)
     {
-        healthPoints.Damage(attackStat);
-    }
-
-    public bool IsDead()
-    {
-        return healthPoints.IsDead();
-    }
-
-    public void PerformAction(List<ICharacter> enemies, ICombatReader combat)
-    {
-        if (TurnProgress.IncrementTurnProgress(Attributes.Speed))
+        if (characterActions.TrueForAll(e => e.TurnProgress == null))
         {
-            if (enemies.Count == 0) return;
-            ICharacter target = enemies[SingletonProvider.MainRandomProvider.RandomInt(0, enemies.Count)];
-            target.BeAttacked(attributes.Attack);
-            MainEventHandler.Instance.Publish(EventType.CombatAction, new CombatActionEvent(combat, target, this));
+            characterActions[0].StartChargingAction(this, combat);
         }
+        IncrementActions(combat);
     }
 }
