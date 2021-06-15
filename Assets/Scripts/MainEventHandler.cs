@@ -1,16 +1,5 @@
 using PubSubSystem;
 
-public enum EventType
-{
-    CharacterNameUpdated,
-    CharacterAttributeChanged,
-    CharacterCurrentHpChanged,
-    CharacterMaxHpChanged,
-    CombatStarted,
-    CombatEnded,
-    CombatAction,
-    CombatantDied,
-}
 
 public class CentralEventHandler : EventPublisher<EventType>
 {

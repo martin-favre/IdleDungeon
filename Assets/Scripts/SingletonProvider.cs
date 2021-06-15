@@ -44,7 +44,15 @@ public static class SingletonProvider
     private static IGuidProvider guidProvider = GuidProvider.Instance;
     public static IGuidProvider MainGuidProvider { get => guidProvider; set => guidProvider = value; }
     private static IGameObjectLoader prefabLoader = PrefabLoader.Instance;
-    public static IGameObjectLoader MainGameobjectLoader { get => prefabLoader; set => prefabLoader = value; }
+    public static IGameObjectLoader MainGameobjectLoader
+    {
+        get
+        {
+            if (prefabLoader == null) prefabLoader = PrefabLoader.Instance;
+            return prefabLoader;
+        }
+        set => prefabLoader = value;
+    }
     private static IPlayerController playerController = PlayerController.Instance;
     public static IPlayerController MainPlayerController { get => playerController; set => playerController = value; }
     private static IUpgradeManager upgradeManager = UpgradeManager.Instance;
@@ -56,9 +64,17 @@ public static class SingletonProvider
             return upgradeManager;
         }
         set => upgradeManager = value;
-    }  
+    }
     private static IEventPublisher<EventType> mainEventHandler = CentralEventHandler.Instance;
-    public static IEventPublisher<EventType> MainEventHandler { get => mainEventHandler; set => mainEventHandler = value; }
+    public static IEventPublisher<EventType> MainEventHandler
+    {
+        get
+        {
+            if (mainEventHandler == null) mainEventHandler = CentralEventHandler.Instance;
+            return mainEventHandler;
+        }
+        set => mainEventHandler = value;
+    }
 
 
 }

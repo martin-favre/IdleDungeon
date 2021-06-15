@@ -42,7 +42,11 @@ namespace PubSubSystem
             List<Action<IEvent>> list;
             bool success = handlers.TryGetValue(key, out list);
             if (!success) return;
-            list.ForEach(e => e(ev));
+            var pubCopy = list.ToArray(); // To allow subs/unsubs when handling events
+            foreach (var e in pubCopy)
+            {
+                e(ev);
+            }
         }
     }
 }

@@ -9,7 +9,7 @@ public class PlayerAttributes : ICombatAttributes
 
     public double Attack { get => attack; }
 
-    public double Speed => 10;
+    public double Speed => 50;
 
     private double attack;
 

@@ -36,6 +36,11 @@ public class CharacterStatBoxComponent : MonoBehaviour
     void UpdateIndex(int index, IEvent e)
     {
         var character = GetCharacter(index);
+        foreach (var actionButton in actionButtonComponents)
+        {
+            actionButton.SetCharacter(character, targetType);
+        }
+
         if (character != null)
         {
             if (characterName)
@@ -47,10 +52,6 @@ public class CharacterStatBoxComponent : MonoBehaviour
             {
                 healthbarComponent.gameObject.SetActive(true);
                 healthbarComponent.SetAttributes(character);
-            }
-            foreach (var actionButton in actionButtonComponents)
-            {
-                actionButton.SetCharacter(character);
             }
         }
         else
@@ -98,10 +99,6 @@ public class CharacterStatBoxComponent : MonoBehaviour
 
     public void OpenUpgradeTab()
     {
-        if (targetType == TargetType.Players)
-        {
-            UpgradePanelComponent.Instance.OpenPanel(targetIndex);
-        }
     }
 
     // Update is called once per frame

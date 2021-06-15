@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 2235990951512057252}
   - component: {fileID: 2235990951512057254}
   - component: {fileID: 2235990951512057253}
+  - component: {fileID: 8461025511733397836}
+  - component: {fileID: 6827826135750059756}
   m_Layer: 0
   m_Name: EnemyObj3D
   m_TagString: Untagged
@@ -81,3 +83,28 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &8461025511733397836
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2235990951512057251}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5f629ade1d0a514f924391b9662078e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!65 &6827826135750059756
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2235990951512057251}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 5.6938305, y: 1, z: 5.079155}
+  m_Center: {x: -0.35389972, y: -0.00000005960465, z: 2.039584}
