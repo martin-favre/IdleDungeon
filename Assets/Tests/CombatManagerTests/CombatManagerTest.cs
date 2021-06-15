@@ -17,6 +17,7 @@ namespace Tests
         Mock<IMap> mapMock;
 
         CombatManager manager;
+        Mock<IGameManager> gameManagerMock;
 
         readonly Vector2Int startPos = new Vector2Int(10, 10);
         readonly Vector2Int goalPos = new Vector2Int(20, 20);
@@ -37,7 +38,10 @@ namespace Tests
             combatFactoryMock.Setup(f => f.CreateInstance(It.IsAny<ICharacter[]>())).Returns(combatMock.Object);
             CombatManager.ClearInstance();
             timeProviderMock = new Mock<ITimeProvider>();
+            gameManagerMock = new Mock<IGameManager>();
+            gameManagerMock.Setup(e => e.GridMap).Returns(mapMock.Object);
             SingletonProvider.MainRandomProvider = randomMock.Object;
+            SingletonProvider.MainGameManager = gameManagerMock.Object;
             manager = new CombatManager(combatFactoryMock.Object);
         }
 
@@ -79,7 +83,7 @@ namespace Tests
         {
             randomMock.Setup(f => f.ThingHappens(It.IsAny<float>())).Returns(false);
             manager.PlayerEntersTile(Vector2Int.zero);
-            combatFactoryMock.Verify(f => f.CreateInstance(It.IsAny<ICharacter[]>()), Times.Never);
+            Assert.IsFalse(manager.InCombat());
         }
 
         [Test]

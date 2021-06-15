@@ -25,7 +25,7 @@ public class HealthbarComponent : MonoBehaviour
     {
         targetGuid = character.UniqueId;
         if (subscription != null) subscription.Dispose();
-        subscription = MainEventHandler.Instance.Subscribe(new[] { EventType.CharacterAttributeChanged, EventType.CharacterCurrentHpChanged }, HandleEvent);
+        subscription = CentralEventHandler.Instance.Subscribe(new[] { EventType.CharacterAttributeChanged, EventType.CharacterCurrentHpChanged }, HandleEvent);
         if (character.HealthPoints != null)
         {
             UpdateBarFill(character);

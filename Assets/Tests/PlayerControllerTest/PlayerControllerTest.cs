@@ -6,6 +6,8 @@ using UnityEngine.TestTools;
 using Moq;
 
 using System;
+using PubSubSystem;
+
 namespace Tests
 {
     public class PlayerControllerTest
@@ -29,7 +31,9 @@ namespace Tests
 
         Mock<GameManager.PlayerCallbacks> callbacksMock;
 
-        IObserver<ICombatUpdateEvent> playersObserver;
+        Mock<IEventPublisher<EventType>> mockPublisher;
+
+        Action<IEvent> publishCallback;
 
         [SetUp]
         public void Setup()
@@ -50,41 +54,45 @@ namespace Tests
                                                     It.IsAny<Vector2Int>(),
                                                     It.IsAny<IMap>())).Returns(path);
             combatManagerMock = new Mock<ICombatManager>();
-            // combatManagerMock.Setup(f => f.Subscribe(It.IsAny<IObserver<ICombatUpdateEvent>>())).Callback<IObserver<ICombatUpdateEvent>>(e => playersObserver = e);
+            mockPublisher = new Mock<IEventPublisher<EventType>>();
+            mockPublisher.Setup(e => e.Subscribe(It.IsAny<EventType[]>(),
+                It.IsAny<Action<IEvent>>())).
+                Callback<EventType[], Action<IEvent>>((type, action) => publishCallback = action);
             playerMoverMock = new Mock<IPlayerMover>();
+            SingletonProvider.MainEventHandler = mockPublisher.Object;
             callbacksMock = new Mock<GameManager.PlayerCallbacks>();
             controller = new PlayerController(mapMock.Object,
                                                 pathfinderMock.Object,
                                                 callbacksMock.Object,
                                                 combatManagerMock.Object,
                                                 playerMoverMock.Object);
+
         }
 
         [Test]
-        public void PlayerOughtToRegisterAnObserver()
+        public void PlayerShouldSubscribe()
         {
-            // mostly a realitycheck
-            Assert.IsNotNull(playersObserver);
+            Assert.IsNotNull(publishCallback);
         }
 
         [Test]
         public void CallPlayerDiedOnExitCombatWherePlayerDied()
         {
-            playersObserver.OnNext(new ExitedCombatEvent(null, ExitedCombatEvent.CombatResult.PlayerLost));
+            publishCallback(new ExitedCombatEvent(null, ExitedCombatEvent.CombatResult.PlayerLost));
             callbacksMock.Verify(f => f.OnPlayerDied());
         }
 
         [Test]
         public void CallNothingOnEnteredCombatEvent()
         {
-            playersObserver.OnNext(new EnteredCombatEvent(combatReaderMock.Object));
+            publishCallback(new EnteredCombatEvent(combatReaderMock.Object));
             callbacksMock.Verify(f => f.OnPlayerDied(), Times.Never);
         }
 
         [Test]
         public void CallNothingOnExitedCombatEventWherePlayerSurvived()
         {
-            playersObserver.OnNext(new ExitedCombatEvent(null, ExitedCombatEvent.CombatResult.PlayerWon));
+            publishCallback(new ExitedCombatEvent(null, ExitedCombatEvent.CombatResult.PlayerWon));
             callbacksMock.Verify(f => f.OnPlayerDied(), Times.Never);
         }
 

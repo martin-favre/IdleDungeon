@@ -48,7 +48,7 @@ public class PlayerAttributes : ICombatAttributes
         ICharacter chr;
         if (owner.TryGetTarget(out chr))
         {
-            MainEventHandler.Instance.Publish(EventType.CharacterAttributeChanged, new AttributeChangedEvent(chr));
+            CentralEventHandler.Instance.Publish(EventType.CharacterAttributeChanged, new AttributeChangedEvent(chr));
         }
 
     }

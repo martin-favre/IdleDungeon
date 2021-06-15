@@ -47,7 +47,7 @@ public class PlayerController : IPlayerController, IDisposable
 
         machine = new StateMachine(new DetermineStepState(this));
 
-        combatSubscriber = MainEventHandler.Instance.Subscribe(new[] { EventType.CombatStarted, EventType.CombatEnded }, (e) =>
+        combatSubscriber = SingletonProvider.MainEventHandler.Subscribe(new[] { EventType.CombatStarted, EventType.CombatEnded }, (e) =>
           {
               if (e is EnteredCombatEvent)
               {

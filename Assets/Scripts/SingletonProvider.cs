@@ -1,4 +1,5 @@
 using GameManager;
+using PubSubSystem;
 
 public static class SingletonProvider
 {
@@ -55,7 +56,9 @@ public static class SingletonProvider
             return upgradeManager;
         }
         set => upgradeManager = value;
-    }
+    }  
+    private static IEventPublisher<EventType> mainEventHandler = CentralEventHandler.Instance;
+    public static IEventPublisher<EventType> MainEventHandler { get => mainEventHandler; set => mainEventHandler = value; }
 
 
 }

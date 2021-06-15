@@ -13,6 +13,6 @@ public class AttackRandomAction : BaseCharacterAction
         if (enemies.Length == 0) return;
         ICharacter target = enemies[SingletonProvider.MainRandomProvider.RandomInt(0, enemies.Length)];
         target.BeAttacked(user.Attributes.Attack);
-        MainEventHandler.Instance.Publish(EventType.CombatAction, new CombatActionEvent(combat, target, user));
+        CentralEventHandler.Instance.Publish(EventType.CombatAction, new CombatActionEvent(combat, target, user));
     }
 }

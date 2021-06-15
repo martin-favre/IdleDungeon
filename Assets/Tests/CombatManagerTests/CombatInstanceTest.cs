@@ -22,8 +22,6 @@ namespace Tests
 
         Mock<ITimeProvider> timeMock;
 
-        Mock<ITurnProgress> turnProgressMock;
-
         Mock<IPlayerWallet> walletMock;
         Mock<ICombatAttributes> mockPlayerAttributes;
 
@@ -40,8 +38,6 @@ namespace Tests
             enemyFactoryMock.Setup(f => f.GenerateEnemies()).Returns(enemies);
             timeMock = new Mock<ITimeProvider>();
             timeMock.Setup(f => f.DeltaTime).Returns(1); // Since turnprogression is DeltaTime*speed this makes calculating it easier
-            turnProgressMock = new Mock<ITurnProgress>();
-            turnProgressMock.Setup(f => f.IncrementTurnProgress(It.IsAny<double>())).Returns(true); // By default it's always everyone's turn
             mockPlayerAttributes = new Mock<ICombatAttributes>();
             playerMock.Setup(f => f.Attributes).Returns(mockPlayerAttributes.Object);
             walletMock = new Mock<IPlayerWallet>();
@@ -117,23 +113,20 @@ namespace Tests
         }
 
         [Test]
-        public void PlayerShouldActIfTheirTurn()
+        public void PlayerShouldActIfAlive()
         {
-            var enemyMock = new Mock<ICharacter>();
+            var enemyMock = new Mock<ICharacter>(); // to not finish combat
             enemies.Add(enemyMock.Object);
-
-            turnProgressMock.Setup(f => f.IncrementTurnProgress(It.IsAny<double>())).Returns(true);
             combatInstance.Update();
             playerMock.Verify(foo => foo.PerformAction(It.IsAny<List<ICharacter>>(), It.IsAny<ICombatReader>()), Times.Once); // Should only have happened once
         }
 
         [Test]
-        public void PlayerShouldNotActIfNotTheirTurn()
+        public void PlayerShouldNotActIfDead()
         {
             var enemyMock = new Mock<ICharacter>();
             enemies.Add(enemyMock.Object);
-
-            turnProgressMock.Setup(f => f.IncrementTurnProgress(It.IsAny<double>())).Returns(false);
+            playerMock.Setup(e => e.IsDead()).Returns(true);
             combatInstance.Update();
             playerMock.Verify(foo => foo.PerformAction(It.IsAny<List<ICharacter>>(), It.IsAny<ICombatReader>()), Times.Never); // Should only have happened once
         }
@@ -145,22 +138,20 @@ namespace Tests
         }
 
         [Test]
-        public void PlayerLostIfEnemiesLeft()
+        public void PlayerLostIfDeadAndEnemiesLeft()
         {
-            // var enemyMock = new Mock<ICharacter>();
-            // enemyMock.Setup(f => f.TurnProgress).Returns(turnProgressMock.Object);
-            // enemies.Add(enemyMock.Object);
-            // players.Clear();
-            // combatInstance = new CombatInstance(players.ToArray(), enemyFactoryMock.Object);
-            // Assert.AreEqual(ICombatInstance.CombatResult.PlayerLost, combatInstance.Result);
+            var enemyMock = new Mock<ICharacter>();
+            enemies.Add(enemyMock.Object);
+            players.Clear(); // no players left
+            combatInstance = new CombatInstance(players.ToArray(), enemyFactoryMock.Object);
+            Assert.AreEqual(ICombatInstance.CombatResult.PlayerLost, combatInstance.Result);
         }
         [Test]
         public void ResultUnknownIfCombatNotDone()
         {
-            // var enemyMock = new Mock<ICharacter>();
-            // enemyMock.Setup(f => f.TurnProgress).Returns(turnProgressMock.Object);
-            // enemies.Add(enemyMock.Object);
-            // Assert.AreEqual(ICombatInstance.CombatResult.Unknown, combatInstance.Result);
+            var enemyMock = new Mock<ICharacter>();
+            enemies.Add(enemyMock.Object);
+            Assert.AreEqual(ICombatInstance.CombatResult.Unknown, combatInstance.Result);
         }
 
     }

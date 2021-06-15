@@ -14,7 +14,6 @@ public class CombatManager : ICombatManager
 
     static readonly LilLogger logger = new LilLogger("CombatManager");
     private readonly ICombatInstanceFactory combatInstanceFactory;
-    private IMap map;
     private ICombatInstance combatInstance;
 
     static CombatManager()
@@ -34,15 +33,12 @@ public class CombatManager : ICombatManager
 
     public bool PlayerEntersTile(Vector2Int tile)
     {
-        if (map == null)
-        {
-            map = SingletonProvider.MainGameManager.GridMap;
-        }
+        var map = SingletonProvider.MainGameManager.GridMap;
         if (map.Goal == tile || (map.Start - tile).magnitude <= 1) return false;
         if (SingletonProvider.MainRandomProvider.ThingHappens(0.25f))
         {
             combatInstance = combatInstanceFactory.CreateInstance(SingletonProvider.MainPlayerRoster.GetAllPlayersChars());
-            MainEventHandler.Instance.Publish(EventType.CombatStarted, new EnteredCombatEvent(combatInstance.CombatReader));
+            CentralEventHandler.Instance.Publish(EventType.CombatStarted, new EnteredCombatEvent(combatInstance.CombatReader));
             return true;
         }
         return false;
@@ -61,7 +57,7 @@ public class CombatManager : ICombatManager
             var result = combatInstance.Result == ICombatInstance.CombatResult.PlayerLost ? ExitedCombatEvent.CombatResult.PlayerLost : ExitedCombatEvent.CombatResult.PlayerWon;
             combatInstance.Dispose();
             combatInstance = null;
-            MainEventHandler.Instance.Publish(EventType.CombatEnded , new ExitedCombatEvent(null, result));
+            CentralEventHandler.Instance.Publish(EventType.CombatEnded, new ExitedCombatEvent(null, result));
         }
     }
 

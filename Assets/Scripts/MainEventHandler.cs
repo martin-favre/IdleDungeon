@@ -12,14 +12,14 @@ public enum EventType
     CombatantDied,
 }
 
-public class MainEventHandler : EventPublisher<EventType>
+public class CentralEventHandler : EventPublisher<EventType>
 {
-    static readonly MainEventHandler instance;
+    static readonly CentralEventHandler instance;
 
-    public static MainEventHandler Instance => instance;
+    public static CentralEventHandler Instance => instance;
 
-    static MainEventHandler()
+    static CentralEventHandler()
     {
-        instance = new MainEventHandler();
+        instance = new CentralEventHandler();
     }
 }
