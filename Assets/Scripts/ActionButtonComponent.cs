@@ -19,6 +19,7 @@ public class ActionButtonComponent : MonoBehaviour
     Toggle toggle;
 
     Subscription<EventType> clickSub;
+    Subscription<EventType> actionSub;
 
     void Awake()
     {
@@ -45,16 +46,16 @@ public class ActionButtonComponent : MonoBehaviour
             return;
         }
         this.targetType = targetType;
+        if(targetType == CharacterStatBoxComponent.TargetType.Enemies) toggle.interactable = false;
         var actions = character.CharacterActions;
         if (buttonIndex < actions.Length)
         {
             var action = GetAction();
             if (action != null)
             {
-                turnProgressIndicator.gameObject.SetActive(true);
-                turnProgressIndicator.SetTurnProgress(action);
                 image.sprite = action.Icon;
                 image.enabled = true;
+                turnProgressIndicator.SetTurnProgressOwner(action);
             }
         }
         else
@@ -70,29 +71,42 @@ public class ActionButtonComponent : MonoBehaviour
     private void HideIcons()
     {
         image.enabled = false;
-        turnProgressIndicator.gameObject.SetActive(false);
+    }
+
+    private void OnPlayerClickedEnemy(IEvent e)
+    {
+        if (e is PlayerClickedEnemyEvent clkEn)
+        {
+            var action = GetAction();
+            SingletonProvider.MainEventHandler.Publish(EventType.PlayerSelectedActionTarget, new PlayerSelectedActionTargetEvent(character, clkEn.Enemy, action));
+            actionSub = SingletonProvider.MainEventHandler.Subscribe(EventType.CombatAction, OnPlayerTookAction);
+        }
+        toggle.isOn = false;
+        clickSub.Dispose();
+    }
+
+    private void OnPlayerTookAction(IEvent e)
+    {
+        // So, we've clicked the enemy
+        // And now the action was taken
+
+        if (e is CombatActionEvent ev)
+        {
+            if (ev.Action == GetAction())
+            {
+                actionSub.Dispose();
+            }
+        }
     }
 
     public void OnButtonPressed(bool newVal)
     {
         var action = GetAction();
-        if (action != null && targetType == CharacterStatBoxComponent.TargetType.Players)
+        if (action != null && action is IHasTarget)
         {
             if (newVal) // i.e. we pushed it down
             {
-                clickSub = SingletonProvider.MainEventHandler.Subscribe(new[] { EventType.PlayerClickedEnemy, EventType.PlayerClickedNothing }, e =>
-                  {
-                      if (e is PlayerClickedEnemyEvent clkEn)
-                      {
-                          SingletonProvider.MainEventHandler.Publish(EventType.PlayerSelectedActionTarget, new PlayerSelectedActionTargetEvent(character, clkEn.Enemy, action));
-                      }
-                      else if (e is PlayerClickedNothingEvent)
-                      {
-                          toggle.isOn = false;
-                          if (clickSub != null) clickSub.Dispose();
-                          clickSub = null;
-                      }
-                  });
+                clickSub = SingletonProvider.MainEventHandler.Subscribe(new[] { EventType.PlayerClickedEnemy, EventType.PlayerClickedNothing }, OnPlayerClickedEnemy);
             }
         }
     }

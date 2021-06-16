@@ -26,6 +26,7 @@ public class PlayerClickHandlerComponent : MonoBehaviour
         var enemy = enemyTransf.GetComponent<VisalisedEnemyComponent>();
         if (enemy)
         {
+            Debug.Log("Player clicked: " + enemy.Character.Name);
             SingletonProvider.MainEventHandler.Publish(EventType.PlayerClickedEnemy, new PlayerClickedEnemyEvent(enemy.Character));
             return true;
         }

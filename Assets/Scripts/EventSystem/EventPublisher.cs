@@ -32,7 +32,7 @@ namespace PubSubSystem
             {
                 List<Action<IEvent>> list;
                 bool success = handlers.TryGetValue(key, out list);
-                if (!success) return;
+                if (!success) continue;
                 list.Remove(hook.Handler);
             }
         }

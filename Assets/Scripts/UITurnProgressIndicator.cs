@@ -1,35 +1,58 @@
 
 using System.Timers;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UITurnProgressIndicator : MonoBehaviour
 {
     [SerializeField]
-    float updateFrequencyS = 0.5f;
+    float updateFrequencyS = 0.01f;
     [SerializeField]
     UIBarComponent bar;
-    private IHasTurnProgress character;
+    [SerializeField]
+    Image background;
+
+    private IHasTurnProgress hasProgress;
 
     float startTime;
 
     void Start()
     {
         startTime = SingletonProvider.MainTimeProvider.Time;
+        UpdateBarFill();
     }
 
-    public void SetTurnProgress(IHasTurnProgress character)
+    public void SetTurnProgressOwner(IHasTurnProgress hasProgress)
     {
-        this.character = character;
+        this.hasProgress = hasProgress;
+        UpdateBarFill();
+    }
+
+    private void UpdateBarFill()
+    {
+        if (hasProgress != null && hasProgress.TurnProgress != null)
+        {
+            if (bar)
+            {
+                bar.gameObject.SetActive(true);
+                bar.SetFill(hasProgress.TurnProgress.GetRelativeProgress());
+            }
+            if (background) background.gameObject.SetActive(true);
+
+        }
+        else
+        {
+            if (bar) bar.gameObject.SetActive(false);
+            if (background) background.gameObject.SetActive(false);
+        }
     }
 
     private void Update()
     {
-        if (bar && character != null && character.TurnProgress != null)
+        if (startTime + updateFrequencyS < SingletonProvider.MainTimeProvider.Time)
         {
-            if (startTime + updateFrequencyS < SingletonProvider.MainTimeProvider.Time)
-            {
-                bar.SetFill(character.TurnProgress.GetRelativeProgress());
-            }
+            UpdateBarFill();
+            startTime = SingletonProvider.MainTimeProvider.Time;
         }
     }
 }

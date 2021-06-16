@@ -10,6 +10,11 @@ public interface ICharacterAction : IHasTurnProgress
     void PostAction();
 }
 
+public interface IHasTarget
+{
+    ICharacter Target { get; set; }
+}
+
 public abstract class BaseCharacterAction : ICharacterAction
 {
     private readonly Sprite icon;

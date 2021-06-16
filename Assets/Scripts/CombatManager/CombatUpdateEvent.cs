@@ -58,15 +58,18 @@ public class CombatActionEvent : ICombatUpdateEvent
     private readonly ICombatReader combat;
     private readonly ICharacter target;
     private readonly ICharacter actionDoer;
+    private readonly ICharacterAction action;
 
-    public CombatActionEvent(ICombatReader combat, ICharacter target, ICharacter actionDoer)
+    public CombatActionEvent(ICombatReader combat, ICharacter target, ICharacter actionDoer, ICharacterAction action)
     {
         this.combat = combat;
         this.target = target;
         this.actionDoer = actionDoer;
+        this.action = action;
     }
 
     public ICharacter Target => target;
     public ICharacter ActionDoer => actionDoer;
     public ICombatReader Combat => combat;
+    public ICharacterAction Action => action;
 }
