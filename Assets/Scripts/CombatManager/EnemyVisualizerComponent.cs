@@ -59,16 +59,16 @@ public class EnemyVisualizerComponent : MonoBehaviour
             case 0:
                 break;
             case 1:
-                PlaceOneEnemy();
+                PlaceOneEnemy(characters);
                 break;
             case 2:
-                PlaceTwoEnemies();
+                PlaceTwoEnemies(characters);
                 break;
             case 3:
-                PlaceThreeEnemies();
+                PlaceThreeEnemies(characters);
                 break;
             case 4:
-                PlaceFourEnemies();
+                PlaceFourEnemies(characters);
                 break;
             default:
                 logger.Log("To many enemies to show", LogLevel.Error);
@@ -93,15 +93,19 @@ public class EnemyVisualizerComponent : MonoBehaviour
             if (enemyComp) enemyComp.SetCharacter(enemy);
 
             if (renderer && enemy is IHasMaterial sp) renderer.material = sp.Material;
-            if (enemy is IHasEnemyTemplate template) enemyObj.transform.localScale = new Vector3(template.EnemyTemplate.SpriteScale.x, 1, template.EnemyTemplate.SpriteScale.y);
+            if (enemy is IHasEnemyTemplate template)
+            {
+                enemyObj.transform.localScale = new Vector3(template.EnemyTemplate.SpriteScale.x, 1, template.EnemyTemplate.SpriteScale.y);
+                enemyObj.transform.position += template.EnemyTemplate.Offset;
+            }
 
         }
     }
 
-    private void PlaceOneEnemy()
+    private void PlaceOneEnemy(ICharacter[] characters)
     {
         Debug.Assert(enemyObjects.Count >= 1);
-        CentralizeEnemies();
+        CentralizeEnemies(characters);
         FinalRotate();
     }
 
@@ -111,19 +115,23 @@ public class EnemyVisualizerComponent : MonoBehaviour
         enemyObjects.ForEach(e => e.Item2.transform.Rotate(new Vector3(90, 0, 0)));
     }
 
-    void CentralizeEnemies()
+    void CentralizeEnemies(ICharacter[] characters)
     {
         var myGridPos = SingletonProvider.MainPlayerController.GridPosition;
         var realPos = Helpers.ToVec3(myGridPos * Constants.tileSize, Constants.tileSize.y / 2);
-        enemyObjects.ForEach(e => e.Item2.transform.position = realPos);
+        for (int i = 0; i < characters.Length; i++)
+        {
+            var offset = characters[i] is IHasEnemyTemplate tmp ? tmp.EnemyTemplate.Offset : Vector3.zero;
+            enemyObjects[i].Item2.transform.position = realPos + offset;
+        }
 
         var playerWorldPos = SingletonProvider.MainPlayerController.WorldPosition;
         enemyObjects.ForEach(e => e.Item2.transform.LookAt(playerWorldPos));
     }
 
-    private void PlaceTwoEnemies()
+    private void PlaceTwoEnemies(ICharacter[] characters)
     {
-        CentralizeEnemies();
+        CentralizeEnemies(characters);
         // Put them side by side
         {
             Debug.Assert(enemyObjects.Count >= 2);
@@ -139,9 +147,9 @@ public class EnemyVisualizerComponent : MonoBehaviour
         FinalRotate();
     }
 
-    private void PlaceThreeEnemies()
+    private void PlaceThreeEnemies(ICharacter[] characters)
     {
-        CentralizeEnemies();
+        CentralizeEnemies(characters);
         // Put one in front, then two side by side further back
         {
             Debug.Assert(enemyObjects.Count >= 3);
@@ -161,9 +169,9 @@ public class EnemyVisualizerComponent : MonoBehaviour
 
     }
 
-    private void PlaceFourEnemies()
+    private void PlaceFourEnemies(ICharacter[] characters)
     {
-        CentralizeEnemies();
+        CentralizeEnemies(characters);
         // Put two side by side in front, then two side by side further back
         {
             Debug.Assert(enemyObjects.Count >= 4);

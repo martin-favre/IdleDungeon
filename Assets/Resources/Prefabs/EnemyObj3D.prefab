@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2235990951512057254}
   - component: {fileID: 2235990951512057253}
   - component: {fileID: 8461025511733397836}
-  - component: {fileID: 6827826135750059756}
+  - component: {fileID: 8884273461828278088}
   m_Layer: 0
   m_Name: EnemyObj3D
   m_TagString: Untagged
@@ -95,7 +95,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5f629ade1d0a514f924391b9662078e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!65 &6827826135750059756
+--- !u!65 &8884273461828278088
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -106,5 +106,5 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 5.6938305, y: 1, z: 5.079155}
-  m_Center: {x: -0.35389972, y: -0.00000005960465, z: 2.039584}
+  m_Size: {x: 7.19, y: 0.1, z: 6.16}
+  m_Center: {x: 0, y: 0, z: 0}
