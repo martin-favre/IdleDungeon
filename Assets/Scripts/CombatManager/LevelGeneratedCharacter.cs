@@ -17,7 +17,7 @@ class LevelGeneratedCharacter : Character, IHasMaterial, IHasEnemyTemplate
     {
         healthPoints = new HealthPoints(new WeakReference<ICharacter>(this), 200);
         this.template = template;
-        base.characterActions.Add(new AttackRandomAction("Sprites/Slime", "Attack"));
+        base.characterActions.Add(new AttackRandomAction("Sprites/addon_04", "Attack"));
     }
 
     public override void PerformAction(List<ICharacter> enemies, ICombatReader combat)
