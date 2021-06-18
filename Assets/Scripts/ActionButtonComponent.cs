@@ -106,6 +106,7 @@ public class ActionButtonComponent : MonoBehaviour
         {
             if (newVal) // i.e. we pushed it down
             {
+                if(clickSub != null) clickSub.Dispose();
                 clickSub = SingletonProvider.MainEventHandler.Subscribe(new[] { EventType.PlayerClickedEnemy, EventType.PlayerClickedNothing }, OnPlayerClickedEnemy);
             }
         }

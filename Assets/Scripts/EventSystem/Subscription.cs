@@ -21,7 +21,7 @@ namespace PubSubSystem
 
         public void Dispose()
         {
-            eventManager.Unsubscribe(this);
+            if(eventManager != null) eventManager.Unsubscribe(this);
             handler = null;
             eventManager = null;
             keys = null;
