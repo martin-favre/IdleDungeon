@@ -13,9 +13,9 @@ class PrefabLoader : IGameObjectLoader
         instance = new PrefabLoader();
     }
 
-    private Object LoadPrefab(string path)
+    private T LoadPrefab<T>(string path) where T : UnityEngine.Object
     {
-        Object obj = Resources.Load(path) as Object;
+        T obj = Resources.Load<T>(path);
         if (obj == null)
         {
             logger.Log("Could not load resource " + path, LogLevel.Error);
@@ -27,13 +27,13 @@ class PrefabLoader : IGameObjectLoader
 
     public static IGameObjectLoader Instance { get => instance; }
 
-    public T GetPrefab<T>(string name) where T : class
+    public T GetPrefab<T>(string name) where T : UnityEngine.Object
     {
         Object gameObject;
         prefabs.TryGetValue(name, out gameObject);
         if (gameObject == null)
         {
-            gameObject = LoadPrefab(name);
+            gameObject = LoadPrefab<T>(name);
             prefabs[name] = gameObject;
         }
         return gameObject as T;
