@@ -39,6 +39,11 @@ public abstract class Character : ICharacter
 
     protected void StartChargingAction(ICharacterAction action, ICharacter target, ICombatReader combat)
     {
+        if (activeCharacterAction != null)
+        {
+            activeCharacterAction.CancelAction();
+            SingletonProvider.MainEventPublisher.Publish(EventType.CharacterActionCancelled, new CharacterActionCancelledEvent(this, activeCharacterAction));
+        }
         action.StartChargingAction(this, target, combat);
         activeCharacterAction = action;
     }

@@ -13,7 +13,8 @@ public enum EventType
     PlayerSelectedActionTarget,
     PlayerClickedEnemy,
     PlayerClickedNothing,
-    CombatResultsClosed
+    CombatResultsClosed,
+    CharacterActionCancelled
 }
 
 

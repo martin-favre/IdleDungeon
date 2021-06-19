@@ -76,7 +76,7 @@ public class ActionButtonComponent : MonoBehaviour
         {
             var action = GetAction();
             SingletonProvider.MainEventPublisher.Publish(EventType.PlayerSelectedActionTarget, new PlayerSelectedActionTargetEvent(character, clkEn.Enemy, action));
-            actionSub = SingletonProvider.MainEventPublisher.Subscribe(EventType.CombatAction, OnPlayerTookAction);
+            actionSub = SingletonProvider.MainEventPublisher.Subscribe(new[] { EventType.CombatAction, EventType.CharacterActionCancelled }, OnPlayerTookAction);
         }
         toggle.isOn = false;
         clickSub.Dispose();
@@ -85,11 +85,19 @@ public class ActionButtonComponent : MonoBehaviour
     private void OnPlayerTookAction(IEvent e)
     {
         // So, we've clicked the enemy
-        // And now the action was taken
+        // And now the action was taken 
+        // or cancelled
 
         if (e is CombatActionEvent ev)
         {
             if (ev.Action == GetAction())
+            {
+                actionSub.Dispose();
+            }
+        }
+        else if (e is CharacterActionCancelledEvent cancel)
+        {
+            if (cancel.Action == GetAction())
             {
                 actionSub.Dispose();
             }

@@ -41,6 +41,14 @@ public class EnemyTargetComponent : MonoBehaviour
                 awaitedAction = null;
             }
         }
+        else if (e is CharacterActionCancelledEvent cancelledEvent)
+        {
+            if (cancelledEvent.Action.Target == character && cancelledEvent.Action == awaitedAction)
+            {
+                spriteRenderer.enabled = false;
+                awaitedAction = null;
+            }
+        }
     }
     void Start()
     {
