@@ -2,7 +2,7 @@
 using System;
 using UnityEngine;
 
-public class AttackSpecificAction : BaseCharacterAction, IHasTarget
+public class AttackSpecificAction : BaseCharacterAction
 {
     private ICharacter target;
 

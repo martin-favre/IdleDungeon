@@ -8,7 +8,8 @@ public abstract class Character : ICharacter
     private readonly double experienceWorth;
     private readonly IGuid guid;
 
-    protected readonly List<ICharacterAction> characterActions;
+    protected readonly List<ICharacterAction> possibleCharacterActions;
+    protected ICharacterAction activeCharacterAction;
     private readonly double goldWorth;
     protected Character(string name, IHealthPoints healthPoints, ICombatAttributes combatAttributes, double experienceWorth = 0, double goldWorth = 0)
     {
@@ -18,7 +19,7 @@ public abstract class Character : ICharacter
         this.experienceWorth = experienceWorth;
         this.goldWorth = goldWorth;
         this.guid = GuidProvider.Instance.GetNewGuid();
-        this.characterActions = new List<ICharacterAction>();
+        this.possibleCharacterActions = new List<ICharacterAction>();
     }
 
     public string Name => name;
@@ -26,7 +27,7 @@ public abstract class Character : ICharacter
     public double ExperienceWorth => experienceWorth;
     public IGuid UniqueId => guid;
     public IHealthPoints HealthPoints => healthPoints;
-    public ICharacterAction[] CharacterActions { get => characterActions.ToArray(); }
+    public ICharacterAction[] CharacterActions { get => possibleCharacterActions.ToArray(); }
     public double GoldWorth => goldWorth;
 
     public void BeAttacked(double attackStat)
@@ -36,19 +37,22 @@ public abstract class Character : ICharacter
     public bool IsDead() { return HealthPoints.IsDead(); }
     public abstract void PerformAction(List<ICharacter> enemies, ICombatReader combat);
 
+    protected void StartChargingAction(ICharacterAction action, ICharacter target, ICombatReader combat)
+    {
+        action.StartChargingAction(this, target, combat);
+        activeCharacterAction = action;
+    }
+
     protected void IncrementActions(ICombatReader combat)
     {
-        foreach (var action in CharacterActions)
+        if (activeCharacterAction != null)
         {
-            if (action.TurnProgress != null)
+            if (activeCharacterAction.TurnProgress.IncrementTurnProgress(Attributes.Speed))
             {
-                if (action.TurnProgress.IncrementTurnProgress(Attributes.Speed))
-                {
-                    action.PerformAction(this, combat);
-                    action.PostAction();
-                }
+                activeCharacterAction.PerformAction(this, combat);
+                activeCharacterAction.PostAction();
+                activeCharacterAction = null;
             }
         }
-
     }
 }

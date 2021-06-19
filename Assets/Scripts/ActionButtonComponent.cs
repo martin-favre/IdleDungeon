@@ -45,7 +45,7 @@ public class ActionButtonComponent : MonoBehaviour
             return;
         }
         this.targetType = targetType;
-        if(targetType == CharacterStatBoxComponent.TargetType.Enemies) toggle.interactable = false;
+        if (targetType == CharacterStatBoxComponent.TargetType.Enemies) toggle.interactable = false;
         var actions = character.CharacterActions;
         if (buttonIndex < actions.Length)
         {
@@ -99,11 +99,11 @@ public class ActionButtonComponent : MonoBehaviour
     public void OnButtonPressed(bool newVal)
     {
         var action = GetAction();
-        if (action != null && action is IHasTarget)
+        if (action != null)
         {
             if (newVal) // i.e. we pushed it down
             {
-                if(clickSub != null) clickSub.Dispose();
+                if (clickSub != null) clickSub.Dispose();
                 clickSub = SingletonProvider.MainEventHandler.Subscribe(new[] { EventType.PlayerClickedEnemy, EventType.PlayerClickedNothing }, OnPlayerClickedEnemy);
             }
         }

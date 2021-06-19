@@ -5,14 +5,9 @@ public interface ICharacterAction : IHasTurnProgress
 {
     Sprite Icon { get; }
     string Name { get; }
-    void StartChargingAction(ICharacter user, ICombatReader combat);
+    void StartChargingAction(ICharacter user, ICharacter target, ICombatReader combat);
     void PerformAction(ICharacter user, ICombatReader combat);
     void PostAction();
-}
-
-public interface IHasTarget
-{
-    ICharacter Target { get; set; }
 }
 
 public abstract class BaseCharacterAction : ICharacterAction
@@ -20,6 +15,8 @@ public abstract class BaseCharacterAction : ICharacterAction
     private readonly Sprite icon;
     private readonly string name;
     private TurnProgress progress;
+
+    private ICharacter target;
 
     protected BaseCharacterAction(string iconPath, string name)
     {
@@ -38,10 +35,12 @@ public abstract class BaseCharacterAction : ICharacterAction
     public void PostAction()
     {
         progress = null;
+        target = null;
     }
 
-    public virtual void StartChargingAction(ICharacter user, ICombatReader combat)
+    public virtual void StartChargingAction(ICharacter user, ICharacter target, ICombatReader combat)
     {
         progress = new TurnProgress();
+        this.target = target;
     }
 }

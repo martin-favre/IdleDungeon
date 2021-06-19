@@ -24,7 +24,7 @@ public class PlayerCharacter : Character
         this.playerIdentifier = playerIdentifier;
         base.combatAttributes = new PlayerAttributes(playerIdentifier, new WeakReference<ICharacter>(this));
         base.healthPoints = new HealthPoints(new WeakReference<ICharacter>(this), 100);
-        characterActions.Add(new AttackSpecificAction("Sprites/gray_03", "Attack"));
+        possibleCharacterActions.Add(new AttackSpecificAction("Sprites/gray_03", "Attack"));
         SingletonProvider.MainEventHandler.Subscribe(EventType.PlayerSelectedActionTarget, OnPlayerSelectedActionTarget);
     }
 
@@ -32,27 +32,7 @@ public class PlayerCharacter : Character
     {
         var selAction = e as PlayerSelectedActionTargetEvent;
         if (selAction.User != this) return;
-        characterActions.ForEach(action =>
-        {
-            if (action == selAction.Action)
-            {
-                if (action is IHasTarget targetable)
-                {
-                    targetable.Target = selAction.Target;
-                    if (!CombatManager.Instance.InCombat())
-                    {
-                        logger.Log("We can't select an action if we're not in combat", LogLevel.Error);
-                        return;
-                    }
-                    action.StartChargingAction(this, CombatManager.Instance.CombatReader);
-                }
-                else
-                {
-                    logger.Log("We can't target with an action that isn't targetable", LogLevel.Error);
-                }
-            }
-        });
-
+        StartChargingAction(selAction.Action, selAction.Target, SingletonProvider.MainCombatManager.CombatReader);
     }
 
     public override void PerformAction(List<ICharacter> enemies, ICombatReader combat)
