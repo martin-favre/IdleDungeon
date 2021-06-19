@@ -7,10 +7,10 @@ public class DetermineStepState : State
     {
 
     }
-    IPlayerController controller;
+    IMovementController controller;
     bool turningFinished = false;
 
-    public DetermineStepState(IPlayerController controller)
+    public DetermineStepState(IMovementController controller)
     {
         this.controller = controller;
     }

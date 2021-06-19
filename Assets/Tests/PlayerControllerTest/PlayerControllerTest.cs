@@ -25,7 +25,7 @@ namespace Tests
         Mock<IPathFinder> pathfinderMock;
         Mock<ICombatManager> combatManagerMock;
         Stack<Vector2Int> path;
-        PlayerController controller;
+        MovementController controller;
 
         Mock<ICombatReader> combatReaderMock;
 
@@ -61,7 +61,7 @@ namespace Tests
             playerMoverMock = new Mock<IPlayerMover>();
             SingletonProvider.MainEventHandler = mockPublisher.Object;
             callbacksMock = new Mock<GameManager.PlayerCallbacks>();
-            controller = new PlayerController(mapMock.Object,
+            controller = new MovementController(mapMock.Object,
                                                 pathfinderMock.Object,
                                                 callbacksMock.Object,
                                                 combatManagerMock.Object,

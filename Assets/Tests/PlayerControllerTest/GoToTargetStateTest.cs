@@ -16,7 +16,7 @@ namespace Tests
         Action onMoveDone;
         Mock<ICombatManager> combatManagerMock;
 
-        Mock<IPlayerController> playerMock;
+        Mock<IMovementController> playerMock;
 
         [SetUp]
         public void Setup()
@@ -25,7 +25,7 @@ namespace Tests
             playerMoverMock = new Mock<IPlayerMover>();
             playerMoverMock.Setup(f => f.MoveTowards(It.IsAny<Vector2Int>(), It.IsAny<Action>())).Callback<Vector2Int, Action>((v, e) => onMoveDone = e);
             playerMoverMock.Setup(f => f.RotateTowards(It.IsAny<Vector2Int>(), It.IsAny<Action>())).Callback<Vector2Int, Action>((v, e) => onRotateDone = e);
-            playerMock = new Mock<IPlayerController>();
+            playerMock = new Mock<IMovementController>();
             playerMock.Setup(f => f.CombatManager).Returns(combatManagerMock.Object);
         }
 

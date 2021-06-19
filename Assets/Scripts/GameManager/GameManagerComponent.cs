@@ -61,7 +61,7 @@ namespace GameManager
             player = SingletonProvider.MainGameobjectLoader.Instantiate(playerPrefab);
             const float initialHeight = 2f;
             player.transform.position = Helpers.ToVec3(manager.GridMap.Start, Constants.tileSize.x / 2f + initialHeight);
-            var comp = player.GetComponent<PlayerControllerComponent>();
+            var comp = player.GetComponent<MovementControllerComponent>();
             comp.Setup(manager.GridMap, manager);
         }
 

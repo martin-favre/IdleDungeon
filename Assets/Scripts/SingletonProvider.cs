@@ -53,8 +53,8 @@ public static class SingletonProvider
         }
         set => prefabLoader = value;
     }
-    private static IPlayerController playerController = PlayerController.Instance;
-    public static IPlayerController MainPlayerController { get => playerController; set => playerController = value; }
+    private static IMovementController playerController = MovementController.Instance;
+    public static IMovementController MainPlayerController { get => playerController; set => playerController = value; }
     private static IUpgradeManager upgradeManager = UpgradeManager.Instance;
     public static IUpgradeManager MainUpgradeManager
     {

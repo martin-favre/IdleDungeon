@@ -4,10 +4,10 @@ using UnityEngine;
 public class GoToTargetState : State
 {
     public class PositionReachedEvent : IStateEvent { }
-    private IPlayerController controller;
+    private IMovementController controller;
     private bool positionReached = false;
 
-    public GoToTargetState(IPlayerController controller)
+    public GoToTargetState(IMovementController controller)
     {
         this.controller = controller;
         controller.RequestMoveTo(controller.GridPosition);

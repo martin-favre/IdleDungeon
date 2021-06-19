@@ -9,13 +9,14 @@ public abstract class Character : ICharacter
     private readonly IGuid guid;
 
     protected readonly List<ICharacterAction> characterActions;
-
-    protected Character(string name, IHealthPoints healthPoints, ICombatAttributes combatAttributes, double experienceWorth)
+    private readonly double goldWorth;
+    protected Character(string name, IHealthPoints healthPoints, ICombatAttributes combatAttributes, double experienceWorth = 0, double goldWorth = 0)
     {
         this.name = name;
         this.healthPoints = healthPoints;
         this.combatAttributes = combatAttributes;
         this.experienceWorth = experienceWorth;
+        this.goldWorth = goldWorth;
         this.guid = GuidProvider.Instance.GetNewGuid();
         this.characterActions = new List<ICharacterAction>();
     }
@@ -26,6 +27,7 @@ public abstract class Character : ICharacter
     public IGuid UniqueId => guid;
     public IHealthPoints HealthPoints => healthPoints;
     public ICharacterAction[] CharacterActions { get => characterActions.ToArray(); }
+    public double GoldWorth => goldWorth;
 
     public void BeAttacked(double attackStat)
     {

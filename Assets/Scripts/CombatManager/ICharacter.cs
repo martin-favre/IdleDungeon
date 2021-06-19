@@ -9,6 +9,7 @@ public interface ICharacter
     string Name { get; }
     ICombatAttributes Attributes { get; }
     double ExperienceWorth { get; }
+    double GoldWorth { get; }
     IGuid UniqueId { get; }
 
     IHealthPoints HealthPoints { get; }

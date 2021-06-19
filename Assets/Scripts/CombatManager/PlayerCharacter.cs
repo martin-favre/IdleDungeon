@@ -19,8 +19,7 @@ public class PlayerCharacter : Character
     public PlayerCharacter(int playerIdentifier) :
         base(names[playerIdentifier],
         null, // can't use this to create a weakref
-        null,
-        0)
+        null)
     {
         this.playerIdentifier = playerIdentifier;
         base.combatAttributes = new PlayerAttributes(playerIdentifier, new WeakReference<ICharacter>(this));

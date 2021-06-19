@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public interface IPlayerController
+public interface IMovementController
 {
     bool HasNextStep();
     Vector2Int GetNextStep();

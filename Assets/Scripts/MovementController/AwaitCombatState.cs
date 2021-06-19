@@ -4,10 +4,10 @@ using UnityEngine;
 public class AwaitCombatState : State
 {
     public class CombatFinishedEvent :IStateEvent {}
-    private IPlayerController controller;
+    private IMovementController controller;
     bool combatFinished = false;
 
-    public AwaitCombatState(IPlayerController controller)
+    public AwaitCombatState(IMovementController controller)
     {
         this.controller = controller;
     }

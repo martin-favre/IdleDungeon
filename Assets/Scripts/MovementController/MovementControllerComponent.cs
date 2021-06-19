@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class PlayerControllerComponent : MonoBehaviour
+public class MovementControllerComponent : MonoBehaviour
 {
-    private PlayerController controller;
+    private MovementController controller;
 
     private Vector2Int previousPosition;
 
@@ -19,7 +19,7 @@ public class PlayerControllerComponent : MonoBehaviour
     public void Setup(IMap map, GameManager.PlayerCallbacks callbacks)
     {
         movementComponent = GetComponent<PlayerMovementComponent>();
-        controller = new PlayerController(map,
+        controller = new MovementController(map,
                                           new DepthFirst(),
                                           callbacks,
                                           SingletonProvider.MainCombatManager,

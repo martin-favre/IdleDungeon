@@ -9,7 +9,7 @@ using StateMachineCollection;
 using UnityEngine;
 
 
-public class PlayerController : IPlayerController, IDisposable
+public class MovementController : IMovementController, IDisposable
 {
     private readonly PlayerCallbacks callbacks;
     private readonly ICombatManager combatManager;
@@ -19,13 +19,13 @@ public class PlayerController : IPlayerController, IDisposable
     private Vector2Int position;
     public Vector2Int GridPosition { get => position; set => position = value; }
     LilLogger logger;
-    static PlayerController instance;
-    public static PlayerController Instance { get => instance; }
+    static MovementController instance;
+    public static MovementController Instance { get => instance; }
     Subscription<EventType> combatSubscriber;
     StateMachine machine;
 
     public Vector3 WorldPosition { get => playerMover.WorldPosition; }
-    public PlayerController(IMap map,
+    public MovementController(IMap map,
                             IPathFinder pathFinder,
                             GameManager.PlayerCallbacks callbacks,
                             ICombatManager combatManager,
