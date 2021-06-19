@@ -10,13 +10,12 @@ public class PlayerClickHandlerComponent : MonoBehaviour
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
-
+            bool handled = false;
             if (Physics.Raycast(ray, out hit))
             {
-                bool handled = HandleClickedEnemies(hit.transform);
-                if(!handled) SingletonProvider.MainEventHandler.Publish(EventType.PlayerClickedNothing, new PlayerClickedNothingEvent());
+                handled = HandleClickedEnemies(hit.transform);
             }
-
+            if (!handled) SingletonProvider.MainEventHandler.Publish(EventType.PlayerClickedNothing, new PlayerClickedNothingEvent());
         }
     }
 
