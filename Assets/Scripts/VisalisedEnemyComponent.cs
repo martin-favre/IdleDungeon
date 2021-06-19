@@ -4,12 +4,18 @@ using UnityEngine;
 
 public class VisalisedEnemyComponent : MonoBehaviour
 {
-    ICharacter character;
 
+    [SerializeField]
+    EnemyTargetComponent enemyTargetComponent;
+    ICharacter character;
     public ICharacter Character { get => character; }
 
     public void SetCharacter(ICharacter character)
     {
         this.character = character;
+        if (enemyTargetComponent)
+        {
+            enemyTargetComponent.SetCharacter(character);
+        }
     }
 }
