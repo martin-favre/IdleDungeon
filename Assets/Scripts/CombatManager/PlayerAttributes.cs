@@ -27,7 +27,7 @@ public class PlayerAttributes : ICombatAttributes
     {
         attackUpgrades = new List<MultiplierUpgrade>()
         {
-            new MultiplierUpgrade(5, 1, 50, 1.07f, GetAttackinessUpgradeKey(0, playerIdentifier)),
+            new MultiplierUpgrade(500, 1, 50, 1.07f, GetAttackinessUpgradeKey(0, playerIdentifier)),
             new MultiplierUpgrade(50, 0, 500, 1.08f, GetAttackinessUpgradeKey(1, playerIdentifier)),
             new MultiplierUpgrade(500, 0, 5000, 1.09f, GetAttackinessUpgradeKey(2, playerIdentifier)),
         };

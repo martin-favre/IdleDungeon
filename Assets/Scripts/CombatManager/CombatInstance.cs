@@ -1,23 +1,16 @@
 
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class CombatInstance : ICombatInstance, ICombatReader
 {
 
-    List<ICharacter> goodGuys;
-    List<ICharacter> badGuys;
-
+    private readonly List<ICharacter> goodGuys;
+    private readonly List<ICharacter> badGuys;
+    double gainedGold;
     public ICombatReader CombatReader => this;
 
-    public ICombatInstance.CombatResult Result
-    {
-        get
-        {
-            if (!IsDone()) return ICombatInstance.CombatResult.Unknown;
-            return goodGuys.Count > 0 ? ICombatInstance.CombatResult.PlayerWon : ICombatInstance.CombatResult.PlayerLost;
-        }
-    }
     public CombatInstance(ICharacter[] playerChars,
     IEnemyFactory enemyFactory)
     {
@@ -25,9 +18,14 @@ public class CombatInstance : ICombatInstance, ICombatReader
         badGuys = enemyFactory.GenerateEnemies();
     }
 
-    public void Update()
+    private CombatResult GenerateResult()
     {
-        if (IsDone()) return;
+        return new CombatResult(Mathf.RoundToInt((float)gainedGold), goodGuys.Count > 0);
+    }
+
+    public CombatResult Update()
+    {
+        if (IsDone()) return GenerateResult();
         {
             ICharacter[] goodGuysCopy = goodGuys.ToArray(); // to avoid modifying the original while iterating
             foreach (var combatant in goodGuysCopy)
@@ -35,9 +33,10 @@ public class CombatInstance : ICombatInstance, ICombatReader
                 if (!combatant.IsDead())
                 {
                     combatant.PerformAction(badGuys, this);
+                    GenerateCurrencyFromDeads(badGuys);
                     CleanOutDeadGuys(badGuys);
                     CleanOutDeadGuys(goodGuys);
-                    if (IsDone()) return;
+                    if (IsDone()) return GenerateResult();
                 }
             }
         }
@@ -50,12 +49,24 @@ public class CombatInstance : ICombatInstance, ICombatReader
                 if (!combatant.IsDead())
                 {
                     combatant.PerformAction(goodGuys, this);
+                    GenerateCurrencyFromDeads(badGuys);
                     CleanOutDeadGuys(badGuys);
                     CleanOutDeadGuys(goodGuys);
-                    if (IsDone()) return;
+                    if (IsDone()) return GenerateResult();
                 }
             }
         }
+        return null;
+    }
+    private void GenerateCurrencyFromDeads(List<ICharacter> badGuys)
+    {
+        badGuys.ForEach((c) =>
+        {
+            if (c.IsDead())
+            {
+                gainedGold += c.GoldWorth;
+            }
+        });
     }
 
     private void CleanOutDeadGuys(List<ICharacter> combatants)
@@ -77,7 +88,7 @@ public class CombatInstance : ICombatInstance, ICombatReader
         }
     }
 
-    public bool IsDone()
+    private bool IsDone()
     {
         return badGuys.Count == 0 || goodGuys.Count == 0;
     }

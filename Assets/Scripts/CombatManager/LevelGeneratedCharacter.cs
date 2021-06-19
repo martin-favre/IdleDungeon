@@ -16,7 +16,7 @@ class LevelGeneratedCharacter : Character, IHasMaterial, IHasEnemyTemplate
     Dictionary<ICharacterAction, float> nextActionTime = new Dictionary<ICharacterAction, float>(); // hack to make characters sorta feel like they take time thinking about their actions
     float actionCooldownS = 2;
 
-    public LevelGeneratedCharacter(EnemyTemplate template, int currentLevel, float powerFactor) : base(template.Name, null, new LevelGeneratedCombatAttributes(currentLevel, powerFactor), 200)
+    public LevelGeneratedCharacter(EnemyTemplate template, int currentLevel, float powerFactor) : base(template.Name, null, new LevelGeneratedCombatAttributes(currentLevel, powerFactor), 200, 100)
     {
         healthPoints = new HealthPoints(new WeakReference<ICharacter>(this), 200);
         this.template = template;

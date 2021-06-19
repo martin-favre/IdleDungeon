@@ -21,15 +21,9 @@ public class CombatInstanceFactory : ICombatInstanceFactory
 
 public interface ICombatInstance : IDisposable
 {
-    enum CombatResult
-    {
-        Unknown,
-        PlayerWon,
-        PlayerLost
-    }
-    CombatResult Result { get; }
-    bool IsDone();
-    void Update();
+    // returns null if combat is not done
+    // returns the result of the combat if done
+    CombatResult Update();
 
     ICombatReader CombatReader { get; }
 }

@@ -6,6 +6,7 @@ using UnityEngine.TestTools;
 using Moq;
 
 using GameManager;
+using PubSubSystem;
 
 namespace Tests
 {
@@ -15,14 +16,13 @@ namespace Tests
         Mock<ICombatInstanceFactory> combatFactoryMock;
         Mock<ICombatInstance> combatMock;
         Mock<IMap> mapMock;
-
         CombatManager manager;
         Mock<IGameManager> gameManagerMock;
-
         readonly Vector2Int startPos = new Vector2Int(10, 10);
         readonly Vector2Int goalPos = new Vector2Int(20, 20);
         Mock<IEventRecipient<ICombatUpdateEvent>> eventRecipientMock;
         Mock<ITimeProvider> timeProviderMock;
+        Mock<IEventPublisher<EventType>> publisherMock;
 
 
         [SetUp]
@@ -30,6 +30,7 @@ namespace Tests
         {
             randomMock = new Mock<IRandomProvider>();
             combatMock = new Mock<ICombatInstance>();
+            publisherMock = new Mock<IEventPublisher<EventType>>();
             mapMock = new Mock<IMap>();
             mapMock.Setup(f => f.Start).Returns(startPos);
             mapMock.Setup(f => f.Goal).Returns(goalPos);
@@ -42,6 +43,7 @@ namespace Tests
             gameManagerMock.Setup(e => e.GridMap).Returns(mapMock.Object);
             SingletonProvider.MainRandomProvider = randomMock.Object;
             SingletonProvider.MainGameManager = gameManagerMock.Object;
+            SingletonProvider.MainEventHandler = publisherMock.Object;
             manager = new CombatManager(combatFactoryMock.Object);
         }
 
@@ -98,7 +100,7 @@ namespace Tests
                 manager.Update();
                 Assert.IsTrue(manager.InCombat());
             }
-            combatMock.Setup(f => f.IsDone()).Returns(true);
+            combatMock.Setup(f => f.Update()).Returns(new CombatResult(0, false));
             manager.Update();
             Assert.IsFalse(manager.InCombat());
         }

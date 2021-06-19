@@ -47,7 +47,7 @@ namespace Tests
         [Test]
         public void IfNoEnemiesShouldBeDone()
         {
-            Assert.IsTrue(combatInstance.IsDone());
+            Assert.IsNotNull(combatInstance.Update());
         }
 
         [Test]
@@ -56,9 +56,7 @@ namespace Tests
             playerMock.Setup(f => f.IsDead()).Returns(true);
             var enemyMock = new Mock<ICharacter>();
             enemies.Add(enemyMock.Object); // if 0 enemies IsDone returns true
-            Assert.IsFalse(combatInstance.IsDone()); // reality check
-            combatInstance.Update();
-            Assert.IsTrue(combatInstance.IsDone());
+            Assert.IsNotNull(combatInstance.Update());
         }
 
         [Test]
@@ -67,9 +65,7 @@ namespace Tests
             var enemyMock = new Mock<ICharacter>();
             enemyMock.Setup(f => f.IsDead()).Returns(true);
             enemies.Add(enemyMock.Object);
-            Assert.IsFalse(combatInstance.IsDone());
-            combatInstance.Update();
-            Assert.IsTrue(combatInstance.IsDone());
+            Assert.IsNotNull(combatInstance.Update());
         }
 
 
@@ -86,10 +82,7 @@ namespace Tests
                 enemyMock.Setup(f => f.IsDead()).Returns(false);
                 enemies.Add(enemyMock.Object);
             }
-
-            Assert.IsFalse(combatInstance.IsDone());
-            combatInstance.Update();
-            Assert.IsFalse(combatInstance.IsDone());
+            Assert.IsNull(combatInstance.Update());
         }
 
         [Test]
@@ -134,7 +127,8 @@ namespace Tests
         [Test]
         public void PlayerWonIfNoEnemiesLeft()
         {
-            Assert.AreEqual(ICombatInstance.CombatResult.PlayerWon, combatInstance.Result);
+            var result = combatInstance.Update();
+            Assert.IsTrue(result.PlayerWon);
         }
 
         [Test]
@@ -144,15 +138,8 @@ namespace Tests
             enemies.Add(enemyMock.Object);
             players.Clear(); // no players left
             combatInstance = new CombatInstance(players.ToArray(), enemyFactoryMock.Object);
-            Assert.AreEqual(ICombatInstance.CombatResult.PlayerLost, combatInstance.Result);
+            var result = combatInstance.Update();
+            Assert.IsFalse(result.PlayerWon);
         }
-        [Test]
-        public void ResultUnknownIfCombatNotDone()
-        {
-            var enemyMock = new Mock<ICharacter>();
-            enemies.Add(enemyMock.Object);
-            Assert.AreEqual(ICombatInstance.CombatResult.Unknown, combatInstance.Result);
-        }
-
     }
 }

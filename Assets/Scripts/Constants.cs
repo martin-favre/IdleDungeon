@@ -6,6 +6,7 @@ public static class Constants {
 
     public const string currentLevelKey = "currentLevel";
     public const string experienceKey = "experience";
+    public const string goldKey = "gold";
 
     public const float maxTurnProgress = 100f;
 }

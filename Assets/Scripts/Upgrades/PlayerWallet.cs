@@ -11,35 +11,55 @@ public interface IPlayerWalletUpdateEvent
     IPlayerWallet Wallet { get; }
 }
 
-public class ExperienceGainedEvent : IPlayerWalletUpdateEvent
+public class PlayerWalletUpdateEvent : IPlayerWalletUpdateEvent
 {
     private readonly IPlayerWallet wallet;
 
-    public ExperienceGainedEvent(IPlayerWallet wallet)
+    public PlayerWalletUpdateEvent(IPlayerWallet wallet)
     {
         this.wallet = wallet;
     }
 
     public IPlayerWallet Wallet => wallet;
+
 }
 
-public class ExperienceLostEvent : IPlayerWalletUpdateEvent
+public class ExperienceGainedEvent : PlayerWalletUpdateEvent
 {
-    private readonly IPlayerWallet wallet;
-
-    public ExperienceLostEvent(IPlayerWallet wallet)
+    public ExperienceGainedEvent(IPlayerWallet wallet) : base(wallet)
     {
-        this.wallet = wallet;
     }
+}
 
-    public IPlayerWallet Wallet => wallet;
+public class ExperienceLostEvent : PlayerWalletUpdateEvent
+{
+    public ExperienceLostEvent(IPlayerWallet wallet) : base(wallet)
+    {
+    }
+}
+
+public class GoldLostEvent : PlayerWalletUpdateEvent
+{
+    public GoldLostEvent(IPlayerWallet wallet) : base(wallet)
+    {
+    }
+}
+public class GoldGainedEvent : PlayerWalletUpdateEvent
+{
+    public GoldGainedEvent(IPlayerWallet wallet) : base(wallet)
+    {
+    }
 }
 
 public interface IPlayerWallet : IObservable<IPlayerWalletUpdateEvent>
 {
     double Experience { get; }
+    double Gold { get; }
+
     void AddExperience(double amount);
     void RemoveExperience(double amount);
+    void AddGold(double amount);
+    void RemoveGold(double amount);
 }
 
 public class PlayerWallet : IPlayerWallet
@@ -51,6 +71,8 @@ public class PlayerWallet : IPlayerWallet
 
     private double experience = 0;
     public double Experience => experience;
+    private double gold = 0;
+    public double Gold => gold;
 
     List<IObserver<IPlayerWalletUpdateEvent>> observers = new List<IObserver<IPlayerWalletUpdateEvent>>();
 
@@ -66,6 +88,7 @@ public class PlayerWallet : IPlayerWallet
     public PlayerWallet(IPersistentDataStorage storage)
     {
         experience = storage.GetFloat(Constants.experienceKey, defaultValue);
+        gold = storage.GetFloat(Constants.goldKey, defaultValue);
         this.storage = storage;
         dbObserver = new KeyObserver<string, IPersistentStorageUpdateEvent>(storage, Constants.experienceKey, OnDBUpdate);
     }
@@ -75,7 +98,9 @@ public class PlayerWallet : IPlayerWallet
         if (e is DataClearedUpdateEvent ce)
         {
             experience = defaultValue;
+            gold = defaultValue;
             SendEvent(new ExperienceLostEvent(this));
+            SendEvent(new GoldLostEvent(this));
         }
     }
 
@@ -107,5 +132,24 @@ public class PlayerWallet : IPlayerWallet
     public IDisposable Subscribe(IObserver<IPlayerWalletUpdateEvent> observer)
     {
         return new SimpleUnsubscriber<IPlayerWalletUpdateEvent>(observers, observer);
+    }
+
+    public void AddGold(double amount)
+    {
+        gold += amount;
+        storage.SetFloat(Constants.goldKey, (float)gold);
+        SendEvent(new GoldGainedEvent(this));
+    }
+
+    public void RemoveGold(double amount)
+    {
+        gold -= amount;
+        storage.SetFloat(Constants.goldKey, (float)gold);
+        if (gold < 0)
+        {
+            gold = 0;
+            logger.Log("Going to negative gold", LogLevel.Warning);
+        }
+        SendEvent(new GoldLostEvent(this));
     }
 }

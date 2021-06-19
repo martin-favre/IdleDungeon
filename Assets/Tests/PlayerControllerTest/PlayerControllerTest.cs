@@ -78,7 +78,7 @@ namespace Tests
         [Test]
         public void CallPlayerDiedOnExitCombatWherePlayerDied()
         {
-            publishCallback(new CombatEndedEvent(null, CombatEndedEvent.CombatResult.PlayerLost));
+            publishCallback(new CombatResultsClosedEvent(new CombatResult(0, false)));
             callbacksMock.Verify(f => f.OnPlayerDied());
         }
 
@@ -92,7 +92,7 @@ namespace Tests
         [Test]
         public void CallNothingOnExitedCombatEventWherePlayerSurvived()
         {
-            publishCallback(new CombatEndedEvent(null, CombatEndedEvent.CombatResult.PlayerWon));
+            publishCallback(new CombatEndedEvent(null, new CombatResult(0, true)));
             callbacksMock.Verify(f => f.OnPlayerDied(), Times.Never);
         }
 

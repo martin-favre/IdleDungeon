@@ -17,25 +17,6 @@ public class CombatStartedEvent : ICombatUpdateEvent
 
     public ICombatReader Combat { get => combat; }
 }
-public class CombatEndedEvent : ICombatUpdateEvent
-{
-    public enum CombatResult {
-        PlayerWon,
-        PlayerLost
-    }
-    private readonly ICombatReader combat;
-    private readonly CombatResult result;
-
-    public CombatEndedEvent(ICombatReader combat, CombatResult result)
-    {
-        this.combat = combat;
-        this.result = result;
-    }
-
-    public ICombatReader Combat { get => combat; }
-
-    public CombatResult Result => result;
-}
 
 public class CombatantDied : ICombatUpdateEvent
 {

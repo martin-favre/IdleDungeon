@@ -47,26 +47,17 @@ public class MovementController : IMovementController, IDisposable
 
         machine = new StateMachine(new DetermineStepState(this));
 
-        combatSubscriber = SingletonProvider.MainEventHandler.Subscribe(new[] { EventType.CombatStarted, EventType.CombatEnded }, (e) =>
+        combatSubscriber = SingletonProvider.MainEventHandler.Subscribe(new[] { EventType.CombatResultsClosed }, (e) =>
           {
-              if (e is CombatStartedEvent)
+              if (e is CombatResultsClosedEvent ev)
               {
-                  Debug.Log("Player enters combat");
-              }
-              else if (e is CombatEndedEvent)
-              {
-                  var ev = e as CombatEndedEvent;
-                  if (ev.Result == CombatEndedEvent.CombatResult.PlayerWon)
+                  if (ev.Result.PlayerWon)
                   {
                       machine.RaiseEvent(new AwaitCombatState.CombatFinishedEvent());
                   }
-                  else if (ev.Result == CombatEndedEvent.CombatResult.PlayerLost)
-                  {
-                      callbacks.OnPlayerDied();
-                  }
                   else
                   {
-                      logger.Log("Unknown event ", LogLevel.Error);
+                      callbacks.OnPlayerDied(); // tbh should probably be refactored to use pubsub
                   }
               }
           });

@@ -51,13 +51,12 @@ public class CombatManager : ICombatManager
             return;
         }
 
-        combatInstance.Update();
-        if (combatInstance.IsDone())
+        var result = combatInstance.Update();
+        if (result != null)
         {
-            var result = combatInstance.Result == ICombatInstance.CombatResult.PlayerLost ? CombatEndedEvent.CombatResult.PlayerLost : CombatEndedEvent.CombatResult.PlayerWon;
             combatInstance.Dispose();
             combatInstance = null;
-            CentralEventHandler.Instance.Publish(EventType.CombatEnded, new CombatEndedEvent(null, result));
+            SingletonProvider.MainEventHandler.Publish(EventType.CombatEnded, new CombatEndedEvent(null, result));
         }
     }
 
