@@ -4,27 +4,26 @@ using UnityEngine;
 using UnityEngine.UI;
 using PubSubSystem;
 
-[RequireComponent(typeof(Image))]
-[RequireComponent(typeof(Toggle))]
 public class ActionButtonComponent : MonoBehaviour
 {
     [SerializeField]
     private UITurnProgressIndicator turnProgressIndicator;
     [SerializeField]
     private int buttonIndex;
-    Image image;
     CharacterStatBoxComponent.TargetType targetType;
     ICharacter character;
-
+    [SerializeField]
     Toggle toggle;
+    [SerializeField]
+    Image actionIcon;
 
     Subscription<EventType> clickSub;
     Subscription<EventType> actionSub;
 
+
+
     void Awake()
     {
-        image = GetComponent<Image>();
-        toggle = GetComponent<Toggle>();
         HideIcons();
     }
 
@@ -53,8 +52,9 @@ public class ActionButtonComponent : MonoBehaviour
             var action = GetAction();
             if (action != null)
             {
-                image.sprite = action.Icon;
-                image.enabled = true;
+                actionIcon.sprite = action.Icon;
+                toggle.enabled = true;
+                actionIcon.enabled = true;
                 turnProgressIndicator.SetTurnProgressOwner(action);
             }
         }
@@ -64,13 +64,10 @@ public class ActionButtonComponent : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-    }
-
     private void HideIcons()
     {
-        image.enabled = false;
+        toggle.enabled = false;
+        actionIcon.enabled = false;
     }
 
     private void OnPlayerClickedEnemy(IEvent e)
