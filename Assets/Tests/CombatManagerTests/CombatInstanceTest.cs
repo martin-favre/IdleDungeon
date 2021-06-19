@@ -141,5 +141,16 @@ namespace Tests
             var result = combatInstance.Update();
             Assert.IsFalse(result.PlayerWon);
         }
+        [Test]
+        public void KillingBadGuysGeneratesGold()
+        {
+            var enemyMock = new Mock<ICharacter>();
+            enemyMock.Setup(f => f.GoldWorth).Returns(1234);
+            enemyMock.Setup(f => f.IsDead()).Returns(true);
+            enemies.Add(enemyMock.Object);
+            combatInstance = new CombatInstance(players.ToArray(), enemyFactoryMock.Object);
+            var result = combatInstance.Update();
+            Assert.AreEqual(1234, result.GainedGold);
+        }
     }
 }
