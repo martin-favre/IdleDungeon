@@ -17,7 +17,7 @@ public class AttackSpecificAction : BaseCharacterAction
         if (target != null && !target.IsDead())
         {
             target.BeAttacked(user.Attributes.Attack);
-            CentralEventHandler.Instance.Publish(EventType.CombatAction, new CombatActionEvent(combat, target, user, this));
+            CentralEventPublisher.Instance.Publish(EventType.CombatAction, new CombatActionEvent(combat, target, user, this));
         }
     }
 }

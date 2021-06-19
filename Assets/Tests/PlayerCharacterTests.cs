@@ -32,7 +32,7 @@ namespace Tests
             combatReaderMock = new Mock<ICombatReader>();
             combatManagerMock = new Mock<ICombatManager>();
             combatManagerMock.Setup(f => f.CombatReader).Returns(combatReaderMock.Object);
-            SingletonProvider.MainEventHandler = eventPublisherMock.Object;
+            SingletonProvider.MainEventPublisher = eventPublisherMock.Object;
             SingletonProvider.MainCombatManager = combatManagerMock.Object;
             enemyMock = new Mock<ICharacter>();
             actionMock = new Mock<ICharacterAction>();

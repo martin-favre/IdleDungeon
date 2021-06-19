@@ -29,7 +29,7 @@ public class HealthPoints : IHealthPoints
             ICharacter chr;
             if (character.TryGetTarget(out chr))
             {
-                CentralEventHandler.Instance.Publish(EventType.CharacterMaxHpChanged, new MaxHpChanged(hpDelta, chr));
+                CentralEventPublisher.Instance.Publish(EventType.CharacterMaxHpChanged, new MaxHpChangedEvent(hpDelta, chr));
             }
 
         }
@@ -54,7 +54,7 @@ public class HealthPoints : IHealthPoints
             ICharacter chr;
             if (character.TryGetTarget(out chr))
             {
-                CentralEventHandler.Instance.Publish(EventType.CharacterCurrentHpChanged, new CurrentHpChanged(currentHp - oldCurrentHp, chr));
+                CentralEventPublisher.Instance.Publish(EventType.CharacterCurrentHpChanged, new CurrentHpChanged(currentHp - oldCurrentHp, chr));
             }
         }
     }
@@ -69,7 +69,7 @@ public class HealthPoints : IHealthPoints
             ICharacter chr;
             if (character.TryGetTarget(out chr))
             {
-                CentralEventHandler.Instance.Publish(EventType.CharacterCurrentHpChanged, new CurrentHpChanged(currentHp - oldCurrentHp, chr));
+                CentralEventPublisher.Instance.Publish(EventType.CharacterCurrentHpChanged, new CurrentHpChanged(currentHp - oldCurrentHp, chr));
             }
         }
 

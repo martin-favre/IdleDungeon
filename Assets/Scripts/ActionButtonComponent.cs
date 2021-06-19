@@ -75,8 +75,8 @@ public class ActionButtonComponent : MonoBehaviour
         if (e is PlayerClickedEnemyEvent clkEn)
         {
             var action = GetAction();
-            SingletonProvider.MainEventHandler.Publish(EventType.PlayerSelectedActionTarget, new PlayerSelectedActionTargetEvent(character, clkEn.Enemy, action));
-            actionSub = SingletonProvider.MainEventHandler.Subscribe(EventType.CombatAction, OnPlayerTookAction);
+            SingletonProvider.MainEventPublisher.Publish(EventType.PlayerSelectedActionTarget, new PlayerSelectedActionTargetEvent(character, clkEn.Enemy, action));
+            actionSub = SingletonProvider.MainEventPublisher.Subscribe(EventType.CombatAction, OnPlayerTookAction);
         }
         toggle.isOn = false;
         clickSub.Dispose();
@@ -104,7 +104,7 @@ public class ActionButtonComponent : MonoBehaviour
             if (newVal) // i.e. we pushed it down
             {
                 if (clickSub != null) clickSub.Dispose();
-                clickSub = SingletonProvider.MainEventHandler.Subscribe(new[] { EventType.PlayerClickedEnemy, EventType.PlayerClickedNothing }, OnPlayerClickedEnemy);
+                clickSub = SingletonProvider.MainEventPublisher.Subscribe(new[] { EventType.PlayerClickedEnemy, EventType.PlayerClickedNothing }, OnPlayerClickedEnemy);
             }
         }
     }

@@ -17,7 +17,7 @@ public class EnemyVisualizerComponent : MonoBehaviour
 
     private void Start()
     {
-        subscription = CentralEventHandler.Instance.Subscribe(new[] { EventType.CombatStarted, EventType.CombatEnded, EventType.CombatantDied }, (e) =>
+        subscription = CentralEventPublisher.Instance.Subscribe(new[] { EventType.CombatStarted, EventType.CombatEnded, EventType.CombatantDied }, (e) =>
          {
              if (e is CombatStartedEvent)
              {

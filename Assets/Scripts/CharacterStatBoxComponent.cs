@@ -27,7 +27,7 @@ public class CharacterStatBoxComponent : MonoBehaviour
     void Start()
     {
         UpdateIndex(targetIndex, null);
-        combatSubscription = CentralEventHandler.Instance.Subscribe(new[] { EventType.CombatStarted, EventType.CombatEnded }, e =>
+        combatSubscription = CentralEventPublisher.Instance.Subscribe(new[] { EventType.CombatStarted, EventType.CombatEnded }, e =>
          {
              UpdateIndex(targetIndex, e);
          });

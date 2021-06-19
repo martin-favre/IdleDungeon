@@ -59,7 +59,7 @@ namespace Tests
                 It.IsAny<Action<IEvent>>())).
                 Callback<EventType[], Action<IEvent>>((type, action) => publishCallback = action);
             playerMoverMock = new Mock<IPlayerMover>();
-            SingletonProvider.MainEventHandler = mockPublisher.Object;
+            SingletonProvider.MainEventPublisher = mockPublisher.Object;
             callbacksMock = new Mock<GameManager.PlayerCallbacks>();
             controller = new MovementController(mapMock.Object,
                                                 pathfinderMock.Object,

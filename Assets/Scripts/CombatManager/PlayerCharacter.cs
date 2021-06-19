@@ -25,7 +25,7 @@ public class PlayerCharacter : Character
         base.combatAttributes = new PlayerAttributes(playerIdentifier, new WeakReference<ICharacter>(this));
         base.healthPoints = new HealthPoints(new WeakReference<ICharacter>(this), 100);
         possibleCharacterActions.Add(new AttackSpecificAction("Sprites/gray_03", "Attack"));
-        SingletonProvider.MainEventHandler.Subscribe(EventType.PlayerSelectedActionTarget, OnPlayerSelectedActionTarget);
+        SingletonProvider.MainEventPublisher.Subscribe(EventType.PlayerSelectedActionTarget, OnPlayerSelectedActionTarget);
     }
 
     private void OnPlayerSelectedActionTarget(IEvent e)

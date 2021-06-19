@@ -14,7 +14,7 @@ public class EnemyTargetComponent : MonoBehaviour
     void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-        clickSubscription = SingletonProvider.MainEventHandler.Subscribe(new[] { EventType.PlayerSelectedActionTarget, EventType.CombatAction }, OnPlayerClickedEnemy);
+        clickSubscription = SingletonProvider.MainEventPublisher.Subscribe(new[] { EventType.PlayerSelectedActionTarget, EventType.CombatAction }, OnPlayerClickedEnemy);
         spriteRenderer.enabled = false;
     }
 

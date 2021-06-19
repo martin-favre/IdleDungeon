@@ -1,14 +1,14 @@
 using PubSubSystem;
 
 
-public class CentralEventHandler : EventPublisher<EventType>
+public class CentralEventPublisher : EventPublisher<EventType>
 {
-    static readonly CentralEventHandler instance;
+    static readonly CentralEventPublisher instance;
 
-    public static CentralEventHandler Instance => instance;
+    public static CentralEventPublisher Instance => instance;
 
-    static CentralEventHandler()
+    static CentralEventPublisher()
     {
-        instance = new CentralEventHandler();
+        instance = new CentralEventPublisher();
     }
 }

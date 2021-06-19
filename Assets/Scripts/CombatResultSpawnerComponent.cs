@@ -13,7 +13,7 @@ public class CombatResultSpawnerComponent : MonoBehaviour
 
     void Awake()
     {
-        subscription = SingletonProvider.MainEventHandler.Subscribe(EventType.CombatEnded, OnEvent);
+        subscription = SingletonProvider.MainEventPublisher.Subscribe(EventType.CombatEnded, OnEvent);
         combatResultScreen.gameObject.SetActive(false);
     }
 
@@ -29,7 +29,7 @@ public class CombatResultSpawnerComponent : MonoBehaviour
 
     public void OnContinuePressed()
     {
-        SingletonProvider.MainEventHandler.Publish(EventType.CombatResultsClosed, new CombatResultsClosedEvent(result));
+        SingletonProvider.MainEventPublisher.Publish(EventType.CombatResultsClosed, new CombatResultsClosedEvent(result));
         SingletonProvider.MainPlayerWallet.AddGold(result.GainedGold);
         result = null;
         combatResultScreen.gameObject.SetActive(false);

@@ -47,7 +47,7 @@ public class MovementController : IMovementController, IDisposable
 
         machine = new StateMachine(new DetermineStepState(this));
 
-        combatSubscriber = SingletonProvider.MainEventHandler.Subscribe(new[] { EventType.CombatResultsClosed }, (e) =>
+        combatSubscriber = SingletonProvider.MainEventPublisher.Subscribe(new[] { EventType.CombatResultsClosed }, (e) =>
           {
               if (e is CombatResultsClosedEvent ev)
               {

@@ -65,15 +65,15 @@ public static class SingletonProvider
         }
         set => upgradeManager = value;
     }
-    private static IEventPublisher<EventType> mainEventHandler = CentralEventHandler.Instance;
-    public static IEventPublisher<EventType> MainEventHandler
+    private static IEventPublisher<EventType> mainEventPublisher = CentralEventPublisher.Instance;
+    public static IEventPublisher<EventType> MainEventPublisher
     {
         get
         {
-            if (mainEventHandler == null) mainEventHandler = CentralEventHandler.Instance;
-            return mainEventHandler;
+            if (mainEventPublisher == null) mainEventPublisher = CentralEventPublisher.Instance;
+            return mainEventPublisher;
         }
-        set => mainEventHandler = value;
+        set => mainEventPublisher = value;
     }
 
 

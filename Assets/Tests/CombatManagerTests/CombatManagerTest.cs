@@ -43,7 +43,7 @@ namespace Tests
             gameManagerMock.Setup(e => e.GridMap).Returns(mapMock.Object);
             SingletonProvider.MainRandomProvider = randomMock.Object;
             SingletonProvider.MainGameManager = gameManagerMock.Object;
-            SingletonProvider.MainEventHandler = publisherMock.Object;
+            SingletonProvider.MainEventPublisher = publisherMock.Object;
             manager = new CombatManager(combatFactoryMock.Object);
         }
 

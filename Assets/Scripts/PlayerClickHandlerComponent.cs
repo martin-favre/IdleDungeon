@@ -15,7 +15,7 @@ public class PlayerClickHandlerComponent : MonoBehaviour
             {
                 handled = HandleClickedEnemies(hit.transform);
             }
-            if (!handled) SingletonProvider.MainEventHandler.Publish(EventType.PlayerClickedNothing, new PlayerClickedNothingEvent());
+            if (!handled) SingletonProvider.MainEventPublisher.Publish(EventType.PlayerClickedNothing, new PlayerClickedNothingEvent());
         }
     }
 
@@ -26,7 +26,7 @@ public class PlayerClickHandlerComponent : MonoBehaviour
         if (enemy)
         {
             Debug.Log("Player clicked: " + enemy.Character.Name);
-            SingletonProvider.MainEventHandler.Publish(EventType.PlayerClickedEnemy, new PlayerClickedEnemyEvent(enemy.Character));
+            SingletonProvider.MainEventPublisher.Publish(EventType.PlayerClickedEnemy, new PlayerClickedEnemyEvent(enemy.Character));
             return true;
         }
         return false;
