@@ -10,7 +10,7 @@ using PubSubSystem;
 
 namespace Tests
 {
-    public class PlayerControllerTest
+    public class MovementControllerTest
     {
 
         Mock<ITimeProvider> timeMock;
