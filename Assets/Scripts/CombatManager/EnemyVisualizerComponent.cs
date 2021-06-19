@@ -19,12 +19,12 @@ public class EnemyVisualizerComponent : MonoBehaviour
     {
         subscription = CentralEventHandler.Instance.Subscribe(new[] { EventType.CombatStarted, EventType.CombatEnded, EventType.CombatantDied }, (e) =>
          {
-             if (e is EnteredCombatEvent)
+             if (e is CombatStartedEvent)
              {
                  logger.Log("EnemyVisualizerComponent shows enemies");
                  ShowEnemies();
              }
-             else if (e is ExitedCombatEvent)
+             else if (e is CombatEndedEvent)
              {
                  logger.Log("EnemyVisualizerComponent hides enemies");
                  HideEnemies();

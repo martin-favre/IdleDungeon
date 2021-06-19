@@ -6,18 +6,18 @@ public interface ICombatUpdateEvent : IEvent
 }
 
 
-public class EnteredCombatEvent : ICombatUpdateEvent
+public class CombatStartedEvent : ICombatUpdateEvent
 {
     private readonly ICombatReader combat;
 
-    public EnteredCombatEvent(ICombatReader combat)
+    public CombatStartedEvent(ICombatReader combat)
     {
         this.combat = combat;
     }
 
     public ICombatReader Combat { get => combat; }
 }
-public class ExitedCombatEvent : ICombatUpdateEvent
+public class CombatEndedEvent : ICombatUpdateEvent
 {
     public enum CombatResult {
         PlayerWon,
@@ -26,7 +26,7 @@ public class ExitedCombatEvent : ICombatUpdateEvent
     private readonly ICombatReader combat;
     private readonly CombatResult result;
 
-    public ExitedCombatEvent(ICombatReader combat, CombatResult result)
+    public CombatEndedEvent(ICombatReader combat, CombatResult result)
     {
         this.combat = combat;
         this.result = result;

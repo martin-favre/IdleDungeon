@@ -38,7 +38,7 @@ public class CombatManager : ICombatManager
         if (SingletonProvider.MainRandomProvider.ThingHappens(0.25f))
         {
             combatInstance = combatInstanceFactory.CreateInstance(SingletonProvider.MainPlayerRoster.GetAllPlayersChars());
-            CentralEventHandler.Instance.Publish(EventType.CombatStarted, new EnteredCombatEvent(combatInstance.CombatReader));
+            CentralEventHandler.Instance.Publish(EventType.CombatStarted, new CombatStartedEvent(combatInstance.CombatReader));
             return true;
         }
         return false;
@@ -54,10 +54,10 @@ public class CombatManager : ICombatManager
         combatInstance.Update();
         if (combatInstance.IsDone())
         {
-            var result = combatInstance.Result == ICombatInstance.CombatResult.PlayerLost ? ExitedCombatEvent.CombatResult.PlayerLost : ExitedCombatEvent.CombatResult.PlayerWon;
+            var result = combatInstance.Result == ICombatInstance.CombatResult.PlayerLost ? CombatEndedEvent.CombatResult.PlayerLost : CombatEndedEvent.CombatResult.PlayerWon;
             combatInstance.Dispose();
             combatInstance = null;
-            CentralEventHandler.Instance.Publish(EventType.CombatEnded, new ExitedCombatEvent(null, result));
+            CentralEventHandler.Instance.Publish(EventType.CombatEnded, new CombatEndedEvent(null, result));
         }
     }
 

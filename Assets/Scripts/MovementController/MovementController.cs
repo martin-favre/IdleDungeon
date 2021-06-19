@@ -49,18 +49,18 @@ public class MovementController : IMovementController, IDisposable
 
         combatSubscriber = SingletonProvider.MainEventHandler.Subscribe(new[] { EventType.CombatStarted, EventType.CombatEnded }, (e) =>
           {
-              if (e is EnteredCombatEvent)
+              if (e is CombatStartedEvent)
               {
                   Debug.Log("Player enters combat");
               }
-              else if (e is ExitedCombatEvent)
+              else if (e is CombatEndedEvent)
               {
-                  var ev = e as ExitedCombatEvent;
-                  if (ev.Result == ExitedCombatEvent.CombatResult.PlayerWon)
+                  var ev = e as CombatEndedEvent;
+                  if (ev.Result == CombatEndedEvent.CombatResult.PlayerWon)
                   {
                       machine.RaiseEvent(new AwaitCombatState.CombatFinishedEvent());
                   }
-                  else if (ev.Result == ExitedCombatEvent.CombatResult.PlayerLost)
+                  else if (ev.Result == CombatEndedEvent.CombatResult.PlayerLost)
                   {
                       callbacks.OnPlayerDied();
                   }

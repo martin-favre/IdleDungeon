@@ -78,21 +78,21 @@ namespace Tests
         [Test]
         public void CallPlayerDiedOnExitCombatWherePlayerDied()
         {
-            publishCallback(new ExitedCombatEvent(null, ExitedCombatEvent.CombatResult.PlayerLost));
+            publishCallback(new CombatEndedEvent(null, CombatEndedEvent.CombatResult.PlayerLost));
             callbacksMock.Verify(f => f.OnPlayerDied());
         }
 
         [Test]
         public void CallNothingOnEnteredCombatEvent()
         {
-            publishCallback(new EnteredCombatEvent(combatReaderMock.Object));
+            publishCallback(new CombatStartedEvent(combatReaderMock.Object));
             callbacksMock.Verify(f => f.OnPlayerDied(), Times.Never);
         }
 
         [Test]
         public void CallNothingOnExitedCombatEventWherePlayerSurvived()
         {
-            publishCallback(new ExitedCombatEvent(null, ExitedCombatEvent.CombatResult.PlayerWon));
+            publishCallback(new CombatEndedEvent(null, CombatEndedEvent.CombatResult.PlayerWon));
             callbacksMock.Verify(f => f.OnPlayerDied(), Times.Never);
         }
 
