@@ -14,7 +14,7 @@ public class EnemyTargetComponent : MonoBehaviour
     void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-        clickSubscription = SingletonProvider.MainEventPublisher.Subscribe(new[] { EventType.PlayerSelectedActionTarget, EventType.CombatAction }, OnPlayerClickedEnemy);
+        clickSubscription = SingletonProvider.MainEventPublisher.Subscribe(new[] { EventType.PlayerSelectedActionTarget, EventType.CombatAction, EventType.CharacterActionCancelled }, OnPlayerClickedEnemy);
         spriteRenderer.enabled = false;
     }
 
@@ -43,7 +43,7 @@ public class EnemyTargetComponent : MonoBehaviour
         }
         else if (e is CharacterActionCancelledEvent cancelledEvent)
         {
-            if (cancelledEvent.Action.Target == character && cancelledEvent.Action == awaitedAction)
+            if (cancelledEvent.Action == awaitedAction)
             {
                 spriteRenderer.enabled = false;
                 awaitedAction = null;

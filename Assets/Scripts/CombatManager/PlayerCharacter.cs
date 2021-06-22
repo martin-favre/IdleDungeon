@@ -30,9 +30,12 @@ public class PlayerCharacter : Character
 
     private void OnPlayerSelectedActionTarget(IEvent e)
     {
-        var selAction = e as PlayerSelectedActionTargetEvent;
-        if (selAction.User != this) return;
-        StartChargingAction(selAction.Action, selAction.Target, SingletonProvider.MainCombatManager.CombatReader);
+        if (e is PlayerSelectedActionTargetEvent selAction)
+        {
+            if (selAction.User != this) return;
+            StartChargingAction(selAction.Action, selAction.Target, SingletonProvider.MainCombatManager.CombatReader);
+        }
+
     }
 
     public override void PerformAction(List<ICharacter> enemies, ICombatReader combat)

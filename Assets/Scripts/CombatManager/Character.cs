@@ -41,8 +41,9 @@ public abstract class Character : ICharacter
     {
         if (activeCharacterAction != null)
         {
+            var prevAction = activeCharacterAction;
             activeCharacterAction.CancelAction();
-            SingletonProvider.MainEventPublisher.Publish(EventType.CharacterActionCancelled, new CharacterActionCancelledEvent(this, activeCharacterAction));
+            SingletonProvider.MainEventPublisher.Publish(EventType.CharacterActionCancelled, new CharacterActionCancelledEvent(this, prevAction));
         }
         action.StartChargingAction(this, target, combat);
         activeCharacterAction = action;
