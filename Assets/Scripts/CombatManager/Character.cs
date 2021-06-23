@@ -11,10 +11,9 @@ public abstract class Character : ICharacter
     protected readonly List<ICharacterAction> possibleCharacterActions;
     protected ICharacterAction activeCharacterAction;
     private readonly double goldWorth;
-    protected Character(string name, IHealthPoints healthPoints, ICombatAttributes combatAttributes, double experienceWorth = 0, double goldWorth = 0)
+    protected Character(string name, ICombatAttributes combatAttributes, double experienceWorth = 0, double goldWorth = 0)
     {
         this.name = name;
-        this.healthPoints = healthPoints;
         this.combatAttributes = combatAttributes;
         this.experienceWorth = experienceWorth;
         this.goldWorth = goldWorth;

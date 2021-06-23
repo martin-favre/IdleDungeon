@@ -18,7 +18,6 @@ public class PlayerCharacter : Character
     private static LilLogger logger = new LilLogger(typeof(PlayerCharacter).ToString());
     public PlayerCharacter(int playerIdentifier) :
         base(names[playerIdentifier],
-        null, // can't use this to create a weakref
         null)
     {
         this.playerIdentifier = playerIdentifier;
