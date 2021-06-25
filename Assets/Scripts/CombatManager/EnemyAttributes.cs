@@ -1,14 +1,14 @@
 public class EnemyAttributes : ICombatAttributes
 {
-    private readonly double attack;
-    private readonly double speed;
+    private readonly float attack;
+    private readonly float speed;
 
-    public EnemyAttributes(double attack, double speed)
+    public EnemyAttributes(float attack, float speed)
     {
         this.attack = attack;
         this.speed = speed;
     }
-    public double Attack => attack;
+    public float Attack => attack;
 
-    public double Speed => speed;
+    public float Speed => speed;
 }

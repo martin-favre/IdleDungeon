@@ -16,22 +16,25 @@ public abstract class BaseCharacterAction : ICharacterAction
 {
     private readonly Sprite icon;
     private readonly string name;
+    private readonly float baseActionTimeS;
     private TurnProgress progress;
     private ICharacter target;
+    private string icon1;
 
-    protected BaseCharacterAction(string iconPath, string name)
+    protected BaseCharacterAction(string iconPath, string name, float baseActionTimeS)
     {
         this.icon = SingletonProvider.MainGameobjectLoader.GetPrefab<Sprite>(iconPath);
         this.name = name;
+        this.baseActionTimeS = baseActionTimeS;
     }
-
-    public TurnProgress TurnProgress => progress;
 
     public Sprite Icon => icon;
 
     public string Name => name;
 
     public ICharacter Target { get => target; }
+
+    public TurnProgress TurnProgress => progress;
 
     public void CancelAction()
     {
@@ -49,7 +52,8 @@ public abstract class BaseCharacterAction : ICharacterAction
 
     public virtual void StartChargingAction(ICharacter user, ICharacter target, ICombatReader combat)
     {
-        progress = new TurnProgress();
+        var actionTime = baseActionTimeS / user.Attributes.Speed;
+        progress = new TurnProgress(actionTime);
         this.target = target;
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 public class AttackSpecificAction : BaseCharacterAction
 {
 
-    public AttackSpecificAction(string icon, string name) : base(icon, name)
+    public AttackSpecificAction(string icon, string name, float baseActionTimeS) : base(icon, name, baseActionTimeS)
     {
     }
 

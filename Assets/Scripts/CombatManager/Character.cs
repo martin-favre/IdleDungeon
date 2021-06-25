@@ -52,7 +52,7 @@ public abstract class Character : ICharacter
     {
         if (activeCharacterAction != null)
         {
-            if (activeCharacterAction.TurnProgress.IncrementTurnProgress(Attributes.Speed))
+            if (activeCharacterAction.TurnProgress.IsDone())
             {
                 activeCharacterAction.PerformAction(this, combat);
                 activeCharacterAction.PostAction();

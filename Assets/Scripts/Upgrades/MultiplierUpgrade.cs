@@ -1,11 +1,11 @@
 public class MultiplierUpgrade : Upgrade
 {
-    public double MultipliedValue { get => valueMultiplier * Level; }
+    public float MultipliedValue { get => valueMultiplier * Level; }
 
-    private readonly double valueMultiplier;
+    private readonly float valueMultiplier;
 
     public MultiplierUpgrade(
-        double valueMultiplier,
+        float valueMultiplier,
         int initialLevel,
         float baseCost,
         float costMultiplier,

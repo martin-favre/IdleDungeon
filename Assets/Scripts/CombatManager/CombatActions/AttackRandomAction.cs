@@ -5,7 +5,7 @@ using UnityEngine;
 public class AttackRandomAction : BaseCharacterAction
 {
 
-    public AttackRandomAction(string icon, string name) : base(icon, name){}
+    public AttackRandomAction(string icon, string name, float baseActionSpeedS) : base(icon, name, baseActionSpeedS){}
 
     public override void PerformAction(ICharacter user, ICombatReader combat)
     {

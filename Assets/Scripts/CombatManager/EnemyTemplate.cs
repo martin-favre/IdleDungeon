@@ -17,13 +17,13 @@ public class EnemyTemplate
     private readonly string name;
     private readonly Vector2 spriteScale;
     private readonly Vector3 offset;
-    private readonly double maxHp;
-    private readonly double attack;
-    private readonly double speed;
-    private readonly double worthFactor;
+    private readonly int maxHp;
+    private readonly float attack;
+    private readonly float speed;
+    private readonly float worthFactor;
     private readonly ActionFactory factory;
 
-    public EnemyTemplate(Material material, string name, Vector2 spriteScale, Vector3 offset, double maxHp, double attack, double speed, double worthFactor,
+    public EnemyTemplate(Material material, string name, Vector2 spriteScale, Vector3 offset, int maxHp, float attack, float speed, float worthFactor,
     ActionFactory factory)
     {
         this.material = material;
@@ -45,13 +45,13 @@ public class EnemyTemplate
 
     public Vector3 Offset => offset;
 
-    public double MaxHp => maxHp;
+    public int MaxHp => maxHp;
 
-    public double Attack => attack;
+    public float Attack => attack;
 
-    public double Speed => speed;
+    public float Speed => speed;
 
-    public double WorthFactor => worthFactor;
+    public float WorthFactor => worthFactor;
 
     public ActionFactory Factory => factory;
 }

@@ -1,7 +1,7 @@
 public interface ITurnProgress
 {
-    bool IncrementTurnProgress(double speed);
-
+    bool IsDone();
+    void Reset();
     // return float 0-1
     // 0, it's a long time left
     // 1, it's their turn asap
@@ -9,30 +9,28 @@ public interface ITurnProgress
 }
 public class TurnProgress : ITurnProgress
 {
-    public const double MaxTurnProgress = 100;
-    private double turnProgress;
-
-    public void RandomizeProgress()
+    public TurnProgress(float turnTime)
     {
-        turnProgress = SingletonProvider.MainRandomProvider.RandomFloat(0, (float)MaxTurnProgress);
+        this.turnTime = turnTime;
+        Reset();
     }
+    private float startTime;
+    private readonly float turnTime;
 
-    // Return true if it's their turn
-    public bool IncrementTurnProgress(double speed)
+    public bool IsDone()
     {
-        turnProgress += speed*SingletonProvider.MainTimeProvider.DeltaTime;
-        if (turnProgress >= MaxTurnProgress)
-        {
-            turnProgress -= MaxTurnProgress;
-            return true;
-        }
-        return false;
+        return startTime + turnTime < SingletonProvider.MainTimeProvider.Time;
     }
-
     public float GetRelativeProgress()
     {
-        var progress = turnProgress / MaxTurnProgress;
-        if (progress > 1) progress = 1;
-        return (float)progress;
+        if (IsDone()) return 1;
+        var howMuchTimeHasPassed = SingletonProvider.MainTimeProvider.Time - startTime;
+        var progress = howMuchTimeHasPassed / turnTime;
+        return progress;
+    }
+
+    public void Reset()
+    {
+        this.startTime = SingletonProvider.MainTimeProvider.Time;
     }
 }

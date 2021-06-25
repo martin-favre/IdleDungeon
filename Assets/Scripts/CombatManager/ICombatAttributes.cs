@@ -2,6 +2,6 @@ using System;
 
 public interface ICombatAttributes
 {
-    double Attack { get; }
-    double Speed { get; }
+    float Attack { get; }
+    float Speed { get; }
 }

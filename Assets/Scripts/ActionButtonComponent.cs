@@ -20,8 +20,6 @@ public class ActionButtonComponent : MonoBehaviour
     Subscription<EventType> clickSub;
     Subscription<EventType> actionSub;
 
-
-
     void Awake()
     {
         HideIcons();

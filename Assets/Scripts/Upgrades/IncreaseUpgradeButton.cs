@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using Logging;
 
+// Deprecated
 public class IncreaseUpgradeButton : MonoBehaviour
 {
 
@@ -31,7 +32,7 @@ public class IncreaseUpgradeButton : MonoBehaviour
         switch (type)
         {
             case UpgradeTabContentComponent.UpgradeType.Attackiness:
-                upgradeKey = PlayerAttributes.GetAttackinessUpgradeKey(upgradeLevel, playerIndex);
+                // upgradeKey = PlayerAttributes.GetAttackinessUpgradeKey(upgradeLevel, playerIndex);
                 break;
             case UpgradeTabContentComponent.UpgradeType.Healthiness:
                 upgradeKey = "";

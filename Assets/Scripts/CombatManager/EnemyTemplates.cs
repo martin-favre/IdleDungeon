@@ -12,7 +12,7 @@ public static class EnemyTemplates
         attack: 1,
         speed: 1.2f,
         worthFactor: 0.7f,
-        new ActionFactory(() => new[] { new AttackRandomAction("Sprites/addon_04", "Attack") })
+        new ActionFactory(() => new[] { new AttackRandomAction("Sprites/addon_04", "Attack", 5) })
         );
 
     static readonly EnemyTemplate mudGolemTemplate = new EnemyTemplate(
@@ -24,7 +24,7 @@ public static class EnemyTemplates
         attack: 2,
         speed: 0.5f,
         worthFactor: 1.5f,
-        new ActionFactory(() => new[] { new AttackRandomAction("Sprites/addon_04", "Attack") })
+        new ActionFactory(() => new[] { new AttackRandomAction("Sprites/addon_04", "Attack", 5) })
         );
 
     static readonly EnemyTemplate slimeTemplate = new EnemyTemplate(
@@ -36,7 +36,7 @@ public static class EnemyTemplates
         attack: 1,
         speed: 1f,
         worthFactor: 1.5f,
-        new ActionFactory(() => new[] { new AttackRandomAction("Sprites/addon_04", "Attack") })
+        new ActionFactory(() => new[] { new AttackRandomAction("Sprites/addon_04", "Attack", 5) })
         );
     static readonly EnemyTemplate eyeBatTemplate = new EnemyTemplate(
         SingletonProvider.MainGameobjectLoader.GetPrefab<Material>("Materials/EyeBatMat"),
@@ -47,7 +47,7 @@ public static class EnemyTemplates
         attack: 1.5f,
         speed: 1.1f,
         worthFactor: 1f,
-        new ActionFactory(() => new[] { new AttackRandomAction("Sprites/addon_04", "Attack") })
+        new ActionFactory(() => new[] { new AttackRandomAction("Sprites/addon_04", "Attack", 5) })
         );
 
     public static List<ICharacter> GetRandomEncounter()
