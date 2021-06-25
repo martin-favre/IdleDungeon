@@ -18,6 +18,7 @@ namespace Tests
         Mock<ICharacterAction> actionMock;
         Mock<ICombatReader> combatReaderMock;
         Mock<ICombatManager> combatManagerMock;
+        Mock<ICombatAttributes> combatAttributesMock;
 
         [SetUp]
         public void Setup()
@@ -36,7 +37,8 @@ namespace Tests
             SingletonProvider.MainCombatManager = combatManagerMock.Object;
             enemyMock = new Mock<ICharacter>();
             actionMock = new Mock<ICharacterAction>();
-            playerCharacter = new PlayerCharacter(0);
+            combatAttributesMock = new Mock<ICombatAttributes>();
+            playerCharacter = new PlayerCharacter(0, 10, combatAttributesMock.Object, new[] { actionMock.Object });
         }
 
         [Test]

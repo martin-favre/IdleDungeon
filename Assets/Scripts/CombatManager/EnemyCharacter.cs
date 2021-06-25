@@ -6,9 +6,7 @@ using System.Collections.Generic;
 public class EnemyCharacter : Character, IHasEnemyTemplate
 {
     private readonly EnemyTemplate template;
-    Dictionary<ICharacterAction, float> nextActionTime = new Dictionary<ICharacterAction, float>(); // hack to make characters sorta feel like they take time thinking about their actions
-    float actionCooldownS = 2;
-
+    SimleTimer nextActionCooldown;
     public EnemyCharacter(EnemyTemplate template) :
 
 
@@ -17,8 +15,7 @@ public class EnemyCharacter : Character, IHasEnemyTemplate
         this.possibleCharacterActions.AddRange(template.Factory.SpawnActions());
         this.healthPoints = new HealthPoints(new WeakReference<ICharacter>(this), template.MaxHp);
         this.template = template;
-        base.possibleCharacterActions.ForEach(e => nextActionTime[e] = SingletonProvider.MainTimeProvider.Time + actionCooldownS * SingletonProvider.MainRandomProvider.RandomFloat(0.5f, 1.5f));
-
+        nextActionCooldown = new SimleTimer(SingletonProvider.MainRandomProvider.RandomFloat(0.5f, 1.5f));
     }
 
     static private double GetExperienceWorth(double powerFactor)
@@ -35,10 +32,10 @@ public class EnemyCharacter : Character, IHasEnemyTemplate
     {
         if (possibleCharacterActions.TrueForAll(e => e.TurnProgress == null))
         {
-            if (nextActionTime[possibleCharacterActions[0]] < SingletonProvider.MainTimeProvider.Time)
+            if (nextActionCooldown.IsDone())
             {
                 StartChargingAction(possibleCharacterActions[0], null, combat);
-                nextActionTime[possibleCharacterActions[0]] = SingletonProvider.MainTimeProvider.Time + actionCooldownS * SingletonProvider.MainRandomProvider.RandomFloat(0.5f, 1.5f);
+                nextActionCooldown = new SimleTimer(SingletonProvider.MainRandomProvider.RandomFloat(0.5f, 1.5f) + possibleCharacterActions[0].TurnProgress.TurnTime);
             }
         }
         IncrementActions(combat);

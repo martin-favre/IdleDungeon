@@ -12,7 +12,7 @@ public static class EnemyTemplates
         attack: 1,
         speed: 1.2f,
         worthFactor: 0.7f,
-        new ActionFactory(() => new[] { new AttackRandomAction("Sprites/addon_04", "Attack", 5, 4, 6) })
+        new ActionFactory(() => new[] { new AttackRandomAction("Sprites/yellow_34", "Attack", 5, 4, 6) })
         );
 
     static readonly EnemyTemplate mudGolemTemplate = new EnemyTemplate(

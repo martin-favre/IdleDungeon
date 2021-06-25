@@ -4,9 +4,16 @@ using UnityEngine;
 
 public class PlayerAttributes : ICombatAttributes
 {
+    private readonly float attack;
+    private readonly float speed;
 
-    public float Attack => 1;
+    public PlayerAttributes(float attack, float speed)
+    {
+        this.attack = attack;
+        this.speed = speed;
+    }
 
-    public float Speed => 1;
+    public float Attack => attack;
 
+    public float Speed => speed;
 }

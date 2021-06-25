@@ -16,14 +16,14 @@ public class PlayerCharacter : Character
     private readonly int playerIdentifier;
 
     private static LilLogger logger = new LilLogger(typeof(PlayerCharacter).ToString());
-    public PlayerCharacter(int playerIdentifier) :
+    public PlayerCharacter(int playerIdentifier, int maxHp, ICombatAttributes attributes, ICharacterAction[] actions) :
         base(names[playerIdentifier],
         null)
     {
         this.playerIdentifier = playerIdentifier;
-        base.combatAttributes = new PlayerAttributes();
-        base.healthPoints = new HealthPoints(new WeakReference<ICharacter>(this), 100);
-        possibleCharacterActions.Add(new AttackSpecificAction("Sprites/gray_03", "Attack", 8, 8, 12));
+        base.combatAttributes = attributes;
+        base.healthPoints = new HealthPoints(new WeakReference<ICharacter>(this), maxHp);
+        possibleCharacterActions.AddRange(actions);
         SingletonProvider.MainEventPublisher.Subscribe(EventType.PlayerSelectedActionTarget, OnPlayerSelectedActionTarget);
     }
 

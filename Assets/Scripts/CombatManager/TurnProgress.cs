@@ -1,5 +1,6 @@
 public interface ITurnProgress
 {
+    float TurnTime { get; }
     bool IsDone();
     void Reset();
     // return float 0-1
@@ -16,6 +17,8 @@ public class TurnProgress : ITurnProgress
     }
     private float startTime;
     private readonly float turnTime;
+
+    public float TurnTime => turnTime;
 
     public bool IsDone()
     {

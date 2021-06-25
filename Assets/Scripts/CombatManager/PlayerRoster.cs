@@ -23,9 +23,19 @@ public class PlayerRoster : IPlayerRoster
 
     public PlayerRoster()
     {
+        var warrior = new PlayerCharacter(0,
+            30,
+            new PlayerAttributes(1, 1),
+            new[] { new AttackSpecificAction("Sprites/yellow_29", "Attack", 8, 8, 12) }
+        );
+        var rogue = new PlayerCharacter(1,
+                    25,
+                    new PlayerAttributes(0.7f, 2),
+                    new[] { new AttackSpecificAction("Sprites/gray_03", "Attack", 4, 4, 6) }
+                );
         playerChars = new List<PlayerCharacter>() {
-            new PlayerCharacter(0),
-            // new PlayerCharacter(1),
+            warrior,
+            rogue,
             // new PlayerCharacter(2),
             // new PlayerCharacter(3)
         };
