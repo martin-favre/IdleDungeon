@@ -9,7 +9,6 @@ public abstract class BaseCharacterAction : ICharacterAction
     private readonly float baseActionTimeS;
     private TurnProgress progress;
     private ICharacter target;
-    private string icon1;
 
     protected BaseCharacterAction(string iconPath, string name, float baseActionTimeS)
     {
@@ -34,13 +33,13 @@ public abstract class BaseCharacterAction : ICharacterAction
 
     public abstract void PerformAction(ICharacter user, ICombatReader combat);
 
-    public void PostAction()
+    public void AfterAction()
     {
         progress = null;
         target = null;
     }
 
-    public virtual void StartChargingAction(ICharacter user, ICharacter target, ICombatReader combat)
+    public void StartChargingAction(ICharacter user, ICharacter target, ICombatReader combat)
     {
         var actionTime = baseActionTimeS / user.Attributes.Speed;
         progress = new TurnProgress(actionTime);

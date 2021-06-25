@@ -29,7 +29,7 @@ public abstract class Character : ICharacter
     public ICharacterAction[] CharacterActions { get => possibleCharacterActions.ToArray(); }
     public double GoldWorth => goldWorth;
 
-    public void BeAttacked(double attackStat)
+    public void BeAttacked(int attackStat)
     {
         HealthPoints.Damage(attackStat);
     }
@@ -55,7 +55,7 @@ public abstract class Character : ICharacter
             if (activeCharacterAction.TurnProgress.IsDone())
             {
                 activeCharacterAction.PerformAction(this, combat);
-                activeCharacterAction.PostAction();
+                activeCharacterAction.AfterAction();
                 activeCharacterAction = null;
             }
         }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public interface ICharacter
 {
     void PerformAction(List<ICharacter> enemies, ICombatReader combat);
-    void BeAttacked(double attackStat);
+    void BeAttacked(int attackStat);
     bool IsDead();
     string Name { get; }
     ICombatAttributes Attributes { get; }

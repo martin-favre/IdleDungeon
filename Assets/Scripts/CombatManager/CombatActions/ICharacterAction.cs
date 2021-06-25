@@ -7,6 +7,6 @@ public interface ICharacterAction : IHasTurnProgress
     ICharacter Target { get; }
     void StartChargingAction(ICharacter user, ICharacter target, ICombatReader combat);
     void PerformAction(ICharacter user, ICombatReader combat);
-    void PostAction();
+    void AfterAction();
     void CancelAction();
 }
