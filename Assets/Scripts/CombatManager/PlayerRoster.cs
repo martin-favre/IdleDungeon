@@ -1,12 +1,6 @@
 using System;
 using System.Collections.Generic;
 
-public interface IPlayerRoster
-{
-    PlayerCharacter[] GetAllPlayersChars();
-}
-
-
 /*
     Responsible for creating/loading/storing and distributing the PlayerCharacters
 */
@@ -31,7 +25,8 @@ public class PlayerRoster : IPlayerRoster
         var rogue = new PlayerCharacter(1,
                     25,
                     new PlayerAttributes(0.7f, 2),
-                    new[] { new AttackSpecificAction("Sprites/gray_03", "Attack", 4, 4, 6) }
+                    new ICharacterAction[] { new AttackSpecificAction("Sprites/gray_03", "Attack", 4, 4, 6),
+                        new AttackSpecificAction("Sprites/addon_04", "Attack", 4, 4, 6)}
                 );
         playerChars = new List<PlayerCharacter>() {
             warrior,
