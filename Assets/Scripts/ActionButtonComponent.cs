@@ -70,7 +70,7 @@ public class ActionButtonComponent : MonoBehaviour
 
     private void OnPlayerClickedEnemy(IEvent e)
     {
-        if (e is PlayerClickedEnemyEvent clkEn)
+        if (e is PlayerClickedTargetEvent clkEn)
         {
             var action = GetAction();
             SingletonProvider.MainEventPublisher.Publish(EventType.PlayerSelectedActionTarget, new PlayerSelectedActionTargetEvent(character, clkEn.Enemy, action));
@@ -110,7 +110,7 @@ public class ActionButtonComponent : MonoBehaviour
             if (newVal) // i.e. we pushed it down
             {
                 if (clickSub != null) clickSub.Dispose();
-                clickSub = SingletonProvider.MainEventPublisher.Subscribe(new[] { EventType.PlayerClickedEnemy, EventType.PlayerClickedNothing }, OnPlayerClickedEnemy);
+                clickSub = SingletonProvider.MainEventPublisher.Subscribe(new[] { EventType.PlayerClickedTarget, EventType.PlayerClickedNothing }, OnPlayerClickedEnemy);
             }
         }
     }

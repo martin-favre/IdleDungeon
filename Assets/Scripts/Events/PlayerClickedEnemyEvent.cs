@@ -1,9 +1,9 @@
 using PubSubSystem;
 
-public class PlayerClickedEnemyEvent : IEvent
+public class PlayerClickedTargetEvent : IEvent
 {
     ICharacter enemy;
-    public PlayerClickedEnemyEvent(ICharacter enemy)
+    public PlayerClickedTargetEvent(ICharacter enemy)
     {
         this.enemy = enemy;
     }

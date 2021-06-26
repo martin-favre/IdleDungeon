@@ -11,10 +11,12 @@ public enum EventType
     CombatAction,
     CombatantDied,
     PlayerSelectedActionTarget,
-    PlayerClickedEnemy,
+    PlayerClickedTarget,
     PlayerClickedNothing,
     CombatResultsClosed,
-    CharacterActionCancelled
+    CharacterActionCancelled,
+    BuffApplied,
+    BuffExpired
 }
 
 

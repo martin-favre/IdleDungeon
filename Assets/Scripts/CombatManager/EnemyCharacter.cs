@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class EnemyCharacter : Character, IHasEnemyTemplate
 {
     private readonly EnemyTemplate template;
-    SimleTimer nextActionCooldown;
+    SimpleTimer nextActionCooldown;
     public EnemyCharacter(EnemyTemplate template) :
 
 
@@ -15,7 +15,7 @@ public class EnemyCharacter : Character, IHasEnemyTemplate
         this.possibleCharacterActions.AddRange(template.Factory.SpawnActions());
         this.healthPoints = new HealthPoints(new WeakReference<ICharacter>(this), template.MaxHp);
         this.template = template;
-        nextActionCooldown = new SimleTimer(SingletonProvider.MainRandomProvider.RandomFloat(0.5f, 1.5f));
+        nextActionCooldown = new SimpleTimer(SingletonProvider.MainRandomProvider.RandomFloat(0.5f, 1.5f));
     }
 
     static private double GetExperienceWorth(double powerFactor)
@@ -28,6 +28,8 @@ public class EnemyCharacter : Character, IHasEnemyTemplate
     }
     public EnemyTemplate EnemyTemplate => template;
 
+    public override bool IsPlayer => false;
+
     public override void PerformAction(List<ICharacter> enemies, ICombatReader combat)
     {
         if (possibleCharacterActions.TrueForAll(e => e.TurnProgress == null))
@@ -35,7 +37,7 @@ public class EnemyCharacter : Character, IHasEnemyTemplate
             if (nextActionCooldown.IsDone())
             {
                 StartChargingAction(possibleCharacterActions[0], null, combat);
-                nextActionCooldown = new SimleTimer(SingletonProvider.MainRandomProvider.RandomFloat(0.5f, 1.5f) + possibleCharacterActions[0].TurnProgress.TurnTime);
+                nextActionCooldown = new SimpleTimer(SingletonProvider.MainRandomProvider.RandomFloat(0.5f, 1.5f) + possibleCharacterActions[0].TurnProgress.TurnTime);
             }
         }
         IncrementActions(combat);

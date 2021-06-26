@@ -1,29 +1,43 @@
 
+using Logging;
 using UnityEngine;
 
 
 public abstract class BaseCharacterAction : ICharacterAction
 {
     private readonly Sprite icon;
-    private readonly string name;
-    private readonly float baseActionTimeS;
+    private readonly string iconPath;
+    private readonly float baseActionTime;
+    private readonly DamageConfig damageConfig;
+    private readonly bool targetsEnemies;
+    private readonly bool targetsAllies;
     private TurnProgress progress;
     private ICharacter target;
+    static readonly LilLogger logger = new LilLogger(typeof(BaseCharacterAction).ToString());
 
-    protected BaseCharacterAction(string iconPath, string name, float baseActionTimeS)
+    protected BaseCharacterAction(string iconPath, float baseActionTime, DamageConfig damageConfig, bool targetsEnemies, bool targetsAllies)
     {
         this.icon = SingletonProvider.MainGameobjectLoader.GetPrefab<Sprite>(iconPath);
-        this.name = name;
-        this.baseActionTimeS = baseActionTimeS;
+        this.iconPath = iconPath;
+        this.baseActionTime = baseActionTime;
+        this.damageConfig = damageConfig;
+        this.targetsEnemies = targetsEnemies;
+        this.targetsAllies = targetsAllies;
     }
 
     public Sprite Icon => icon;
 
-    public string Name => name;
-
     public ICharacter Target { get => target; }
 
     public TurnProgress TurnProgress => progress;
+
+    public DamageConfig Damage => damageConfig;
+
+    public bool TargetsEnemies => targetsEnemies;
+
+    public bool TargetsAllies => targetsAllies;
+
+    public float BaseActionTime => baseActionTime;
 
     public void CancelAction()
     {
@@ -39,9 +53,15 @@ public abstract class BaseCharacterAction : ICharacterAction
         target = null;
     }
 
-    public void StartChargingAction(ICharacter user, ICharacter target, ICombatReader combat)
+    public virtual void StartChargingAction(ICharacter user, ICharacter target, ICombatReader combat)
     {
-        var actionTime = baseActionTimeS / user.Attributes.Speed;
+        bool sameTeam = user.IsPlayer == target.IsPlayer;
+        if (sameTeam && !TargetsAllies || !sameTeam && !TargetsEnemies)
+        {
+            logger.Log("Trying to charge an action towards a non-matching target, sameTeam: " + sameTeam + " TargetsEnemies" + targetsEnemies + " TargetsAllies: " + TargetsAllies, LogLevel.Warning);
+            return;
+        }
+        var actionTime = BaseActionTime / user.Attributes.Speed;
         progress = new TurnProgress(actionTime);
         this.target = target;
     }

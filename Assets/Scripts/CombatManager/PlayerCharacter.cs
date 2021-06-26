@@ -16,6 +16,9 @@ public class PlayerCharacter : Character
     private readonly int playerIdentifier;
 
     private static LilLogger logger = new LilLogger(typeof(PlayerCharacter).ToString());
+
+    public override bool IsPlayer => true;
+
     public PlayerCharacter(int playerIdentifier, int maxHp, ICombatAttributes attributes, ICharacterAction[] actions) :
         base(names[playerIdentifier],
         null)

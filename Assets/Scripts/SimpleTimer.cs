@@ -1,9 +1,9 @@
 // Need a syncronous timer
-public class SimleTimer
+public class SimpleTimer
 {
     private float timeout;
     private float startTime;
-    public SimleTimer(float timeout)
+    public SimpleTimer(float timeout)
     {
         this.timeout = timeout;
         Reset();

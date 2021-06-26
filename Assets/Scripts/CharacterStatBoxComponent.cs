@@ -21,28 +21,30 @@ public class CharacterStatBoxComponent : MonoBehaviour
     private int targetIndex;
     [SerializeField]
     private ActionButtonComponent[] actionButtonComponents;
-    private int oldTargetIndex;
 
+    [SerializeField]
+    private BuffListComponent buffListComponent;
     Subscription<EventType> combatSubscription;
 
     public int TargetIndex { get => targetIndex; }
 
-    public bool IsPlayer() {
+    public bool IsPlayer()
+    {
         return targetType == TargetType.Players;
     }
 
     void Start()
     {
-        UpdateIndex(targetIndex, null);
+        UpdateIndex(null);
         combatSubscription = CentralEventPublisher.Instance.Subscribe(new[] { EventType.CombatStarted, EventType.CombatEnded }, e =>
          {
-             UpdateIndex(targetIndex, e);
+             UpdateIndex(e);
          });
     }
 
-    void UpdateIndex(int index, IEvent e)
+    void UpdateIndex(IEvent e)
     {
-        var character = GetCharacter(index);
+        var character = GetCharacter();
         foreach (var actionButton in actionButtonComponents)
         {
             actionButton.SetCharacter(character, targetType);
@@ -60,17 +62,19 @@ public class CharacterStatBoxComponent : MonoBehaviour
                 healthbarComponent.gameObject.SetActive(true);
                 healthbarComponent.SetAttributes(character);
             }
+            if (buffListComponent)
+            {
+                buffListComponent.SetCharacter(character);
+            }
         }
         else
         {
             if (characterName) characterName.enabled = false;
             if (healthbarComponent) healthbarComponent.gameObject.SetActive(false);
         }
-
-        oldTargetIndex = index;
     }
 
-    ICharacter GetCharacter(int targetIndex)
+    public ICharacter GetCharacter()
     {
         if (targetType == TargetType.Players)
         {
@@ -102,18 +106,5 @@ public class CharacterStatBoxComponent : MonoBehaviour
             }
         }
         return null;
-    }
-
-    public void OpenUpgradeTab()
-    {
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (targetIndex != oldTargetIndex) // Just to make it editable from the editor
-        {
-            UpdateIndex(targetIndex, null);
-        }
     }
 }
