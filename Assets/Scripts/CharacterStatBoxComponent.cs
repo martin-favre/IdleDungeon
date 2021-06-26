@@ -24,6 +24,13 @@ public class CharacterStatBoxComponent : MonoBehaviour
     private int oldTargetIndex;
 
     Subscription<EventType> combatSubscription;
+
+    public int TargetIndex { get => targetIndex; }
+
+    public bool IsPlayer() {
+        return targetType == TargetType.Players;
+    }
+
     void Start()
     {
         UpdateIndex(targetIndex, null);
