@@ -59,6 +59,7 @@ public abstract class BaseCharacterAction : ICharacterAction
         if (sameTeam && !TargetsAllies || !sameTeam && !TargetsEnemies)
         {
             logger.Log("Trying to charge an action towards a non-matching target, sameTeam: " + sameTeam + " TargetsEnemies" + targetsEnemies + " TargetsAllies: " + TargetsAllies, LogLevel.Warning);
+            SingletonProvider.MainEventPublisher.Publish(EventType.CharacterActionCancelled, new CharacterActionCancelledEvent(user, this));
             return;
         }
         var actionTime = BaseActionTime / user.Attributes.Speed;

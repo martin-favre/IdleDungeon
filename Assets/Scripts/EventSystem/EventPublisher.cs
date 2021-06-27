@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace PubSubSystem
 {
@@ -39,6 +40,7 @@ namespace PubSubSystem
 
         public void Publish(KeyType key, IEvent ev)
         {
+            Debug.Log("Published Event: " + key.ToString());
             List<Action<IEvent>> list;
             bool success = handlers.TryGetValue(key, out list);
             if (!success) return;

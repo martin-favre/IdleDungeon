@@ -19,10 +19,25 @@ public class ActionButtonComponent : MonoBehaviour
 
     Subscription<EventType> clickSub;
     Subscription<EventType> actionSub;
+    Subscription<EventType> combatSub;
 
     void Awake()
     {
         HideIcons();
+        combatSub = SingletonProvider.MainEventPublisher.Subscribe(new[] { EventType.CombatEnded, EventType.CombatStarted }, OnCombatChanged);
+        toggle.interactable = false;
+    }
+
+    void OnCombatChanged(IEvent ev)
+    {
+        if (ev is CombatStartedEvent started && character != null && character.IsPlayer)
+        {
+            toggle.interactable = true;
+        }
+        else
+        {
+            toggle.interactable = false;
+        }
     }
 
     private ICharacterAction GetAction()
@@ -43,7 +58,6 @@ public class ActionButtonComponent : MonoBehaviour
             return;
         }
         this.targetType = targetType;
-        if (targetType == CharacterStatBoxComponent.TargetType.Enemies) toggle.interactable = false;
         var actions = character.CharacterActions;
         if (buttonIndex < actions.Length)
         {
@@ -74,43 +88,23 @@ public class ActionButtonComponent : MonoBehaviour
         {
             var action = GetAction();
             SingletonProvider.MainEventPublisher.Publish(EventType.PlayerSelectedActionTarget, new PlayerSelectedActionTargetEvent(character, clkEn.Enemy, action));
-            actionSub = SingletonProvider.MainEventPublisher.Subscribe(new[] { EventType.CombatAction, EventType.CharacterActionCancelled }, OnPlayerTookAction);
         }
         toggle.isOn = false;
         clickSub.Dispose();
-    }
-
-    private void OnPlayerTookAction(IEvent e)
-    {
-        // So, we've clicked the enemy
-        // And now the action was taken 
-        // or cancelled
-
-        if (e is CombatActionEvent ev)
-        {
-            if (ev.Action == GetAction())
-            {
-                actionSub.Dispose();
-            }
-        }
-        else if (e is CharacterActionCancelledEvent cancel)
-        {
-            if (cancel.Action == GetAction())
-            {
-                actionSub.Dispose();
-            }
-        }
+        clickSub = null;
     }
 
     public void OnButtonPressed(bool newVal)
     {
         var action = GetAction();
-        if (action != null)
+        if (action != null && character != null && !character.IsDead())
         {
             if (newVal) // i.e. we pushed it down
             {
-                if (clickSub != null) clickSub.Dispose();
-                clickSub = SingletonProvider.MainEventPublisher.Subscribe(new[] { EventType.PlayerClickedTarget, EventType.PlayerClickedNothing }, OnPlayerClickedEnemy);
+                if (clickSub == null)
+                {
+                    clickSub = SingletonProvider.MainEventPublisher.Subscribe(new[] { EventType.PlayerClickedTarget, EventType.PlayerClickedNothing }, OnPlayerClickedEnemy);
+                }
             }
         }
     }
